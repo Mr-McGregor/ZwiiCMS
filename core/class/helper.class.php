@@ -17,6 +17,27 @@ class helper {
 	const FILTER_TIMESTAMP = 10;
 	const FILTER_URL = 11;
 
+
+
+	/** 
+	 * Récupérer l'adresse IP sans tenit compte du proxy
+	 * @return string IP adress
+	 * Cette focntion est utilisé par user
+	*/
+
+	public static function getIp() {
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+			$ip=$_SERVER['HTTP_CLIENT_IP'];
+		}
+		elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+			$ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		else{
+			$ip=$_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
+
 	/**
 	 * Fonction pour récupérer le numéro de version en ligne
 	 * @param string $url à récupérer
@@ -24,19 +45,23 @@ class helper {
 	 */
 
 	public static function urlGetContents ($url) {
-	if(function_exists('file_get_contents') and 
-			ini_get('allow_url_fopen') ){
-			$url_get_contents_data = file_get_contents($url);
-		}elseif(function_exists('fopen') && 
-			function_exists('stream_get_contents' &&
-			ini_get('allow_url_fopen') )){
-			$handle = fopen ($url, "r");
-			$url_get_contents_data = stream_get_contents($handle);
-		}else{
-			$url_get_contents_data = false;
+		// Ejecter free.fr
+		if (strpos(self::baseUrl(),'free.fr') > 0 ){
+			return false;
 		}
-	return $url_get_contents_data;
-	} 
+		if(function_exists('file_get_contents') &&
+				ini_get('allow_url_fopen') ){
+				$url_get_contents_data = @file_get_contents($url); // Masque un warning éventuel
+			}elseif(function_exists('fopen') &&
+				function_exists('stream_get_contents') &&
+				ini_get('allow_url_fopen')){
+				$handle = fopen ($url, "r");
+				$url_get_contents_data = stream_get_contents($handle);
+			}else{
+				$url_get_contents_data = false;
+			}
+		return $url_get_contents_data;
+	}
 
 	/**
 	 * Retourne les valeurs d'une colonne du tableau de données
@@ -46,7 +71,7 @@ class helper {
 	 * @return array
 	 */
 	public static function arrayCollumn($array, $column, $sort = null) {
-		$newArray = [];	
+		$newArray = [];
 		if(empty($array) === false) {
 			$newArray = array_map(function($element) use($column) {
 				return $element[$column];
@@ -65,7 +90,7 @@ class helper {
 
 
 	/**
-	 * Génére un backup des données de site
+	 * Génère un backup des données de site
 	 * @param string $folder dossier de sauvegarde
 	 * @param array $exclude dossier exclus
 	 * @return string nom du fichier de sauvegarde
@@ -94,7 +119,7 @@ class helper {
 				$filePath = $file->getRealPath();
 				$relativePath = substr($filePath, strlen(realpath($directory)) + 1);
 				$zip->addFile($filePath, $relativePath);
-			} 			
+			}
 		}
 		$zip->close();
 		return ($fileName);
@@ -130,7 +155,7 @@ class helper {
 		else {
 			$queryString = '';
 		}
-		return $host . rtrim($pathInfo['dirname'], ' /') . '/' . $queryString;
+		return $host . rtrim($pathInfo['dirname'], ' ' . DIRECTORY_SEPARATOR) . '/' . $queryString;
 	}
 
 	/**
@@ -184,7 +209,7 @@ class helper {
 			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $rgba[3] . ')',
 			'darken' => 'rgba(' . max(0, $rgba[0] - 15) . ',' . max(0, $rgba[1] - 15) . ',' . max(0, $rgba[2] - 15) . ',' . $rgba[3] . ')',
 			'veryDarken' => 'rgba(' . max(0, $rgba[0] - 20) . ',' . max(0, $rgba[1] - 20) . ',' . max(0, $rgba[2] - 20) . ',' . $rgba[3] . ')',
-			'text' => self::relativeLuminanceW3C($rgba) > .22 ? "inherit" : "white"
+			'text' => self::relativeLuminanceW3C($rgba) > .22 ? "#222" : "#DDD"
 		];
 	}
 
@@ -225,7 +250,7 @@ class helper {
 					explode(',', 'á,à,â,ä,ã,å,ç,é,è,ê,ë,í,ì,î,ï,ñ,ó,ò,ô,ö,õ,ú,ù,û,ü,ý,ÿ,\',", '),
 					explode(',', 'a,a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,-,-,-'),
 					$text
-				));				
+				));
 				$text = preg_replace('/([^a-z0-9-])/', '', $text);
 				// Supprime les emoji
 				$text = preg_replace('/[[:^print:]]/', '', $text);
@@ -238,7 +263,7 @@ class helper {
 				// Un ID ne peut pas être un entier, pour éviter les conflits avec le système de pagination
 				if(intval($text) !== 0) {
 					$text = 'i' . $text;
-				}			
+				}
 				break;
 			case self::FILTER_INT:
 				$text = (int) filter_var($text, FILTER_SANITIZE_NUMBER_INT);
@@ -443,6 +468,29 @@ class helper {
 			$text = mb_substr($text, 0, min(mb_strlen($text), mb_strrpos($text, ' ')));
 		}
 		return $text;
+	}
+
+	/**
+	 * Cryptage
+	 * @param string $key la clé d'encryptage
+	 * @param string $payload la chaine à coder
+	 * @return string
+	 */
+	public static function encrypt($key, $payload) {
+		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+		$encrypted = openssl_encrypt($payload, 'aes-256-cbc', $key, 0, $iv);
+		return base64_encode($encrypted . '::' . $iv);
+	}
+
+	/**
+	 * Décryptage
+	 * @param string $key la clé d'encryptage
+	 * @param string $garble la chaine à décoder
+	 * @return string
+	 */
+	public static  function decrypt($key, $garble) {
+		list($encrypted_data, $iv) = explode('::', base64_decode($garble), 2);
+		return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
 	}
 
 }

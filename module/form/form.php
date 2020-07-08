@@ -30,10 +30,10 @@ class form extends common {
 	public static $data = [];
 
 	public static $pages = [];
-	
+
 	public static $pagination;
-	
-	const FORM_VERSION = '2.2'; 
+
+	const FORM_VERSION = '2.3';
 
 	// Objets
 	const TYPE_MAIL = 'mail';
@@ -46,12 +46,12 @@ class form extends common {
 
 
 	public static $types = [
-		self::TYPE_LABEL => 'Etiquette',		
+		self::TYPE_LABEL => 'Etiquette',
 		self::TYPE_TEXT => 'Champ texte',
 		self::TYPE_TEXTAREA => 'Grand champ texte',
 		self::TYPE_MAIL => 'Champ mail',
 		self::TYPE_SELECT => 'Sélection',
-		self::TYPE_CHECKBOX => 'Case à cocher',		
+		self::TYPE_CHECKBOX => 'Case à cocher',
 		self::TYPE_DATETIME => 'Date'
 	];
 
@@ -62,22 +62,22 @@ class form extends common {
 	 * Configuration
 	 */
 	public function config() {
-		// Liste des utilisateurs 
+		// Liste des utilisateurs
 		$userIdsFirstnames = helper::arrayCollumn($this->getData(['user']), 'firstname');
 		ksort($userIdsFirstnames);
-		self::$listUsers [] = '';	
+		self::$listUsers [] = '';
 		foreach($userIdsFirstnames as $userId => $userFirstname) {
 			self::$listUsers [] =  $userId;
 		}
 		// Soumission du formulaire
 		if($this->isPost()) {
 			// Configuration
-			// Option sélectionnée sans page choisie	
-			$pageId = '';		
-			if ($this->getInput('formConfigPageId') !== "") { 
+			// Option sélectionnée sans page choisie
+			$pageId = '';
+			if ($this->getInput('formConfigPageId') !== "") {
 				// Option désactivée, réinitialiser l'id de la page sélectionnée.
 				$pageId = $this->getInput('formConfigPageIdToggle', helper::FILTER_BOOLEAN) === true ? $this->getInput('formConfigPageId', helper::FILTER_ID) : '';
-			} 
+			}
 			$this->setData([
 				'module',
 				$this->getUrl(0),
@@ -94,7 +94,7 @@ class form extends common {
 				]
 			]);
 			// Génération des données vides
-			$this->setData(['module', $this->getUrl(0), 'data', []]);			
+			$this->setData(['module', $this->getUrl(0), 'data', []]);
 			// Génération des champs
 			$inputs = [];
 			foreach($this->getInput('formConfigPosition', null) as $index => $position) {
@@ -221,7 +221,7 @@ class form extends common {
 				'redirect' => helper::baseUrl()  . $this->getUrl(0) . '/data',
 				'notification' => 'Action non autorisée'
 			]);
-		} else {	
+		} else {
 			$data = ($this->getData(['module', $this->getUrl(0), 'data']));
 			if (count($data) > 0 ) {
 				// Suppression multiple
@@ -244,7 +244,7 @@ class form extends common {
 		}
 	}
 
-	
+
 	/**
 	 * Suppression
 	 */
@@ -292,12 +292,12 @@ class form extends common {
 				AND $this->getInput('formCapcha', helper::FILTER_INT) !== $this->getInput('formCapchaFirstNumber', helper::FILTER_INT) + $this->getInput('formCapchaSecondNumber', helper::FILTER_INT))
 			{
 				self::$inputNotices['formCapcha'] = 'Incorrect';
-				
+
 			}
 			// Préparation le contenu du mail
 			$data = [];
-			$content = '';
 			$replyTo = null;
+			$content = '';
 			foreach($this->getData(['module', $this->getUrl(0), 'input']) as $index => $input) {
 				// Filtre la valeur
 				switch($input['type']) {
@@ -307,20 +307,19 @@ class form extends common {
 					case self::TYPE_TEXTAREA:
 						$filter = helper::FILTER_STRING_LONG;
 						break;
-					case self::TYPE_DATETIME: 
+					case self::TYPE_DATETIME:
 						$filter = helper::FILTER_STRING_SHORT; // Mettre TYPE_DATETIME pour récupérer un TIMESTAMP
 						break;
-					case self::TYPE_CHECKBOX: 
+					case self::TYPE_CHECKBOX:
 						$filter = helper::FILTER_BOOLEAN;
 						break;
 					default:
 						$filter = helper::FILTER_STRING_SHORT;
 				}
 				$value = $this->getInput('formInput[' . $index . ']', $filter, $input['required']) === true ? 'X' : $this->getInput('formInput[' . $index . ']', $filter, $input['required']);
-				//  premier chalmp email ajouté au mail en reply si option active
-				if ($this->getData(['module', $this->getUrl(0), 'config', 'replyto']) === true && 
-					$input['type'] === 'mail' && 
-					$replyTo !== null) {
+				//  premier champ email ajouté au mail en reply si option active
+				if ($this->getData(['module', $this->getUrl(0), 'config', 'replyto']) === true &&
+					$input['type'] === 'mail') {
 					$replyTo = $value;
                 }
 				// Préparation des données pour la création dans la base
@@ -332,7 +331,7 @@ class form extends common {
 			$success = $this->setData(['module', $this->getUrl(0), 'data', helper::increment(1, $this->getData(['module', $this->getUrl(0), 'data'])), $data]);
 			// Envoi du mail
 			if ($success === true) {
-				// Rechercher l'adresse en fonction du mail			
+				// Rechercher l'adresse en fonction du mail
 				$singleuser = $this->getData(['user',
 											$this->getData(['module', $this->getUrl(0), 'config', 'user']),
 											'mail']);
@@ -353,29 +352,25 @@ class form extends common {
 								$to[] = $user['mail'];
 							}
 						}
-					}							
+					}
 					// Utilisateur désigné
 					if (!empty($singleuser)) {
 						$to[] = $singleuser;
 					}
-					// Mail désigné
-					if (!empty($singlemail)) {
-						$to[] = $singlemail;
-					}
-					if($to) {
-						// Sujet du mail
-						$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
-						if($subject === '') {
-							$subject = 'Nouveau message en provenance de votre site';
-						}					
-						
-						// Envoi le mail
-						$sent = $this->sendMail(
-							$to,
-							$subject,
-							'Nouveau message en provenance de la page "' . $this->getData(['page', $this->getUrl(0), 'title']) . '" :<br><br>' .
-							$content
-						);
+				}
+				// Utilisateur désigné
+				if (!empty($singleuser)) {
+					$to[] = $singleuser;
+				}
+				// Mail désigné
+				if (!empty($singlemail)) {
+					$to[] = $singlemail;
+				}
+				if($to) {
+					// Sujet du mail
+					$subject = $this->getData(['module', $this->getUrl(0), 'config', 'subject']);
+					if($subject === '') {
+						$subject = 'Nouveau message en provenance de votre site';
 					}
 					// Envoi le mail
 					$sent = $this->sendMail(

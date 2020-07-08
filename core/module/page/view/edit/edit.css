@@ -13,4 +13,28 @@
  */
 
 
-@import url("core/layout/admin.css");
+@import url("site/data/admin.css");
+
+#ceo > .blockContainer,
+#advanced > .blockContainer {
+    display: none;
+}
+
+#info .zwiico-minus,
+#layout .zwiico-minus,
+#location .zwiico-minus {
+    display: inline;
+}
+
+.zwiico-minus,
+#info .zwiico-plus,
+#layout .zwiico-plus,
+#location .zwiico-plus {
+    display: none;
+}
+
+
+.zwiico-minus,
+.zwiico-plus {
+    cursor: pointer;
+}

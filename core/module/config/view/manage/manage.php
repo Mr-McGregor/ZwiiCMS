@@ -9,11 +9,11 @@
 		]); ?>
 	</div>
 	<div class="col2 offset8">
-					<?php echo template::submit('configManageSubmit',[
-						'value' => 'valider',
-						'ico' => 'check'
-					]); ?>
-				</div>	
+		<?php echo template::submit('configManageSubmit',[
+			'value' => 'Valider',
+			'ico' => 'check'
+		]); ?>
+	</div>
 </div>
 <div class="row">
 	<div class="col12">
@@ -25,18 +25,18 @@
 						<?php echo template::file('configManageImportFile', [
 							'label' => 'Sélectionnez une archive au format ZIP',
 							'type' => 2,
-							'help' => 'L\'archive a été déposée dans le gestionaire de fichiers. Les archives inférieures à la version 9 ne sont pas acceptées.'
+							'help' => 'L\'archive a été déposée dans le gestionnaire de fichiers. Les archives inférieures à la version 9 ne sont pas acceptées.'
 						]); ?>
 					</div>
 					<div class="row">
 						<?php echo template::checkbox('configManageImportUser', true, 'Préserver les comptes des utilisateurs déjà installés', [
 							'checked' => true
-						]); ?>		
-					</div>		
+						]); ?>
+					</div>
 				</div>
-			</div>		
-		</div>				
-	</div>		
+			</div>
+		</div>
+	</div>
 </div>
 <div class="row">
 	<div class="col12">
@@ -44,10 +44,10 @@
 			<h4>Conversion des URL <?php echo template::help('Conversion des URL des ressources multimédia après le transfert d\'une archive entre deux sites aux adresses différentes.');?></h4>
 			<div class="row">
 				<div class="col4 offset1">
-					<?php 
+					<?php
 					if (is_null($this->getData(['core', 'baseUrl'])) ) {
 						$baseUrlValue = 'Pas de donnée dans la sauvegarde';
-						$buttonClass = 'disabled'; 
+						$buttonClass = 'disabled';
 					} elseif ($this->getData(['core', 'baseUrl']) === '') {
 						$baseUrlValue = '/';
 						$buttonClass = helper::baseUrl(false,false) !== $this->getData(['core', 'baseUrl']) ? '' : 'disabled';
@@ -69,14 +69,14 @@
 						'readonly' => true,
 						'help'  => 'Dossier du base site actuel.'
 					]); ?>
-				</div>			
+				</div>
 				<div class="col2 verticalAlignMiddle">
 					<?php echo template::button('configManageUpdateBaseURLButton', [
 						'href' => helper::baseUrl() . 'config/updateBaseUrl',
 						'class' => $buttonClass,
 						'value' => 'convertir'
-					]); ?>						
-				</div>		
+					]); ?>
+				</div>
 			</div>
 		</div>
 	</div>

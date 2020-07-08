@@ -18,7 +18,7 @@ tinymce.init({
 	// Langue
 	language: "fr_FR",
 	// Plugins
-	plugins: "advlist anchor autolink autoresize autosave codemirror colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace stickytoolbar tabfocus table template textcolor codesample emoticons ",
+	plugins: "advlist anchor autolink autoresize autosave codemirror colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace stickytoolbar tabfocus table template textcolor emoticons ",
 	// Contenu de la barre d'outils
 	toolbar: "restoredraft | undo redo |  formatselect bold italic underline forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist emoticons | table template | image media link | code fullscreen",
 	// Emoticons
@@ -35,7 +35,7 @@ tinymce.init({
 		saveCursorPosition: false,    // Insert caret marker
 		config: {           // CodeMirror config object
 			/*theme: 'ambiance',*/
-			fullscreen: true,	
+			fullscreen: true,
 			/*mode: 'application/x-httpd-php',*/
 			indentUnit: 4,
 			lineNumbers: true,
@@ -53,10 +53,10 @@ tinymce.init({
 		],
 		cssFiles: [
 			/*'theme/ambiance.css',*/
-		],		
+		],
 		width: 800,         // Default value is 800
-		height: 500       // Default value is 550		
-	}, 
+		height: 500       // Default value is 550
+	},
 	// Cibles de la target
 	target_list: [
 		{title: 'None', value: ''},
@@ -67,7 +67,7 @@ tinymce.init({
 		{title: 'None', value: ''},
 		{title: 'Une popup (Lity)', value: 'data-lity'},
 		{title: 'Une galerie d\'images (SimpleLightbox)', value: 'gallery'}
-	],	
+	],
 	// Titre des image
 	image_title: true,
 	// Pages internes
@@ -86,9 +86,17 @@ tinymce.init({
 	// Cache les menus
 	menubar: true,
 	// URL menu contextuel
-	link_context_toolbar: true,	
+	link_context_toolbar: true,
 	// Cache la barre de statut
 	statusbar: false,
+	// Active le copié collé à partir du Web
+	paste_data_images: true,
+	// Active le copié collé à partir du presse papier
+	paste_filter_drop: false,
+	/* Eviter BLOB à tester
+	images_dataimg_filter: function(img) {
+		return img.hasAttribute('internal-blob');
+	},*/
 	// Autorise tous les éléments
 	valid_elements :"*[*]",
 	valid_children : "*[*]",
@@ -161,16 +169,6 @@ tinymce.init({
 			description: "Bloc de texte avec effet accordéon."
 		},
 		{
-			title: "FullPage sections",
-			url: baseUrl + "core/vendor/tinymce/templates/fullPageSections.html",
-			description: "Page organisée en sections navigable avec le module redirection."
-		},		
-		{
-			title: "FullPage slides",
-			url: baseUrl + "core/vendor/tinymce/templates/fullPageSlides.html",
-			description: "Page organisée en slides navigable avec le module redirection."
-		},		
-		{
 			title: "Grille symétrique : 6 - 6",
 			url: baseUrl + "core/vendor/tinymce/templates/col6.html",
 			description: "Grille adaptative sur 12 colonnes, sur mobile elles passent les unes en dessous des autres."
@@ -217,7 +215,7 @@ tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 	editor.on('init', function() {
 	  setSticky();
 	});
-	
+
 	$(window).on('scroll', function() {
 	  setSticky();
 	});
@@ -227,12 +225,12 @@ tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 	  var toolbars = $(container).find('.mce-toolbar-grp');
 	  var statusbar = $(container).find('.mce-statusbar');
 	  var menubar = $(container).find('.mce-menubar');
-	  
+
 	  if (isSticky()) {
 		$(container).css({
 		  paddingTop: menubar.outerHeight()
 		});
-		
+
 		if (isAtBottom()) {
 		  toolbars.css({
 			top: 'auto',
@@ -240,7 +238,7 @@ tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 			position: 'absolute',
 			width: '100%',
 			borderBottom: 'none'
-		  }); 
+		  });
 		} else {
 			menubar.css({
 				top: 45,
@@ -249,20 +247,20 @@ tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 				width: $(container).width(),
 				borderBottom: '1px solid rgba(0,0,0,0.2)',
 				background: '#fff'
-			}); 			
+			});
 		  	toolbars.css({
 				top: 78,
 				bottom: 'auto',
 				position: 'fixed',
 				width: $(container).width(),
 				borderBottom: '1px solid rgba(0,0,0,0.2)'
-		  	}); 
+		  	});
 		}
 	  } else {
 		$(container).css({
 		  paddingTop: 0
 		});
-		
+
 		toolbars.css({
   		top:0,
 		  position: 'relative',
@@ -274,34 +272,34 @@ tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 			position: 'relative',
 			width: 'auto',
 			borderBottom: 'none'
-		  });		
+		  });
 	  }
 	}
-	
+
 	function isSticky() {
 	  var container = editor.editorContainer,
 		editorTop = container.getBoundingClientRect().top;
-	  
+
 	  if (editorTop < 0) {
 		return true;
 	  }
-  
+
 	  return false;
 	}
-	
+
 	function isAtBottom() {
 	  var container = editor.editorContainer,
 		editorTop = container.getBoundingClientRect().top;
-	  
+
 	  var toolbarHeight = $(container).find('.mce-toolbar-grp').outerHeight();
 	  var footerHeight = $(container).find('.mce-statusbar').outerHeight();
-	  
+
 	  var hiddenHeight = -($(container).outerHeight() - toolbarHeight - footerHeight);
 
   	  if (editorTop < hiddenHeight) {
 		return true;
 	  }
-	  
+
 	  return false;
 	}
   });

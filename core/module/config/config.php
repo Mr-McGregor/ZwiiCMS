@@ -23,9 +23,15 @@ class config extends common {
 		'updateRobots' => self::GROUP_ADMIN,
 		'index' => self::GROUP_ADMIN,
 		'manage' => self::GROUP_ADMIN,
-		'updateBaseUrl' => self::GROUP_ADMIN
+		'updateBaseUrl' => self::GROUP_ADMIN,
+		'script' => self::GROUP_ADMIN,
+		'logReset' => self::GROUP_ADMIN,
+		'logDownload'=> self::GROUP_ADMIN,
+		'blacklistReset' => self::GROUP_ADMIN,
+		'blacklistDownload' => self::GROUP_ADMIN
+
 	];
-	
+
 	public static $timezones = [
 		'Pacific/Midway'		=> '(GMT-11:00) Midway Island',
 		'US/Samoa'				=> '(GMT-11:00) Samoa',
@@ -146,20 +152,47 @@ class config extends common {
 		5 => '5 articles',
 		10 => '10 articles',
 		15 => '15 articles',
-		20 => '20  articles'		
+		20 => '20  articles'
 	];
-		// Type de proxy
-		public static $proxyType = [
-			'tcp://' => 'TCP',
-			'http://' => 'HTTP'
-		];
+	// Type de proxy
+	public static $proxyType = [
+		'tcp://' => 'TCP',
+		'http://' => 'HTTP'
+	];
+	// Authentification SMTP
+	public static $SMTPauth = [
+		true => 'Oui',
+		false => 'Non'
+	];
+	// Encryptation SMTP
+	public static $SMTPEnc = [
+		'' => 'Aucune',
+		'tls' => 'START TLS',
+		'ssl' => 'SSL/TLS'
+	];
+	// Sécurité de la  connexion - tentative max avant blocage
+	public static $connectAttempt = [
+		999 => 'Aucun',
+		3 => '3 tentatives',
+		5 => '5 tentatives',
+		10 => '10 tentatives'
+	];
+	// Sécurité de la connexion - durée du blocage
+	public static $connectTimeout = [
+		0 => 'Aucun',
+		300 => '5 minutes',
+		600 => '10 minutes',
+		900 => '15 minutes'
+	];
 
-
+	/**
+	 * Génére les fichiers pour les crawlers
+	 */
 	public function generateFiles() {
 		// Mettre à jour le site map
 		$successSitemap=$this->createSitemap();
 
-		// Creer un fichier robots.txt
+		// Créer un fichier robots.txt
 		$successRobots=$this->updateRobots();
 		if ( $successSitemap === true &&
 			 $successRobots >= 100) {
@@ -176,10 +209,10 @@ class config extends common {
 	}
 
 	/**
-	 * Met à jour un fichier robots.txt lors du changement de réécriture 
+	 * Met à jour un fichier robots.txt lors du changement de réécriture
 	 */
 
-	public function updateRobots() {
+	private function updateRobots() {
 		// Créer le fichier robot si absent
 		if (!file_exists('robots.txt')) {
 			$this->createRobots();
@@ -188,7 +221,7 @@ class config extends common {
 		rename ('robots.txt','robots.bak');
 		$fileold = fopen('robots.bak','r');
 		$filenew = fopen('robots.txt','w');
-		while(!feof($fileold))	{			
+		while(!feof($fileold))	{
 			$data = fgets($fileold);
 			if (strpos($data,'sitemap.xml') == 0) {
 				fwrite($filenew, $data);
@@ -210,11 +243,11 @@ class config extends common {
 	public function backup() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			// Creation du ZIP		
+			// Creation du ZIP
 			$filter = $this->getInput('configBackupOption',helper::FILTER_BOOLEAN) === true ? ['backup','tmp'] : ['backup','tmp','file'];
 			$fileName = helper::autoBackup(self::TEMP_DIR,$filter);
 
-			// Téléchargement du ZIP		
+			// Téléchargement du ZIP
 			header('Content-Type: application/zip');
 			header('Content-Disposition: attachment; filename="' . $fileName . '"');
 			header('Content-Length: ' . filesize(self::TEMP_DIR . $fileName));
@@ -239,34 +272,31 @@ class config extends common {
 	 *  https://www.codexworld.com/capture-screenshot-website-url-php-google-api/
 	 */
 	public function configMetaImage() {
-		// fonction désactivée pour un site local		
-		if ( strpos(helper::baseUrl(false),'localhost') > 0 OR strpos(helper::baseUrl(false),'127.0.0.1') > 0)	{				
+		// fonction désactivée pour un site local
+		if ( strpos(helper::baseUrl(false),'localhost') > 0 OR strpos(helper::baseUrl(false),'127.0.0.1') > 0)	{
 			$site = 'https://zwiicms.com/'; } else {
 			$site = helper::baseUrl(false);	}
-		
+
 		$success= false;
-		$googlePagespeedData = helper::urlGetContents('https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url='. $site .'&screenshot=true');
+		$googlePagespeedData = helper::urlGetContents('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url='. $site .'&screenshot=true');
 		if ($googlePagespeedData  !== false) {
 			$googlePagespeedData = json_decode($googlePagespeedData, true);
-			$screenshot = $googlePagespeedData['screenshot']['data'];
-			$screenshot = str_replace(array('_','-'),array('/','+'),$screenshot);
-			$data = 'data:image/jpeg;base64,'.$screenshot;
-			$data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));			
-			// Effacer la miniature
-			if (file_exists(self::FILE_DIR.'thumb/screenshot.png')) {
-				unlink (self::FILE_DIR.'thumb/screenshot.png');
+			$data = str_replace('_','/',$googlePagespeedData['lighthouseResult']['audits']['final-screenshot']['details']['data']);
+			$data = str_replace('-','+',$data);
+			$img = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
+			$success = file_put_contents( self::FILE_DIR.'source/screenshot.jpg',$img) ;
+			// Effacer la miniature png
+			if (file_exists(self::FILE_DIR.'source/screenshot.png')) {
+				unlink (self::FILE_DIR.'source/screenshot.png');
 			}
-			file_put_contents( self::FILE_DIR.'source/screenshot.png',$data);
-			$success =true;
 		}
-
 		// Valeurs en sortie
 		$this->addOutput([
-			'notification' => $success === true ? 'Image tag réinitialisée' : 'Erreur : image tag non créée',
+			'notification' => $success === false  ? 'Service inaccessible ou erreur d\'écriture de l\'image' : 'Image générée avec succès',
 			'redirect' => helper::baseUrl() . 'config',
-			'state' => $success
+			'state' => $success === false ? false : true
 		]);
-	}	
+	}
 
 
      /**
@@ -289,7 +319,7 @@ class config extends common {
 					]);
 			}
 			$successOpen = $zip->open(self::FILE_DIR . 'source/' . $fileZip);
-			if ($successOpen === FALSE) {					
+			if ($successOpen === FALSE) {
 				// Valeurs en sortie erreur
 				$this->addOutput([
 					'notification' => 'Impossible de lire l\'archive',
@@ -298,29 +328,29 @@ class config extends common {
 					]);
 			}
 			// Lire le contenu de l'archive dans le tableau files
-			for( $i = 0; $i < $zip->numFiles; $i++ ){ 
-				$stat = $zip->statIndex( $i ); 
-				$files [] = ( basename( $stat['name'] )); 
+			for( $i = 0; $i < $zip->numFiles; $i++ ){
+				$stat = $zip->statIndex( $i );
+				$files [] = ( basename( $stat['name'] ));
 			}
-			
+
 			// Détermination de la version	à installer
-			if (in_array('theme.json',$files) === true && 
-				in_array('core.json',$files) === true && 
-				in_array ('user.json', $files) === false ) { 
+			if (in_array('theme.json',$files) === true &&
+				in_array('core.json',$files) === true &&
+				in_array ('user.json', $files) === false ) {
 					// V9 pas de fichier user dans l'archive
 					// Stocker le choix de conserver les users installées
 					$version = '9';
 
-			} elseif (in_array('theme.json',$files) === true && 					
-				in_array('core.json',$files) === true && 
-				in_array ('user.json', $files) === true && 
+			} elseif (in_array('theme.json',$files) === true &&
+				in_array('core.json',$files) === true &&
+				in_array ('user.json', $files) === true &&
 				in_array ('config.json', $files) === true ) {
 					// V10 valide
 					$version = '10';
 					// Option active, les users sont stockées
-					if ($this->getInput('configManageImportUser', helper::FILTER_BOOLEAN) === true ) { 
-						$users = $this->getData(['user']); 
-					}	
+					if ($this->getInput('configManageImportUser', helper::FILTER_BOOLEAN) === true ) {
+						$users = $this->getData(['user']);
+					}
 			} else { // Version invalide
 				// Valeurs en sortie erreur
 				$this->addOutput([
@@ -330,41 +360,40 @@ class config extends common {
 				]);
 			}
 			// Préserver les comptes des utilisateurs d'une version 9 si option cochée
-			// Positionnement d'une  variable de session lue au constructeur
-			echo $version;
+			// Positionnement d'une  variable de session lue au constructeurs
 			if ($version === '9') {
 				$_SESSION['KEEP_USERS'] = $this->getInput('configManageImportUser', helper::FILTER_BOOLEAN);
 			}
 			// Extraire le zip ou 'site/'
-			$success = $zip->extractTo( 'site/' );				
-			// Fermer l'archive	
+			$success = $zip->extractTo( 'site/' );
+			// Fermer l'archive
 			$zip->close();
-			
+
 			// Restaurer les users originaux d'une v10 si option cochée
 			if (!empty($users) &&
 				$version === '10' &&
-				$this->getInput('configManageImportUser', helper::FILTER_BOOLEAN) === true) { 
-					$this->setData(['user',$users]);											
+				$this->getInput('configManageImportUser', helper::FILTER_BOOLEAN) === true) {
+					$this->setData(['user',$users]);
 			}
 			/*
 			if ($version === '9' ) {
-				$this->importData($this->getInput('configManageImportUser', helper::FILTER_BOOLEAN));	
+				$this->importData($this->getInput('configManageImportUser', helper::FILTER_BOOLEAN));
 				$this->setData(['core','dataVersion',0]);
 			}*/
-			
+
 			// Met à jours les URL dans les contenus de page
-					
+
 			// Message de notification
-			$notification  = $success === true ? 'Sauvegarde importée avec succès' : 'Une erreur s\'est produite'; 
+			$notification  = $success === true ? 'Restauration réalisée avec succès' : 'Erreur inconnue';
 			$redirect = $this->getInput('configManageImportUser', helper::FILTER_BOOLEAN) === true ?  helper::baseUrl() . 'config/manage' : helper::baseUrl() . 'user/login/';
-			// Valeurs en sortie erreur	
+			// Valeurs en sortie erreur
 			$this->addOutput([
 				'notification' => $notification,
 				'redirect' =>$redirect,
 				'state' => $success
 			]);
-		} 
-	
+		}
+
 		// Valeurs en sortie
 		$this->addOutput([
 			'title' => 'Restaurer',
@@ -390,7 +419,7 @@ class config extends common {
 			} else {
 				$legalPageId = '';
 			}
-
+			// Sauvegarder
 			$this->setData([
 				'config',
 				[
@@ -414,24 +443,35 @@ class config extends common {
 					'timezone' => $this->getInput('configTimezone', helper::FILTER_STRING_SHORT, true),
 					'itemsperPage' => $this->getInput('configItemsperPage', helper::FILTER_INT,true),
 					'legalPageId' => $this->getInput('configLegalPageId'),
-					'metaDescription' => $this->getInput('configMetaDescription', helper::FILTER_STRING_LONG, true),					
+					'metaDescription' => $this->getInput('configMetaDescription', helper::FILTER_STRING_LONG, true),
 					'title' => $this->getInput('configTitle', helper::FILTER_STRING_SHORT, true),
 					'disablei18n' => $this->getInput('configdisablei18n', helper::FILTER_BOOLEAN),
 					'googTransLogo' => $this->getInput('configdGoogTransLogo', helper::FILTER_BOOLEAN),
 					'i18n' => $this->getData(['config','i18n']),
-					'autoUpdate' => helper::urlGetContents('http://zwiicms.com/update/' . common::ZWII_UPDATE_CHANNEL . '/version') === false 
-						? false
-						: $this->getInput('configAutoUpdate', helper::FILTER_BOOLEAN),
+					'autoUpdate' => $this->getInput('configAutoUpdate', helper::FILTER_BOOLEAN),
+					'autoUpdateHtaccess' => $this->getInput('configAutoUpdateHtaccess', helper::FILTER_BOOLEAN),
 					'proxyType' => $this->getInput('configProxyType'),
 					'proxyUrl' => $this->getInput('configProxyUrl'),
-					'proxyPort' => $this->getInput('configProxyPort',helper::FILTER_INT)	
+					'proxyPort' => $this->getInput('configProxyPort',helper::FILTER_INT),
+					'smtp' => [
+						'enable' => $this->getInput('configSmtpEnable',helper::FILTER_BOOLEAN),
+						'host' => $this->getInput('configSmtpHost',helper::FILTER_STRING_SHORT),
+						'port' => $this->getInput('configSmtpPort',helper::FILTER_INT),
+						'auth' => $this->getInput('configSmtpAuth',helper::FILTER_BOOLEAN),
+						'secure' => $this->getInput('configSmtpSecure'),
+						'username' => $this->getInput('configSmtpUsername',helper::FILTER_STRING_SHORT),
+						'password' =>helper::encrypt($this->getData(['config','smtp','username']),$this->getInput('configSmtpPassword')),
+						'sender' => $this->getInput('configSmtpSender',helper::FILTER_MAIL)
+					],
+					'connect' => [
+						'attempt' => $this->getInput('configConnectAttempt',helper::FILTER_INT),
+						'timeout' => $this->getInput('configConnectTimeout',helper::FILTER_INT),
+						'log' => $this->getInput('configConnectLog',helper::FILTER_BOOLEAN)
+					]
 				]
 			]);
-							
+
 			if(self::$inputNotices === []) {
-				// Ecrire les fichiers de script
-				file_put_contents(self::DATA_DIR . 'head.inc.html',$this->getInput('configScriptHead',null));
-				file_put_contents(self::DATA_DIR . 'body.inc.html',$this->getInput('configScriptBody',null));				
 				// Active la réécriture d'URL
 				$rewrite = $this->getInput('rewrite', helper::FILTER_BOOLEAN);
 				if(
@@ -477,10 +517,12 @@ class config extends common {
 				'state' => true
 			]);
 		}
-		// Initialisation du screen 
-		if (!file_exists(self::FILE_DIR.'source/screenshot.png')) {
+		// Initialisation du screen - APPEL AUTO DESACTIVE POUR EVITER UN RALENTISSEMENT
+		/*
+		if (!file_exists(self::FILE_DIR.'source/screenshot.jpg')) {
 			$this->configMetaImage();
 		}
+		*/
 		// Valeurs en sortie
 		$this->addOutput([
 			'title' => 'Configuration',
@@ -488,20 +530,47 @@ class config extends common {
 		]);
 	}
 
+	public function script() {
+		// Soumission du formulaire
+		if($this->isPost()) {
+			// Ecrire les fichiers de script
+			if ($this->geturl(2) === 'head') {
+				file_put_contents(self::DATA_DIR . 'head.inc.html',$this->getInput('configScriptHead',null));
+			}
+			if ($this->geturl(2) === 'body') {
+				file_put_contents(self::DATA_DIR . 'body.inc.html',$this->getInput('configScriptBody',null));
+			}
+			// Valeurs en sortie
+			$this->addOutput([
+				'notification' => 'Modifications enregistrées',
+				'redirect' => helper::baseUrl() . 'config/script/'. $this->geturl(2),
+				'state' => true
+			]);
+		}
+		// Valeurs en sortie
+		$this->addOutput([
+			'title' => 'Éditeur de script dans ' . ucfirst($this->geturl(2)) ,
+			'vendor' => [
+				'codemirror'
+			],
+			'view' => 'script'
+		]);
+	}
+
 	/**
-	 * Met à jour les données de site avec l'adresse trannsmise
+	 * Met à jour les données de site avec l'adresse transmise
 	 */
-	public function updateBaseUrl () {		
+	public function updateBaseUrl () {
 		// Supprimer l'information de redirection
 		$old = str_replace('?','',$this->getData(['core', 'baseUrl']));
 		$new = helper::baseUrl(false,false);
 		$c3 = 0;
 		$success = false ;
-		// Boucler sur les pages			
+		// Boucler sur les pages
 		foreach($this->getHierarchy(null,null,null) as $parentId => $childIds) {
 			$content = $this->getData(['page',$parentId,'content']);
-			$replace = str_replace( 'href="' . $old , 'href="'. $new , stripslashes($content),$c1) ;			
-			$replace = str_replace( 'src="' . $old , 'src="'. $new , stripslashes($replace),$c2) ;			
+			$replace = str_replace( 'href="' . $old , 'href="'. $new , stripslashes($content),$c1) ;
+			$replace = str_replace( 'src="' . $old , 'src="'. $new , stripslashes($replace),$c2) ;
 
 			if ($c1 > 0 || $c2 > 0) {
 				$success = true;
@@ -510,21 +579,21 @@ class config extends common {
 			}
 			foreach($childIds as $childId) {
 				$content = $this->getData(['page',$childId,'content']);
-				$replace = str_replace( 'href="' . $old , 'href="'. $new , stripslashes($content),$c1) ;			
-				$replace = str_replace( 'src="' . $old , 'src="'. $new , stripslashes($replace),$c2) ;	
+				$replace = str_replace( 'href="' . $old , 'href="'. $new , stripslashes($content),$c1) ;
+				$replace = str_replace( 'src="' . $old , 'src="'. $new , stripslashes($replace),$c2) ;
 				if ($c1 > 0 || $c2 > 0) {
 					$success = true;
 					$this->setData(['page',$childId,'content', $replace ]);
 					$c3 += $c1 + $c2;
 				}
 			}
-		}	
+		}
 		// Traiter les modules dont la redirection
 		$content = $this->getdata(['module']);
 		$replace = $this->recursive_array_replace('href="' . $old , 'href="'. $new, $content, $c1);
 		$replace = $this->recursive_array_replace('src="' . $old , 'src="'. $new, $replace, $c2);
 		if ($content !== $replace) {
-			$this->setdata(['module',$replace]);			
+			$this->setdata(['module',$replace]);
 			$c3 += $c1 + $c2;
 			$success = true;
 		}
@@ -539,21 +608,142 @@ class config extends common {
 	}
 
 	/**
+	 * Vider le fichier de log
+	 */
+
+	public function logReset() {
+		if ( file_exists(self::DATA_DIR . 'journal.log') ) {
+			unlink(self::DATA_DIR . 'journal.log');
+			// Créer les en-têtes des journaux
+			$d = 'Date;Heure;IP;Id;Action' . PHP_EOL;
+			file_put_contents(self::DATA_DIR . 'journal.log',$d);
+			// Valeurs en sortie
+				$this->addOutput([
+				'redirect' => helper::baseUrl() . 'config',
+				'notification' => 'Journal réinitialisé avec succès',
+				'state' => true
+			]);
+		} else {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'config',
+				'notification' => 'Aucun journal à effacer',
+				'state' => false
+			]);
+		}
+
+	 }
+
+
+
+	 /**
+	  * Télécharger le fichier de log
+	  */
+	public function logDownload() {
+		$fileName = self::DATA_DIR . 'journal.log';
+		if (file_exists($fileName)) {
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename="' . $fileName . '"');
+			header('Content-Length: ' . filesize($fileName));
+			readfile( $fileName);
+			// Valeurs en sortie
+			$this->addOutput([
+				'display' => self::DISPLAY_RAW
+			]);
+			// Valeurs en sortie
+			$this->addOutput([
+				'title' => 'Configuration',
+				'view' => 'index'
+			]);
+		} else {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'config',
+				'notification' => 'Aucun fichier journal à télécharger',
+				'state' => false
+			]);
+		}
+	}
+
+	/**
+	 * Tableau des IP blacklistés
+	 */
+	public function blacklistDownload () {
+		$fileName = self::TEMP_DIR . 'blacklist.log';
+		$d = 'Date dernière tentative;Heure dernière tentative;Id;Adresse IP;Nombre d\'échecs' . PHP_EOL;
+		file_put_contents($fileName,$d);
+		if ( file_exists($fileName) ) {
+			$d = $this->getData(['blacklist']);
+			$data = '';
+			foreach ($d as $key => $item) {
+				$data .= strftime('%d/%m/%y',$item['lastFail']) . ';' . strftime('%R',$item['lastFail']) . ';' ;
+				$data .= $key  . ';' . $item['ip'] . ';' .  $item['connectFail']  . PHP_EOL;
+			}
+			file_put_contents($fileName,$data,FILE_APPEND);
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename="' . $fileName . '"');
+			header('Content-Length: ' . filesize($fileName));
+			readfile( $fileName);
+			// Valeurs en sortie
+			$this->addOutput([
+				'display' => self::DISPLAY_RAW
+			]);
+			unlink(self::TEMP_DIR . 'blacklist.log');
+			// Valeurs en sortie
+			$this->addOutput([
+				'title' => 'Configuration',
+				'view' => 'index'
+			]);
+		} else {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'config',
+				'notification' => 'Aucune liste noire à télécharger',
+				'state' => false
+			]);
+		}
+	}
+
+	/**
+	 * Réinitialiser les ip blacklistées
+	 */
+
+	public function blacklistReset() {
+		if ( file_exists(self::DATA_DIR . 'blacklist.json') ) {
+			unlink(self::DATA_DIR . 'blacklist.json');
+			// Valeurs en sortie
+				$this->addOutput([
+				'redirect' => helper::baseUrl() . 'config',
+				'notification' => 'Liste noire réinitialisée avec succès',
+				'state' => true
+			]);
+		} else {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'config',
+				'notification' => 'Pas de liste à effacer',
+				'state' => false
+			]);
+		}
+	}
+
+
+	/**
 	 * Fonction de parcours des données de module
 	 * @param string $find donnée à rechercher
 	 * @param string $replace donnée à remplacer
 	 * @param array tableau à analyser
-	 * @param int count nombres d'occurences
+	 * @param int count nombres d'occurrences
 	 * @return array avec les valeurs remplacées.
 	 */
-	private function recursive_array_replace ($find, $replace, $array, &$count) {	
+	private function recursive_array_replace ($find, $replace, $array, &$count) {
 		if (!is_array($array)) {
-			return str_replace($find, $replace, $array, $count);			
+			return str_replace($find, $replace, $array, $count);
 		}
-	
+
 		$newArray = [];
 		foreach ($array as $key => $value) {
-			$newArray[$key] = $this->recursive_array_replace($find, $replace, $value,$c);	
+			$newArray[$key] = $this->recursive_array_replace($find, $replace, $value,$c);
 			$count += $c;
 		}
 		return $newArray;

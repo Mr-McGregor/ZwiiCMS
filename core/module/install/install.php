@@ -34,7 +34,7 @@ class install extends common {
 		if($this->getData(['user']) !== []) {
 			// Valeurs en sortie
 			$this->addOutput([
-				'access' => false			
+				'access' => false
 			]);
 		}
 		// Accès autorisé
@@ -55,17 +55,17 @@ class install extends common {
 				// Créer les dossiers
 				if (!is_dir(self::FILE_DIR.'source/banniere/')) {
 					mkdir(self::FILE_DIR.'source/banniere/');}
-				if (!is_dir(self::FILE_DIR.'thumb/banniere/')) {					
+				if (!is_dir(self::FILE_DIR.'thumb/banniere/')) {
 					mkdir(self::FILE_DIR.'thumb/banniere/');
 					}
 				// Copier les fichiers
 				copy('core/module/install/ressource/file/source/banniere960.jpg',self::FILE_DIR.'source/banniere/banniere960.jpg');
 				copy('core/module/install/ressource/file/thumb/banniere960.jpg',self::FILE_DIR.'thumb/banniere/banniere960.jpg');
 				// Copie des icônes
-				copy('core/module/install/ressource/file/source/favicon.ico',self::FILE_DIR.'source/favicon.ico'); 
-				copy('core/module/install/ressource/file/source/faviconDark.ico',self::FILE_DIR.'source/faviconDark.ico'); 
+				copy('core/module/install/ressource/file/source/favicon.ico',self::FILE_DIR.'source/favicon.ico');
+				copy('core/module/install/ressource/file/source/faviconDark.ico',self::FILE_DIR.'source/faviconDark.ico');
 				// Configure certaines données par défaut
-				if ($this->getInput('installDefaultData',helper::FILTER_BOOLEAN) === TRUE) {					
+				if ($this->getInput('installDefaultData',helper::FILTER_BOOLEAN) === TRUE) {
 					$this->initData('page','fr',true);
 					$this->initData('module','fr',true);
 				} else {
@@ -85,7 +85,7 @@ class install extends common {
 						'password' => $this->getInput('installPassword', helper::FILTER_PASSWORD, true)
 					]
 				]);
-				if ($success === true) { // Formulaire complété envoi du mail											
+				if ($success === true) { // Formulaire complété envoi du mail
 					// Envoie le mail
 					$sent = $this->sendMail(
 						$userMail,
@@ -101,8 +101,8 @@ class install extends common {
 					// Générer un fichier  robots.txt
 					$this->createRobots();
 					// Créer sitemap
-					$this->createSitemap();				
-					// Valeurs en sortie				
+					$this->createSitemap();
+					// Valeurs en sortie
 					$this->addOutput([
 						'redirect' => helper::baseUrl(false),
 						'notification' => ($sent === true ? 'Installation terminée' : $sent),
@@ -110,7 +110,7 @@ class install extends common {
 					]);
 				}
 			}
-			
+
 			// Valeurs en sortie
 			$this->addOutput([
 				'display' => self::DISPLAY_LAYOUT_LIGHT,
@@ -128,13 +128,19 @@ class install extends common {
 			// Préparation
 			case 1:
 				$success = true;
+				// RAZ la mise à jour auto
+				$this->setData(['core','updateAvailable', false]);
 				// Backup du dossier Data
 				helper::autoBackup(self::BACKUP_DIR,['backup','tmp','file']);
+				// Sauvegarde htaccess
+				if ($this->getData(['config','autoUpdateHtaccess'])) {
+					$success = copy('.htaccess', '.htaccess' . '.bak');
+				}
 				// Nettoyage des fichiers d'installation précédents
-				if(file_exists(self::TEMP_DIR.'update.tar.gz')) {
+				if(file_exists(self::TEMP_DIR.'update.tar.gz') && $success) {
 					$success = unlink(self::TEMP_DIR.'update.tar.gz');
 				}
-				if(file_exists(self::TEMP_DIR.'update.tar') && $success === true) {
+				if(file_exists(self::TEMP_DIR.'update.tar') && $success) {
 					$success = unlink(self::TEMP_DIR.'update.tar');
 				}
 				// Valeurs en sortie
@@ -174,7 +180,7 @@ class install extends common {
 				} catch (Exception $e) {
 					$success = $e->getMessage();
 				}
-				// Netooyage du dossier
+				// Nettoyage du dossier
 				if(file_exists(self::TEMP_DIR.'update.tar.gz')) {
 					unlink(self::TEMP_DIR.'update.tar.gz');
 				}
@@ -209,8 +215,15 @@ class install extends common {
 						FILE_APPEND
 					) !== false);
 				}
-				// RAZ la mise à jour auto
-				$this->setData(['core','updateAvailable', false]);
+				// Recopie htaccess
+				if ($this->getData(['config','autoUpdateHtaccess']) &&
+					$success && file_exists( '.htaccess.bak')
+				) {
+						// L'écraser avec le backup
+						$success = copy( '.htaccess.bak' ,'.htaccess' );
+						// Effacer l ebackup
+						unlink('.htaccess.bak');
+				}
 				// Valeurs en sortie
 				$this->addOutput([
 					'display' => self::DISPLAY_JSON,
@@ -245,7 +258,7 @@ class install extends common {
 			if ( $item->isFile() ) unlink($item->getRealPath());
 			if ( !$item->isDot() && $item->isDir() ) $this->removeAll($item->getRealPath());
 		endforeach;
-	 
+
 		rmdir($path);
 	}
 

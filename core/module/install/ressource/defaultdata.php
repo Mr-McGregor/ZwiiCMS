@@ -7,7 +7,9 @@ class init extends common {
 			'autoUpdate' => true,
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
-			'maintenance' => false,		
+			'faviconDark' => 'faviconDark.ico',
+			'homePageId' => 'accueil',
+			'maintenance' => false,
 			'social' => [
 				'facebookId' => 'facebook',
 				'instagramId' => '',
@@ -32,7 +34,15 @@ class init extends common {
 			'title' => 'Votre site en quelques clics !',
 			'proxyUrl' => "",
 			'proxyPort' => "",
-			'proxyType' => "tcp://"
+			'proxyType' => "tcp://",
+			'smtp' => [
+				'enable' => false,
+			],
+			"connect" => [
+				"timeout" => 600,
+				"attempt" => 3,
+				'log' => false
+			]
 		],
 		'core' => [
 			'dataVersion' => 10000,
@@ -42,7 +52,7 @@ class init extends common {
 			'updateAvailable' => false,
 			'baseUrl' => ''
 		],
-		'page' => [	
+		'page' => [
 			'accueil' => [
 			'typeMenu' => 'text',
 			'iconUrl' => '',
@@ -84,14 +94,11 @@ class init extends common {
 				'toTopbackgroundColor' => 'rgba(33, 34, 35, .8)',
 				'toTopColor' => 'rgba(255, 255, 255, 1)'
 			],
-			'button' => [
-				'backgroundColor' => 'rgba(32, 59, 82, 1)'
-			],
 			'footer' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
-				'font' => 'Open+Sans',				
+				'font' => 'Open+Sans',
 				'fontSize' => '.8em',
-				'fontWeight' => 'normal',				
+				'fontWeight' => 'normal',
 				'height' => '5px',
 				'loginLink' => true,
 				'margin' => true,
@@ -101,8 +108,8 @@ class init extends common {
 				'copyrightAlign' => 'right',
 				'text' => '<p>Pied de page personnalisé</p>',
 				'textPosition' => 'left',
-				'textAlign' => 'left',	
-				'textTransform' => 'none',							
+				'textAlign' => 'left',
+				'textTransform' => 'none',
 				'socialsPosition' => 'center',
 				'socialsAlign' => 'center',
 				'displayVersion' => true,
@@ -124,18 +131,15 @@ class init extends common {
 				'margin' => false,
 				'position' => 'site',
 				'textAlign' => 'center',
-				'textColor' => 'rgba(33, 34, 35, 1)',
+				'textColor' => 'rgba(0, 17, 157, 1)',
 				'textHide' => false,
 				'textTransform' => 'none',
 				'linkHomePage' => true,
 				'imageContainer' => 'auto'
 			],
-			'link' => [
-				'textColor' => 'rgba(74, 105, 189, 1)'
-			],
 			'menu' => [
 				'backgroundColor' => 'rgba(32, 59, 82, 1)',
-				'font' => 'Open+Sans',				
+				'font' => 'Open+Sans',
 				'fontSize' => '1em',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
@@ -149,7 +153,9 @@ class init extends common {
 				'fixed' => false,
 				'i18nPosition' => 'right',
 				'activeColorAuto' => true,
-				'activeColor' => 'rgba(255, 255, 255, 1)'
+				'activeColor' => 'rgba(255, 255, 255, 1)',
+				'activeTextColor' => 'rgba(255, 255, 255, 1)',
+				'radius' => '0px'
 			],
 			'site' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
@@ -157,10 +163,15 @@ class init extends common {
 				'shadow' => '0',
 				'width' => '960px'
 			],
+			'block' => [
+				'backgroundColor' => 'rgba(236, 239, 241, 1)',
+				'borderColor' => 'rgba(236, 239, 241, 1)'
+			],
 			'text' => [
 				'font' => 'Open+Sans',
 				'fontSize' => '13px',
-				'textColor' => 'rgba(33, 34, 35, 1)'
+				'textColor' => 'rgba(33, 34, 35, 1)',
+				'linkColor' => 'rgba(74, 105, 189, 1)'
 			],
 			'title' => [
 				'font' => 'Oswald',
@@ -168,13 +179,30 @@ class init extends common {
 				'textColor' => 'rgba(74, 105, 189, 1)',
 				'textTransform' => 'none'
 			],
-			'version' => 0,
-		]
+			'button' => [
+				'backgroundColor' => 'rgba(32, 59, 82, 1)'
+			],
+			'version' => 0
+		],
+		'admin' => [
+			'backgroundColor' => 'rgba(255, 255, 255, 1)',
+			'fontText' => 'open+Sans',
+			'fontSize' => '13px',
+			'fontTitle' => 'Oswald',
+			'colorText' => 'rgba(33, 34, 35, 1)',
+			'colorTitle' => 'rgba(74, 105, 189, 1)',
+			'backgroundColorButton' => 'rgba(74, 105, 189, 1)',
+			'backgroundColorButtonGrey' => 'rgba(170, 180, 188, 1)',
+			'backgroundColorButtonRed' => 'rgba(217, 95, 78, 1)',
+			'backgroundColorButtonGreen' => 'rgba(162, 223, 57, 1)',
+			'backgroundBlockColor' => 'rgba(236, 239, 241, 1)',
+			'borderBlockColor' => 'rgba(190, 202, 209, 1)'
+		],
     ];
 
 
     public static $siteData = [
-		'page' => [	
+		'page' => [
 			'accueil' => [
 			'typeMenu' => 'text',
 			'iconUrl' => '',
@@ -213,7 +241,7 @@ class init extends common {
 								<div class="col4"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum, neque non vulputate hendrerit, arcu turpis dapibus nisl, id scelerisque metus lectus vitae nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec feugiat dolor et turpis finibus condimentum. Cras sit amet ligula sagittis justo.</p></div>
 								</div>',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -228,7 +256,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false	
+				'hideMenuChildren' =>false
 			],
 			'privee' => [
 					'typeMenu' => 'text',
@@ -240,7 +268,7 @@ class init extends common {
 									<div class="col6"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum, neque non vulputate hendrerit, arcu turpis dapibus nisl, id scelerisque metus lectus vitae nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec feugiat dolor et turpis finibus condimentum. Cras sit amet ligula sagittis justo.</p></div>
 								</div>',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -266,7 +294,7 @@ class init extends common {
 								<p>Cette nouvelle fonctionnalité autorise toutes sortes d\'utilisations : texte, encadrés, images, vidéos... ou simple marge blanche. Seule restriction : on ne peut pas installer un module dans une barre latérale.</p>
 								<p>La liste des barres disponibles et leur emplacement s\'affichent en fonction du gabarit que vous aurez choisi.',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -291,7 +319,7 @@ class init extends common {
 						Deux types de menus sont disponibles : l\'un reprenant les rubriques du menu principal comme celui-ci, l\'autre listant les pages d\'une même rubrique. Le choix du type de menu se fait dans la page de configuration d\'une barre latérale.</p>
 						<p>Pour ajouter un menu à une page, choisissez une barre latérale avec menu dans la page de configuration. Les bulles d\'aide de la rubrique "Menu" expliquent comment masquer une page.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -307,14 +335,14 @@ class init extends common {
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
 				'hideMenuChildren' =>false
-				],				
+				],
 			'blog' => [
 				'typeMenu' => 'text',
 						'iconUrl' => '',
 						'disable' => false,
 				'content' => '<p>Cette page contient une instance du module de blog. Cliquez sur un article afin de le lire et de poster des commentaires.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => 'blog',
@@ -329,7 +357,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false							
+				'hideMenuChildren' =>false
 			],
 			'galeries' => [
 				'typeMenu' => 'text',
@@ -337,7 +365,7 @@ class init extends common {
 						'disable' => false,
 				'content' => '<p>Cette page contient une instance du module de galeries photos. Cliquez sur la galerie ci-dessous afin de voir les photos qu\'elle contient.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => 'gallery',
@@ -352,7 +380,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false			
+				'hideMenuChildren' =>false
 			],
 			'site-de-zwii' => [
 			'typeMenu' => 'text',
@@ -360,8 +388,8 @@ class init extends common {
 					'disable' => false,
 			'content' => '',
 			'hideTitle' => false,
-			'homePageId' => false,			
-			'breadCrumb' => false,				
+			'homePageId' => false,
+			'breadCrumb' => false,
 			'metaDescription' => '',
 			'metaTitle' => '',
 			'moduleId' => 'redirection',
@@ -376,7 +404,7 @@ class init extends common {
 			'barRight' => '',
 			'displayMenu' => 'none',
 			'hideMenuSide' => false,
-			'hideMenuChildren' =>false							
+			'hideMenuChildren' =>false
 			],
 			'contact' => [
 				'typeMenu' => 'text',
@@ -384,7 +412,7 @@ class init extends common {
 				'disable' => false,
 				'content' => '<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires. Il est configuré pour envoyer les données saisies par mail aux administrateurs du site.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => 'form',
@@ -399,7 +427,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' => 'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false						
+				'hideMenuChildren' =>false
 			],
 			'barre' => [
 				'typeMenu' => 'text',
@@ -407,7 +435,7 @@ class init extends common {
 				'disable' => false,
 				'content' => '<div class="block"><h4>ZwiiCMS</h4><h2>Le CMS sans base de données à l\'installation simple et rapide</h2></div>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -422,7 +450,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' => 'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false	
+				'hideMenuChildren' =>false
 			],
 			'barrelateraleavecmenu' => [
 				'typeMenu' => 'text',
@@ -430,7 +458,7 @@ class init extends common {
 				'disable' => false,
 				'content' => '<p>&nbsp;</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -445,7 +473,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' => 'parents',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false			
+				'hideMenuChildren' =>false
 			],
 			'mentions-legales' => [
 				'typeMenu' => 'text',
@@ -559,7 +587,7 @@ class init extends common {
 					'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut tempus nibh. Cras eget iaculis justo, ac laoreet lacus. Nunc tellus nulla, auctor id hendrerit eu, pellentesque in sapien. In hac habitasse platea dictumst. Aliquam leo urna, hendrerit id nunc eget, finibus maximus dolor. Sed rutrum sapien consectetur, tincidunt nulla at, blandit quam. Duis ex enim, vehicula vel nisi vitae, lobortis volutpat nisl. Vivamus enim libero, euismod nec risus vel, interdum placerat elit. In cursus sapien condimentum dui imperdiet, sed lobortis ante consectetur. Maecenas hendrerit eget felis non consequat.</p><p>Nullam nec risus non velit efficitur tempus eget tincidunt mauris. Etiam venenatis leo id justo sagittis, commodo dignissim sapien tristique. Vivamus finibus augue malesuada sapien gravida rutrum. Integer mattis lectus ac pulvinar scelerisque. Integer suscipit feugiat metus, ac molestie odio suscipit eget. Fusce at elit in tellus venenatis finibus id sit amet magna. Integer sodales luctus neque blandit posuere. Cras pellentesque dictum lorem eget vestibulum. Quisque vitae metus non nisi efficitur rhoncus ut vitae ipsum. Donec accumsan massa at est faucibus lacinia. Quisque imperdiet luctus neque eu vestibulum. Phasellus pellentesque felis ligula, id imperdiet elit ultrices eu.</p>',
 					'picture' => 'galerie/landscape/iceberg.jpg',
 					'hidePicture' => false,
-					'pictureSize' => 100,			
+					'pictureSize' => 100,
 					'publishedOn' => 1550864502,
 					'state' => true,
 					'title' => 'Mon troisième article',

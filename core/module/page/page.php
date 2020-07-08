@@ -26,7 +26,7 @@ class page extends common {
 	];
 	public static $pagesBarId = [
 		'' => 'Aucune'
-	];	
+	];
 	public static $moduleIds = [];
 	// Nom des modules
 	public static $moduleNames = [
@@ -60,10 +60,10 @@ class page extends common {
 	];
 	public static $displayMenu = [
 		'none'	=> 'Aucun',
-		'parents' 	=> 'Le menu horizontal',
+		'parents' 	=> 'Le menu',
 		'children'	=> 'Le sous-menu de la page parente'
 	];
-	
+
 	/**
 	 * Création
 	 */
@@ -73,10 +73,10 @@ class page extends common {
 		$this->setData([
 			'page',
 			$pageId,
-			[		
+			[
 				'typeMenu' => 'text',
 				'iconUrl' => '',
-                'disable' => false,								
+                'disable' => false,
 				'content' => 'Contenu de votre nouvelle page.',
 				'hideTitle' => false,
 				'breadCrumb' => false,
@@ -153,10 +153,10 @@ class page extends common {
 			]);
 		}
 		// Suppression
-		else {		
+		else {
 			// Met à jour le site map
-			$this->createSitemap();
-			// Effacer la page	
+			$this->createSitemap('all');
+			// Effacer la page
 			$this->deleteData(['page', $url[0]]);
 			$this->deleteData(['module', $url[0]]);
 			// Valeurs en sortie
@@ -167,7 +167,7 @@ class page extends common {
 			]);
 		}
 	}
-	
+
 
 	/**
 	 * Édition
@@ -183,12 +183,12 @@ class page extends common {
 		// La page existe
 		else {
 			// Soumission du formulaire
-			if($this->isPost()) {			
+			if($this->isPost()) {
 				$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID, true);
 				// un dossier existe du même nom (erreur en cas de redirection)
 				if (file_exists($pageId)) {
 					$pageId = uniqid($pageId);
-				}		
+				}
 				// Si l'id a changée
 				if ($pageId !== $this->getUrl(2)) {
 					// Incrémente le nouvel id de la page
@@ -239,7 +239,7 @@ class page extends common {
 					$hideTitle = $this->getInput('pageEditHideTitle', helper::FILTER_BOOLEAN);
 
 				} else {
-					// Une barre ne peut pas avoir de barres 
+					// Une barre ne peut pas avoir de barres
 					$barLeft = "";
 					$barRight = "";
 					// Une barre est masquée
@@ -260,10 +260,10 @@ class page extends common {
 				$this->setData([
 					'page',
 					$pageId,
-					[					
+					[
 						'typeMenu' => $this->getinput('pageTypeMenu'),
 						'iconUrl' => $this->getinput('pageIconUrl'),
-						'disable'=> $this->getinput('pageEditDisable', helper::FILTER_BOOLEAN), 						
+						'disable'=> $this->getinput('pageEditDisable', helper::FILTER_BOOLEAN),
 						'content' => (empty($this->getInput('pageEditContent', null)) ? '<p>&nbsp;</p>' : $this->getInput('pageEditContent', null)),
 						'hideTitle' => $hideTitle,
 						'breadCrumb' => $this->getInput('pageEditbreadCrumb', helper::FILTER_BOOLEAN),
@@ -337,8 +337,8 @@ class page extends common {
 					} else {
 						$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
 					}
-				}				
-			}			
+				}
+			}
 			self::$moduleIds = 	$moduleIds;
 			asort(self::$moduleIds);
 			self::$moduleIds = array_merge( ['' => 'Aucun'] , self::$moduleIds);
@@ -347,14 +347,14 @@ class page extends common {
 				if($parentPageId !== $this->getUrl(2)) {
 					self::$pagesNoParentId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
 				}
-			}	
+			}
 			// Pages barre latérales
 			foreach($this->getHierarchy(null,false,true) as $parentPageId => $childrenPageIds) {
 					if($parentPageId !== $this->getUrl(2) &&
 						$this->getData(['page', $parentPageId, 'block']) === 'bar') {
 						self::$pagesBarId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
 					}
-			}			
+			}
 			// Valeurs en sortie
 			$this->addOutput([
 				'title' => $this->getData(['page', $this->getUrl(2), 'title']),

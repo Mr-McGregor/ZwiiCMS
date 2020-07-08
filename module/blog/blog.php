@@ -46,14 +46,14 @@ class blog extends common {
 	];
 
 	public static $picturePositions = [
-		'left' => 'À gauche',		
+		'left' => 'À gauche',
 		'right' => 'À droite ',
 	];
 
 
 	public static $users = [];
 
-	const BLOG_VERSION = '2.01';
+	const BLOG_VERSION = '2.02';
 
 	/**
 	 * Édition
@@ -68,12 +68,14 @@ class blog extends common {
 			// Crée l'article
 			$this->setData(['module', $this->getUrl(0), $articleId, [
 				'closeComment' => $this->getInput('blogAddCloseComment', helper::FILTER_BOOLEAN),
-				'mailNotification'  => $this->getInput('blogEditMailNotification', helper::FILTER_BOOLEAN),
-				'groupNotification' => 	$this->getInput('blogEditGroupNotification', helper::FILTER_INT),		
+				'mailNotification'  => $this->getInput('blogAddMailNotification', helper::FILTER_BOOLEAN),
+				'groupNotification' => 	$this->getInput('blogAddGroupNotification', helper::FILTER_INT),
 				'comment' => [],
 				'content' => $this->getInput('blogAddContent', null),
 				'picture' => $this->getInput('blogAddPicture', helper::FILTER_STRING_SHORT, true),
-				'hidePicture' => $this->getInput('blogAddHidePicture', helper::FILTER_BOOLEAN),				
+				'hidePicture' => $this->getInput('blogAddHidePicture', helper::FILTER_BOOLEAN),
+				'pictureSize' => $this->getInput('blogAddPictureSize', helper::FILTER_STRING_SHORT),
+				'picturePosition' => $this->getInput('blogAddPicturePosition', helper::FILTER_STRING_SHORT),
 				'publishedOn' => $this->getInput('blogAddPublishedOn', helper::FILTER_DATETIME, true),
 				'state' => $this->getInput('blogAddState', helper::FILTER_BOOLEAN),
 				'title' => $this->getInput('blogAddTitle', helper::FILTER_STRING_SHORT, true),
@@ -126,7 +128,7 @@ class blog extends common {
 		for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 			// Met en forme le tableau
 			$comment = $comments[$commentIds[$i]];
-			self::$comments[] = [				
+			self::$comments[] = [
 				utf8_encode(strftime('%d %B %Y - %H:%M', $comment['createdOn'])),
 				$comment['content'],
 				$comment['userId'] ? $this->getData(['user', $comment['userId'], 'firstname']) . ' ' . $this->getData(['user', $comment['userId'], 'lastname']) : $comment['author'],
@@ -162,7 +164,7 @@ class blog extends common {
 				'redirect' => helper::baseUrl()  . $this->getUrl(0) . '/config',
 				'notification' => 'Action non autorisée'
 			]);
-		}	
+		}
 		// Suppression
 		else {
 			$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3)]);
@@ -184,7 +186,7 @@ class blog extends common {
 		// Pagination
 		$pagination = helper::pagination($articleIds, $this->getUrl(),$this->getData(['config','itemsperPage']));
 		// Liste des pages
-		self::$pages = $pagination['pages']; 
+		self::$pages = $pagination['pages'];
 		// Articles en fonction de la pagination
 		for($i = $pagination['first']; $i < $pagination['last']; $i++) {
 			// Met en forme le tableau
@@ -193,7 +195,7 @@ class blog extends common {
 				// date('d/m/Y H:i', $this->getData(['module', $this->getUrl(0), $articleIds[$i], 'publishedOn'])),
 				utf8_encode(strftime('%d %B %Y', $this->getData(['module', $this->getUrl(0), $articleIds[$i], 'publishedOn'])))
 				.' à '.
-				utf8_encode(strftime('%H:%M', $this->getData(['module', $this->getUrl(0), $articleIds[$i], 'publishedOn']))),				
+				utf8_encode(strftime('%H:%M', $this->getData(['module', $this->getUrl(0), $articleIds[$i], 'publishedOn']))),
 				self::$states[$this->getData(['module', $this->getUrl(0), $articleIds[$i], 'state'])],
 				template::button('blogConfigEdit' . $articleIds[$i], [
 					'href' => helper::baseUrl() . $this->getUrl(0) . '/edit/' . $articleIds[$i] . '/' . $_SESSION['csrf'],
@@ -230,7 +232,7 @@ class blog extends common {
 				'redirect' => helper::baseUrl()  . $this->getUrl(0) . '/config',
 				'notification' => 'Action non autorisée'
 			]);
-		}			
+		}
 		// Suppression
 		else {
 			$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
@@ -254,7 +256,7 @@ class blog extends common {
 				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
 				'notification' => 'Action  non autorisée'
 			]);
-		}			
+		}
 		// L'article n'existe pas
 		if($this->getData(['module', $this->getUrl(0), $this->getUrl(2)]) === null) {
 			// Valeurs en sortie
@@ -265,7 +267,7 @@ class blog extends common {
 		// L'article existe
 		else {
 			// Soumission du formulaire
-			if($this->isPost()) {	
+			if($this->isPost()) {
 				$articleId = $this->getInput('blogEditTitle', helper::FILTER_ID, true);
 				// Incrémente le nouvel id de l'article
 				if($articleId !== $this->getUrl(2)) {
@@ -354,18 +356,18 @@ class blog extends common {
 						'createdOn' => time(),
 						'userId' => $this->getInput('blogArticleUserId'),
 					]]);
-					
+
 					// Envoi d'une notification aux administrateurs
 					// Init tableau
 					$to = [];
-					// Liste des destinataires	
+					// Liste des destinataires
 					foreach($this->getData(['user']) as $userId => $user) {
 						if ($user['group'] >= $this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'groupNotification']) ) {
 							$to[] = $user['mail'];
 						}
 					}
-					// Envoi du mail $sent code d'erreur ou de réusssite
-					if ($this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'mailNotification']) === true) {						  
+					// Envoi du mail $sent code d'erreur ou de réussite
+					if ($this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'mailNotification']) === true) {
 						$sent = $this->sendMail(
 							$to,
 							'Nouveau commentaire',
@@ -379,7 +381,7 @@ class blog extends common {
 							//'notification' => 'Commentaire ajouté',
 							//'state' => true
 							'notification' => ($sent === true ? 'Commentaire ajouté et une notification envoyée' : 'Commentaire ajouté, erreur de notification : <br/>' . $sent),
-							'state' => ($sent === true ? true : null)												
+							'state' => ($sent === true ? true : null)
 						]);
 
 					} else {
@@ -387,10 +389,10 @@ class blog extends common {
 						$this->addOutput([
 							'redirect' => helper::baseUrl() . $this->getUrl() . '#comment',
 							'notification' => 'Commentaire ajouté',
-							'state' => true											
+							'state' => true
 						]);
 					}
-					
+
 				}
 				// Ids des commentaires par ordre de publication
 				$commentIds = array_keys(helper::arrayCollumn($this->getData(['module', $this->getUrl(0), $this->getUrl(1), 'comment']), 'createdOn', 'SORT_DESC'));

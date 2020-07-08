@@ -12,7 +12,7 @@
 
 
 /* Thème administration */
-@import url("core/layout/admin.css");
+@import url("site/data/admin.css");
 
 #bar,
 #site,
@@ -33,6 +33,7 @@ nav li ul {
 #themeShowAll,
 #themeBack,
 #themeManage,
+#themeAdmin,
 #themeAdvanced {
 	position: relative;
 	z-index: 11;

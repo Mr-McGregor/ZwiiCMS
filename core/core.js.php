@@ -52,7 +52,8 @@ core.colorVariants = function(rgba) {
 		"normal": "rgba(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")",
 		"darken": "rgba(" + Math.max(0, rgba[0] - 15) + "," + Math.max(0, rgba[1] - 15) + "," + Math.max(0, rgba[2] - 15) + "," + rgba[3] + ")",
 		"veryDarken": "rgba(" + Math.max(0, rgba[0] - 20) + "," + Math.max(0, rgba[1] - 20) + "," + Math.max(0, rgba[2] - 20) + "," + rgba[3] + ")",
-		"text": core.relativeLuminanceW3C(rgba) > .22 ? "inherit" : "white"
+		//"text": core.relativeLuminanceW3C(rgba) > .22 ? "inherit" : "white"
+		"text": core.relativeLuminanceW3C(rgba) > .22 ? "#222" : "#DDD"
 	};
 };
 
@@ -224,7 +225,7 @@ core.start = function() {
 		if(document.cookie.indexOf("ZWII_COOKIE_CONSENT") === -1) {
 			$("body").append(
 				$("<div>").attr("id", "cookieConsent").append(
-					$("<span>").text("En poursuivant votre navigation sur ce site, vous acceptez l'utilisation de cookies."),
+					$("<span>").text("En poursuivant votre navigation sur ce site, vous acceptez l'utilisation de cookies et de vos données de visite."),
 					$("<span>")
 						.attr("id", "cookieConsentConfirm")
 						.text("OK")
@@ -268,10 +269,10 @@ core.start = function() {
 		var fileName = inputFileHiddenDOM.val();
 		if(fileName === "") {
 			fileName = "Choisissez un fichier";
-			$(".inputFileDelete").addClass("disabled");
+			$(inputFileHiddenDOM).addClass("disabled");
 		}
 		else {
-			$(".inputFileDelete").removeClass("disabled");
+			$(inputFileHiddenDOM).removeClass("disabled");
 		}
 		inputFileHiddenDOM.parent().find(".inputFileLabel").text(fileName);
 	}).trigger("change");

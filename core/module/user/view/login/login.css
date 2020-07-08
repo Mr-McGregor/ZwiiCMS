@@ -12,9 +12,6 @@
  * @link http://zwiicms.com/
  */
 
-
-@import url("core/layout/admin.css");
-
-#site {
-    background-color: #fff !important;
-}
+/*
+@import url("site/data/admin.css");
+*/

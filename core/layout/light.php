@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<?php $layout->showMetaTitle(); ?>
 	<?php $layout->showMetaDescription(); ?>
-	<?php $layout->showMetaType(); ?>	
-	<?php $layout->showMetaImage(); ?>		
+	<?php $layout->showMetaType(); ?>
+	<?php $layout->showMetaImage(); ?>
 	<?php $layout->showFavicon(); ?>
 	<?php $layout->showVendor(); ?>
 	<?php $layout->showStyle(); ?>
