@@ -171,7 +171,7 @@ class theme extends common {
 		'body-second' => 'Après la bannière',
 		'site' => 'Dans le site',
 		'hide' => 'Caché'
-	];	
+	];
 	public static $menui18nPosition = [
 		'right' => '&Agrave; droite de la barre de menu',
 		'left' => '&Agrave; gauche de la barre de menu',

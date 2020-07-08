@@ -67,7 +67,7 @@ $( document ).ready(function() {
 
 	/**
      * Blocs dépliants
-	 * 
+	 *
 	 * Sauvegarder la position des blocs
      * true = bloc déplié
      */
@@ -76,7 +76,7 @@ $( document ).ready(function() {
         $(this).find(".zwiico-plus").toggle();
         $(this).find(".zwiico-minus").toggle();
         $(this).find(".blockContainer").slideToggle();
-        /* 
+        /*
         * Sauvegarder la position des blocs
         * true = bloc déplié
         */
