@@ -82,18 +82,6 @@ echo template::formOpen('pageEditForm');
 						]); ?>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col6">
-						<?php echo template::checkbox('pageHomePageId', true, 'Page d\'accueil du site', [
-								'checked' => $this->getData(['page', $this->getUrl(2), 'homePageId'])
-						]); ?>
-					</div>
-					<div class="col6">
-							<?php echo template::checkbox('pageEditHideTitle', true, 'Titre masqué', [
-								'checked' => $this->getData(['page', $this->getUrl(2), 'hideTitle'])
-							]); ?>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -188,6 +176,11 @@ echo template::formOpen('pageEditForm');
 					</div>
 					<div class="row">
 						<div class="col4">
+							<?php echo template::checkbox('pageHomePageId', true, 'Page d\'accueil du site', [
+									'checked' => $this->getData(['page', $this->getUrl(2), 'homePageId'])
+							]); ?>
+						</div>
+						<div class="col4">
 							<?php echo template::checkbox('pageEditDisable', true, 'Désactivée', [
 								'disabled' => (bool) ($this->getdata(['config','homePageId']) === $this->getUrl(2)) ? true : false,
 								'checked' => (bool) ($this->getdata(['config','homePageId']) === $this->getUrl(2)) ? false : $this->getData(['page', $this->getUrl(2), 'disable']),
@@ -199,7 +192,14 @@ echo template::formOpen('pageEditForm');
 								'checked' => $this->getData(['page', $this->getUrl(2), 'targetBlank'])
 							]); ?>
 						</div>
-						<div class="col4">
+					</div>
+					<div class="row">
+						<div class="col6">
+								<?php echo template::checkbox('pageEditHideTitle', true, 'Titre masqué', [
+									'checked' => $this->getData(['page', $this->getUrl(2), 'hideTitle'])
+								]); ?>
+						</div>
+						<div class="col6">
 							<?php echo template::checkbox('pageEditbreadCrumb', true, 'Fil d\'Ariane', [
 								'checked' => $this->getData(['page', $this->getUrl(2), 'breadCrumb']),
 								'help' => 'Affiche le nom de la page parente suivi du nom de la page, le titre ne doit pas être masqué.'
