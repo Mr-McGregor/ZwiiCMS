@@ -8,6 +8,74 @@
     - En mode déconnecté, la langue affichée est celle du navigateur ou choix de la langue dans la barre de menu.
     - Les drapeaux affichés dans le menu ne font pas référence à un pays mais à une langue, sont proposés des langues européennes et régionales nationales.
 
+## version 10.2.04
+- Modifications :
+    - Position de l'icône d'ouverture et de fermeture des blocs.
+
+## version 10.2.03
+- Corrections :
+    - Les entrées de menu disposent d'une classe par groupe de parent en lieu et place des ids.
+    - Edition du compte de l'utilisateur, empêcher le préremplissage de l'ancien mot de passe.
+    - Reformulation du mail de confirmation d'inscription.
+    - Champ de sélection de fichiers, suppression de la couleur des URL lors d'un survol
+- Modifications :
+    - Sécurisation des deux cookies d'authentification (options httpOnly et secure).
+    - La couleur du texte des headers avec un lien est celle des titres et non des liens.
+
+## version 10.2.02
+- Corrections :
+    - Problème d'affichage du gestionnaire de fichier sous Safari.
+    - Configuration, favicon impossibles à sélectionner.
+
+## version 10.2.01
+- Corrections :
+    - Optimisation et correction de l'algorithme de contrôle d'accès.
+    - Erreur des noms de champ barre des membres dans le pied de page.
+    - Génération de l'image tag, amélioration du code et du message d'erreur.
+    - Edition de page, erreur lors de la sélection d'une icône de menu.
+    - Problème lors de l'installation, impossibilité d'obtenir l'écran de configuration.
+
+## version 10.2.00
+- Mise à jour :
+    - jQuery v3.5.1
+- Nouveautés :
+    - Gestion des accès concurrents :
+        - deux utilisateurs ne peuvent accèder en modification à la même page du site ou de configuration
+        - la connexion d'un utilisateur sur un autre poste ou navigateur déconnecte la session précédente.
+        - sécurisation du login
+        - journalisation de l'utilisation du site
+    - Ecran de configuration et d'édition des pages, les blocs sont pliables et dépliables afin d'alléger l'occupation sur l'écran. Le statut des blocs (fermés ; ouverts) est persistante au cours de la session.
+- Modifications :
+    - Thème, les sélecteurs de couleur affiche la valeur RGBa d'une couleur différente de celle de la sélection.
+    - Thème de l'administration, amélioration du rendu.
+    - Image tag :  adaptations suite à la modification de l'API Google.
+    - Installation automatique d'une mise à jour en ligne : un nouvelle option de configuration permet de conserver
+    le fichier htaccess afin de préserver les modifications nécessaires à certains hébergeurs.
+    - Suppression de la barre de membre (membres simples) et déport des options dans le menu.
+    - Module Blog 2.02 : homogénéisation des interfaces.
+    - Module Gallery 2.26 : largeur proportionnelle des images.
+- Corrections :
+    - Configuration, favicon clair et sombre : le bouton d'effacement initialise les deux champs.
+    - Amélioration de l'adaptation aux thèmes sombres.
+    - Erreur bouton Retour lors de l'édition du compte par un membre simple ou un éditeur.
+
+## version 10.1.04
+- Correction :
+    - Warning après modification du thème du site.
+
+## version 10.1.03
+- Mise à jour :
+    - Responsive File Manager : chargement impossible de certaines images JPEG.
+
+## version 10.1.02
+- Corrections :
+    - free.fr : désactivation totale de la fonction de récupération de données en ligne (update, image tag, etc..)
+    - Image Tag absente : non régénérée au lancement de la configuration du site, image masquée dans si absente.
+
+## version 10.1.01
+- Correction :
+    - Extension image tag.
+
 ## version 10.1.00
 - Nouveautés :
     - Distinction entre le thème du site et celui de l'administration. Sauvegarde et restauration de l'un ou de  l'autre.

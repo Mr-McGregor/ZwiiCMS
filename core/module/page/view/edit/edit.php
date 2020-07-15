@@ -96,10 +96,14 @@ echo template::formOpen('pageEditForm');
 	<div class="row">
 		<div class="col12" id="pageEditBlockLayout">
 			<div class="block" id="layout">
-				<h4><?php
-				echo template::ico('plus','right');
-				echo template::ico('minus','right');
-				?>Mise en page</h4>
+				<h4>Mise en page
+					<div class="openClose">
+						<?php
+						echo template::ico('plus','right');
+						echo template::ico('minus','right');
+						?>
+					</div>
+				</h4>
 				<div class="blockContainer">
 					<div class="row">
 						<div class="col6">
@@ -149,10 +153,14 @@ echo template::formOpen('pageEditForm');
 	<div class="row">
 		<div class="col12"  id="pageEditMenu">
 			<div class="block" id="location">
-				<h4><?php
-				echo template::ico('plus','right');
-				echo template::ico('minus','right');
-				?>Emplacement dans le menu</h4>
+				<h4>Emplacement dans le menu
+					<div class="openClose">
+						<?php
+						echo template::ico('plus','right');
+						echo template::ico('minus','right');
+						?>
+					</div>
+				</h4>
 				<div class="blockContainer">
 					<div class="row">
 						<div class="col6">
@@ -174,6 +182,7 @@ echo template::formOpen('pageEditForm');
 							<?php endif; ?>
 						</div>
 					</div>
+
 					<div class="row">
 						<div class="col4">
 							<?php echo template::checkbox('pageHomePageId', true, 'Page d\'accueil du site', [
@@ -213,20 +222,23 @@ echo template::formOpen('pageEditForm');
 	<div class='row' id="pageEditAdvancedWrapper">
 		<div class="col12">
 			<div class="block" id="advanced">
-				<h4><?php
-				echo template::ico('plus','right');
-				echo template::ico('minus','right');
-				?>Options avancées d'emplacement</h4>
+				<h4>Options avancées d'emplacement
+					<div class="openClose">
+						<?php
+						echo template::ico('plus','right');
+						echo template::ico('minus','right');
+						?>
+					</div>
+				</h4>
 				<div class="blockContainer">
 					<div class="row">
 						<div class="col6">
-								<?php echo template::checkbox('pageEditHideMenuChildren', true, 'Masquer les pages enfants du menu', [
-									'checked' => $this->getData(['page', $this->getUrl(2), 'hideMenuChildren']),
-									'help' => 'Les pages enfants ne sont pas visibles dans le menu horizontal, elles se seront dans un menu vertical. La page doit intégrer un lien vers l\'une des pages enfants sinon elles ne seront pas accessibles.'
+								<?php echo template::checkbox('pageEditHideMenuChildren', true, 'Masquer les pages enfants dans le menu horizontal', [
+									'checked' => $this->getData(['page', $this->getUrl(2), 'hideMenuChildren'])
 								]); ?>
 						</div>
 						<div class="col6">
-								<?php echo template::checkbox('pageEditHideMenuSide', true, 'Masquer la page dans le menu vertical', [
+								<?php echo template::checkbox('pageEditHideMenuSide', true, 'Masquer la page et les pages enfants dans le menu d\'une barre latérale' , [
 									'checked' => $this->getData(['page', $this->getUrl(2), 'hideMenuSide']),
 									'help' => 'La page est affichée dans un menu horizontal mais pas dans le menu vertical d\'une barre latérale.'
 								]); ?>
@@ -239,10 +251,14 @@ echo template::formOpen('pageEditForm');
 	<div class='row' id="pageEditSeoWrapper">
 		<div class="col12">
 			<div class="block" id="ceo">
-				<h4><?php
-				echo template::ico('plus','right');
-				echo template::ico('minus','right');
-				?>Permission et référencement</h4>
+				<h4>Permission et référencement
+				<div class="openClose">
+						<?php
+						echo template::ico('plus','right');
+						echo template::ico('minus','right');
+						?>
+					</div>
+				</h4>
 				<div class="blockContainer">
 					<div class="row">
 						<div class='col6'>

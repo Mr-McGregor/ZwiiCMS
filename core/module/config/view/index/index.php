@@ -195,10 +195,14 @@
 <div class="row">
 	<div class="col12">
 		<div class="block" id="social">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			 ?>Réseaux sociaux</h4>
+			<h4>Réseaux sociaux
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			 <div class="blockContainer">
 				<div class="row">
 					<div class="col3">
@@ -267,10 +271,14 @@
 <div class="row">
 	<div class="col12">
 		<div class="block" id="ceo">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			 ?>Référencement</h4>
+			<h4>Référencement
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			 <div class="blockContainer">
 				<div class="row">
 					<div class="col4 offset1">
@@ -310,10 +318,14 @@
 <div class="row">
 	<div class="col12">
 		<div class="block" id="network">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			 ?>Paramètres réseaux</h4>
+			<h4>Réseau
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			<div class="blockContainer">
 				<div class="row">
 					<div class="col2">
@@ -344,10 +356,14 @@
 <div class="row">
 	<div class="col12">
 		<div class="block" id="smtp">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			?>Paramètres de messagerie SMTP</h4>
+			<h4>Messagerie SMTP
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			<div class="blockContainer">
 				<div class="row">
 					<div class="col12">
@@ -411,10 +427,14 @@
 <div class="row">
 	<div class="col12">
 		<div class="block" id="login">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			?>Sécurité de la connexion</h4>
+			<h4>Sécurité de la connexion
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			<div class="blockContainer">
 				<div class="row">
 					<div class="col3">
@@ -430,7 +450,7 @@
 						]); ?>
 					</div>
 					<div class="col3 verticalAlignBottom">
-						<label id="helpBlacklist">Blocage des comptes inconnus
+						<label id="helpBlacklist">Comptes inexistants
 							<?php echo template::help(
 							'La liste noire énumère les tentatives de connexion à partir de comptes inexistants. Sont stockés : la date, l\'heure, le nom du compte et l\'IP.
 							Après le nombre de tentatives autorisées, l\'IP et le compte sont bloqués.');
@@ -458,10 +478,14 @@
 <div class="row">
 	<div class="col12">
 		<div class="block" id="logs">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			?>Journalisation</h4>
+			<h4>Journalisation
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			<div class="blockContainer">
 				<div class="row">
 					<div class="col4 verticalAlignBottom">
@@ -492,10 +516,14 @@
 <div class="row">
 	<div class="col12">
 		<div class="block" id="script">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			?>Options de script</h4>
+			<h4>Scripts
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			<div class="blockContainer">
 				<div class="row">
 					<div class="col3">
@@ -528,10 +556,14 @@
 <div class="row">
 	<div class="col12" >
 		<div class="block" id="system">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			?>Versions système</h4>
+			<h4>Système
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
 			<div class="blockContainer">
 				<div class="row">
 					<div  class="col2">
