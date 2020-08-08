@@ -139,48 +139,78 @@
             <h4>Configuration</h4>
             <div class="row">
                 <div class="col4">
-
                     <?php $footerBlockPosition =  is_null($this->getData(['theme', 'footer', 'template'])) ? $module::$footerblocks[3] : $module::$footerblocks [$this->getData(['theme', 'footer', 'template'])] ;?>
                         <?php echo template::select('themeFooterTemplate', $module::$footerTemplate, [
                                 'label' => 'Disposition',
                                 'selected' => is_null($this->getData(['theme', 'footer', 'template'])) ? 4 : $this->getData(['theme', 'footer', 'template'])
                             ]); ?>
-                    </div>
-                    <div class="col4">
-                        <?php echo template::select('themeFooterPosition', $module::$footerPositions, [
-                                'label' => 'Position',
-                                'selected' => $this->getData(['theme', 'footer', 'position'])
-                            ]); ?>
-                    </div>
-                    <div class="col4">
-                        <?php echo template::select('themeFooterHeight', $module::$footerHeights, [
-                                'label' => 'Marges verticales',
-                                'selected' => $this->getData(['theme', 'footer', 'height'])
-                            ]); ?>
-                    </div>
                 </div>
-                <div class="row">
-                    <div class="col4">
-                        <p><strong>Contenu personnalisé</strong></p>
-                        <?php echo template::select('themeFooterTextPosition', $footerBlockPosition, [
-                                'label' => 'Emplacement',
-                                'selected' => $this->getData(['theme', 'footer', 'textPosition']),
-                                'class' => 'themeFooterContent'
-                            ]); ?>
-                        <?php echo template::select('themeFooterTextAlign', $module::$aligns, [
-                                'label' => 'Alignement',
-                                'selected' => $this->getData(['theme', 'footer', 'textAlign'])
+                <div class="col4">
+                    <?php echo template::select('themeFooterPosition', $module::$footerPositions, [
+                            'label' => 'Position',
+                            'selected' => $this->getData(['theme', 'footer', 'position'])
+                        ]); ?>
+                </div>
+                <div class="col4">
+                    <?php echo template::select('themeFooterHeight', $module::$footerHeights, [
+                            'label' => 'Marges verticales',
+                            'selected' => $this->getData(['theme', 'footer', 'height'])
+                        ]); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col4">
+                    <p><strong>Contenu personnalisé</strong></p>
+                    <?php echo template::select('themeFooterTextPosition', $footerBlockPosition, [
+                            'label' => 'Emplacement',
+                            'selected' => $this->getData(['theme', 'footer', 'textPosition']),
+                            'class' => 'themeFooterContent'
+                        ]); ?>
+                    <?php echo template::select('themeFooterTextAlign', $module::$aligns, [
+                            'label' => 'Alignement',
+                            'selected' => $this->getData(['theme', 'footer', 'textAlign'])
+                        ]); ?>
+                </div>
+                <div class="col4">
+                    <p><strong>Réseaux sociaux</strong></p>
+                    <?php echo template::select('themeFooterSocialsPosition', $footerBlockPosition, [
+                            'label' => 'Emplacement',
+                            'selected' => $this->getData(['theme', 'footer', 'socialsPosition']),
+                            'class' => 'themeFooterContent'
+                        ]); ?>
+                    <?php echo template::select('themeFooterSocialsAlign', $module::$aligns, [
+                            'label' => 'Alignement',
+                            'selected' => $this->getData(['theme', 'footer', 'socialsAlign'])
+                        ]); ?>
+                </div>
+                <div class="col4">
+                    <p><strong>Informations</strong></p>
+                    <?php echo template::select('themeFooterCopyrightPosition', $footerBlockPosition, [
+                            'label' => 'Emplacement',
+                            'selected' => $this->getData(['theme', 'footer', 'copyrightPosition']),
+                            'class' => 'themeFooterContent'
+                        ]); ?>
+                    <?php echo template::select('themeFooterCopyrightAlign', $module::$aligns, [
+                            'label' => 'Alignement',
+                            'selected' => $this->getData(['theme', 'footer', 'copyrightAlign'])
+                        ]); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col6">
+                    <div id="themeFooterPositionOptions">
+                        <?php echo template::checkbox('themeFooterMargin', true, 'Alignement avec le contenu', [
+                                'checked' => $this->getData(['theme', 'footer', 'margin'])
                             ]); ?>
                     </div>
                 </div>
                 <div class="col6">
                     <div id="themeFooterPositionFixed" class="displayNone">
                         <?php echo template::checkbox('themeFooterFixed', true, 'Pied de page fixe', [
-							'checked' => $this->getData(['theme', 'footer', 'fixed'])
-						]); ?>
+                            'checked' => $this->getData(['theme', 'footer', 'fixed'])
+                        ]); ?>
                     </div>
                 </div>
-                </div> 
             </div>
         </div>
     </div>
