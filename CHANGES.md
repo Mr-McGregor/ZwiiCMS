@@ -7,6 +7,12 @@
     - Le changement de la langue courante dans l'interface d'administration ainsi que dans le menu utilisateur.
     - En mode déconnecté, la langue affichée est celle du navigateur ou choix de la langue dans la barre de menu.
     - Les drapeaux affichés dans le menu ne font pas référence à un pays mais à une langue, sont proposés des langues européennes et régionales nationales.
+
+## version 10.2.06
+- Corrections :
+    - Anticipation de la dépréciation de l'option de cookie samesite=none.
+    - Warning : absence de fichier map dans le thème TinyMCE lightgray
+
 ## version 10.2.05
 - Correction :
     - Champ date non affiché sous Chrome.
