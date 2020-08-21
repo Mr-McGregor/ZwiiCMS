@@ -33,7 +33,7 @@ class form extends common {
 
 	public static $pagination;
 
-	const FORM_VERSION = '2.3';
+	const FORM_VERSION = '2.4';
 
 	// Objets
 	const TYPE_MAIL = 'mail';
@@ -388,7 +388,10 @@ class form extends common {
 			$this->addOutput([
 				'notification' => ($sent === true ? 'Formulaire soumis' : $sent),
 				'redirect' => $redirect ? helper::baseUrl() . $redirect : '',
-				'state' => ($sent === true ? true : null)
+				'state' => ($sent === true ? true : null),
+				'vendor' => [
+					'flatpickr'
+				],
 			]);
 		}
 		// Valeurs en sortie
@@ -396,6 +399,9 @@ class form extends common {
 			'showBarEditButton' => true,
 			'showPageContent' => true,
 			'view' => 'index',
+			'vendor' => [
+				'flatpickr'
+			],
 		]);
 	}
 }
