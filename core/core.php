@@ -39,7 +39,7 @@ class common {
 	const ACCESS_TIMER = 1800;
 
 	// Numéro de version
-	const ZWII_VERSION = '11.0.171.dev';
+	const ZWII_VERSION = '11.0.172.dev';
 	const ZWII_UPDATE_CHANNEL = "v11";
 
 	public static $actions = [];
@@ -611,7 +611,7 @@ class common {
 
 	/**
 	 * Retourne l'Id de la homePage de la langue  courante
-	 * @return string ide la page
+	 * @return string id la page
 	 */
 	public function getHomePageId () {
 		foreach($this->getHierarchy(null, false, false) as $parentPageId => $childrenPageIds) {

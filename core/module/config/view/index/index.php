@@ -31,21 +31,7 @@
 		<div class="block">
 			<h4>Informations générales</h4>
 			<div class="row">
-				<div class="col4">
-				<?php
-					$pages = $this->getData(['page']);
-					foreach($pages as $page => $pageId) {
-						if ($this->getData(['page',$page,'block']) === 'bar' ||
-						$this->getData(['page',$page,'disable']) === true) {
-							unset($pages[$page]);
-						}
-					}
-					echo template::select('configHomePageId', helper::arrayCollumn($pages, 'title', 'SORT_ASC'), [
-					'label' => 'Page d\'accueil',
-					'selected' =>$this->getData(['config', 'homePageId'])
-					]); ?>
-				</div>
-				<div class="col8">
+				<div class="col12">
 					<?php echo template::text('configTitle', [
 						'label' => 'Titre du site',
 						'value' => $this->getData(['config', 'title']),
