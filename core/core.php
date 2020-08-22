@@ -2404,8 +2404,6 @@ class layout extends common {
 		 	$this->getData(['config','googTransLogo']) === true) {
 			echo '<div id="googTransLogo"><a href="//policies.google.com/terms#toc-content" data-lity><img src="core/module/i18n/ressource/googtrans.png" /></a></div>';
 		 }
-
-		echo $this->core->output['content'];
 	}
 
 
