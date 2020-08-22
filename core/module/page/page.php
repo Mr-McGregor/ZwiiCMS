@@ -34,12 +34,13 @@ class page extends common {
 		'blog' 			=> 'Blog',
 		'form' 			=> 'Formulaire',
 		'gallery' 		=> 'Galerie',
-		'redirection' 	=> 'Redirection'
+		'redirection' 	=> 'Redirection',
+		'search'        => 'Recherche'
 	];
 	public static $typeMenu = [
 		'text' => 'Texte',
 		'icon' => 'Icône',
-		'icontitle' => 'Icône et bulle'
+		'icontitle' => 'Icône avec bulle de texte'
 	];
 	// Position du module
 	public static $modulePosition = [

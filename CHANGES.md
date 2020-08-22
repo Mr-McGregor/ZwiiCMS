@@ -8,6 +8,23 @@
     - En mode déconnecté, la langue affichée est celle du navigateur ou choix de la langue dans la barre de menu.
     - Les drapeaux affichés dans le menu ne font pas référence à un pays mais à une langue, sont proposés des langues européennes et régionales nationales.
     
+## version 10.3.00
+- Corrections :
+    - Bloquage de l'incrémentation de l'id de page lorsque deux pages ont le même nom.
+    - Login : l'option "Se souvenir de moi" est fonctionnelle.
+    - Menu : déplacement de la classe "active".
+    - Le titre dans la configuration du module non affiché si le titre de la page est masqué.
+- Modifications :
+    - Module recherche :
+        - La recherche dans le site devient un module externe plutôt qu'un module interne ;
+        - Diverses corrections optimisations permettant une recherche à l'aide de plusieurs mot-clés.
+    - Module galerie :
+        - Les données du thème de galerie sont désormais stockés de manière unique, un seul thème par site pour toutes les galeries d'un même site.
+    - Configuration du site :
+        - Pages 403 (accès interdit) et 404 (page introuvable) personnalisables
+        - Sauvegarde du site dans une archive : animation d'attente avec message de confirmation ou d'erreur. ; le nom de l'archive prend le nom du sous-domaine s'il existe.
+    - Captcha :  addition présentée en lettres sous la forme d'images, réponse en chiffres ; correction du nom de la fonction (capcha en captcha).
+
 ## version 10.2.08
 - Correction : 
     - Bug pageId, régression corrigée.

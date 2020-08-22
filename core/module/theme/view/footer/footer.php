@@ -61,7 +61,6 @@
                                 'checked' =>  $this->getData(['theme', 'footer', 'displayMemberBar']),
                                 'help' => 'Affiche les icônes de gestion du compte et de déconnexion. Uniquement pour les membres simples une fois connectés.'
                         ]); ?>
-                    </div>
                 </div>
                 <div class="col6">
                     <div class="row">
@@ -136,7 +135,7 @@
 <div class="row">
     <div class="col12">
         <div class="block">
-            <h4>Configuration</h4>
+            <h4>Configuration des blocs</h4>
             <div class="row">
                 <div class="col4">
                     <?php $footerBlockPosition =  is_null($this->getData(['theme', 'footer', 'template'])) ? $module::$footerblocks[3] : $module::$footerblocks [$this->getData(['theme', 'footer', 'template'])] ;?>
@@ -214,5 +213,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <?php echo template::formClose(); ?>
