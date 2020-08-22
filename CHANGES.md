@@ -7,6 +7,14 @@
     - Le changement de la langue courante dans l'interface d'administration ainsi que dans le menu utilisateur.
     - En mode déconnecté, la langue affichée est celle du navigateur ou choix de la langue dans la barre de menu.
     - Les drapeaux affichés dans le menu ne font pas référence à un pays mais à une langue, sont proposés des langues européennes et régionales nationales.
+    
+## version 10.2.08
+- Correction : 
+    - Bug pageId, régression corrigée.
+
+## version 10.2.07
+- Correction :
+    - Défaut de chargement de flatpickr dans le module formulaire qui passe en version 2.4
 
 ## version 10.2.06
 - Corrections :
