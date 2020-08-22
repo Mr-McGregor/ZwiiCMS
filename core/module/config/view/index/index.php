@@ -142,26 +142,6 @@
 </div>
 <div class="row">
 	<div class="col12">
-		<div class="block" id="i18n">
-			<h4><?php
-			echo template::ico('plus','right');
-			echo template::ico('minus','right');
-			 ?>Gestion des langues</h4>
-			 <div class="blockContainer">
-				<div class="row">
-					<div class="col6">
-						<?php echo template::checkbox('configdisablei18n', true, 'Désactivation de la gestion des langues', [
-							'checked' => (bool) (sizeof($this->i18nInstalled() ) === 1) ? $this->getData(['config', 'disablei18n']) : false,
-							'disabled' => (bool) (sizeof($this->i18nInstalled() ) === 1) ? false : true,
-							'help' => 'Cette option n\'est pas modifiable  après l\'installation d\'une langue.'
-						]); ?>
-					</div>
-					<div class="col6">
-						<?php echo template::checkbox('configdGoogTransLogo', true, 'Afficher les conditions Google Traduction', [
-							'checked' => $this->getData(['config', 'googTransLogo']),
-							'help' => 'Les conditions sont affichées en bas des pages traduites automatiquement. Si vous ne traduisez pas vous-même vos pages, cette option est vivement recommandée.'
-						]); ?>
-					</div>
 		<div class="block">
 			<h4>Pages spéciales</h4>
 			<div class="row">
@@ -211,6 +191,37 @@
 							'selected' =>$this->getData(['config', 'page404']),
 							'help' => 'Une page 404 ne doit pas apparaître dans l\'arborescence du menu. Créez et éditez une page orpheline.'
 						]); ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col12">
+		<div class="block" id="i18n">
+		<h4>Gestion des langues
+				<div class="openClose">
+					<?php
+					echo template::ico('plus','right');
+					echo template::ico('minus','right');
+					?>
+				</div>
+			</h4>
+			 <div class="blockContainer">
+				<div class="row">
+					<div class="col6">
+						<?php echo template::checkbox('configdisablei18n', true, 'Désactivation de la gestion des langues', [
+							'checked' => (bool) (sizeof($this->i18nInstalled() ) === 1) ? $this->getData(['config', 'disablei18n']) : false,
+							'disabled' => (bool) (sizeof($this->i18nInstalled() ) === 1) ? false : true,
+							'help' => 'Cette option n\'est pas modifiable  après l\'installation d\'une langue.'
+						]); ?>
+					</div>
+					<div class="col6">
+						<?php echo template::checkbox('configdGoogTransLogo', true, 'Afficher les conditions Google Traduction', [
+							'checked' => $this->getData(['config', 'googTransLogo']),
+							'help' => 'Les conditions sont affichées en bas des pages traduites automatiquement. Si vous ne traduisez pas vous-même vos pages, cette option est vivement recommandée.'
+						]); ?>
+					</div>
 				</div>
 			</div>
 		</div>
