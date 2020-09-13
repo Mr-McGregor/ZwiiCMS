@@ -50,7 +50,7 @@ ul #menuSide  {
 /* Block menu à droite */
 #menuSideRight {
 }
-/* Block menu à gauche */
+/* Block menu à gauchle */
 #menuSideLeft {
 }
 
@@ -167,12 +167,13 @@ textarea:hover {
 }
 
 .newsTitle {
-    /*background-color: grey;*/
 }
 
 .newsContent {
 }
 
+.newsDate {
+}
+
 .newsSignature {
-    color: 	#404040;
 }

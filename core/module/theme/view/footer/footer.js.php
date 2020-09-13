@@ -22,10 +22,8 @@ $("input, select").on("change", function() {
 	// Couleurs du pied de page
 	var colors = core.colorVariants($("#themeFooterBackgroundColor").val());
 	var textColor = $("#themeFooterTextColor").val();
-	var css = "footer {background-color:" + colors.normal + ";color:" + textColor + "}";	
+	var css = "footer{background-color:" + colors.normal + ";color:" + textColor + "}";
 	css += "footer a{color:" + textColor + "}";
-	// Couleur de l'éditeur
-	css += ".editorWysiwyg{background-color:" + colors.normal + " !important; color:" + textColor + " !important;}";
 	// Hauteur du pied de page
 	//css += "#footersiteLeft, #footersiteCenter, #footersiteRight, #footerbodyLeft, #footerbodyCenter, #footerbodyRight {margin:" + $("#themeFooterHeight").val() + " 0}";
 	css += "footer #footersite > div{margin:" + $("#themeFooterHeight").val() + " 0}";		

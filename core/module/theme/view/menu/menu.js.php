@@ -13,7 +13,7 @@
 $(document).ready(function(){
 	// Menu fixe à afficher
 	if($("#themeMenuPosition").val() === 'top') {
-		$("#themeMenuPositionFixed").slideDown();
+		$("#themeMenuPositionFixed").slideDown();	
 	}
 	else {
 		$("#themeMenuPositionFixed").slideUp(function() {
@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 	// Option de menu à afficher
 	if($("#themeMenuPosition").val() === 'site-first' || $(this).val() === 'site-second') {
-		$("#themeMenuPositionOptions").slideDown();
+		$("#themeMenuPositionOptions").slideDown();	
 	}
 	else {
 		$("#themeMenuPositionOptions").slideUp(function() {
@@ -51,10 +51,10 @@ $("input, select").on("change", function() {
 	css += ".flag {height: " + $("#themeMenuFontSize").val() + "}";
 	css += "#i18nBar {float: " + $("#themeMenui18nPosition").val() + "}";
 	if ($("#themeMenuActiveColorAuto").is(':checked')) {
-		css += "nav a:hover{background-color:" + colors.veryDarken + ";color:" + $('#themeMenuActiveTextColor').val() + ";}";
+		css += "nav a.active{background-color:" + colors.veryDarken + "}";
 	} else {
-		css += "nav a:hover{background-color:" +  $("#themeMenuActiveColor").val() +  ";color:" + $('#themeMenuActiveTextColor').val() + ";}";
-	}
+		css += "nav a.active{background-color:" +  $("#themeMenuActiveColor").val() +  "}";
+	}	
 	// Taille, hauteur, épaisseur et capitalisation de caractères du menu
 	css += "#toggle span,#menu a{padding:" + $("#themeMenuHeight").val() + ";font-family:'" + menuFont.replace(/\+/g, " ")  + "',sans-serif;font-weight:" + $("#themeMenuFontWeight").val() + ";font-size:" + $("#themeMenuFontSize").val() + ";text-transform:" + $("#themeMenuTextTransform").val() + "}";
 	// Alignement du menu
@@ -109,7 +109,7 @@ $("input, select").on("change", function() {
 			$("#menu").removeClass('container-large');
 			$("nav").removeAttr('id');
 			$("#menu").addClass('container');
-			break;
+			break;			
 		case 'body-second':
 			if(<?php echo json_encode($this->getData(['theme', 'header', 'position']) === 'body'); ?>) {
 				$("nav").show().insertAfter("header");
@@ -127,7 +127,7 @@ $("input, select").on("change", function() {
 			break;
 		case 'site':
 			$("nav").show().prependTo("#site");
-			break;
+			break;			
 	}
 });
 //
@@ -143,8 +143,9 @@ $("#themeMenuLoginLink").on("change", function() {
 
 // Affiche / Cache les options de la position
 $("#themeMenuPosition").on("change", function() {
+	console.log($("#themeMenuPosition").val());
 	if($(this).val() === 'site-first' || $(this).val() === 'site-second') {
-		$("#themeMenuPositionOptions").slideDown();
+		$("#themeMenuPositionOptions").slideDown();	
 	}
 	else {
 		$("#themeMenuPositionOptions").slideUp(function() {
@@ -156,7 +157,7 @@ $("#themeMenuPosition").on("change", function() {
 // Affiche / Cache les options du menu fixe
 $("#themeMenuPosition").on("change", function() {
 	if($(this).val() === 'top') {
-		$("#themeMenuPositionFixed").slideDown();
+		$("#themeMenuPositionFixed").slideDown();	
 	}
 	else {
 		$("#themeMenuPositionFixed").slideUp(function() {
@@ -169,7 +170,7 @@ $("#themeMenuPosition").on("change", function() {
 $("#themeMenuActiveColorAuto").on("change", function() {
 	if ($(this).is(':checked') ) {
 		$("#themeMenuActiveColorWrapper").slideUp();
-	} else {
+	} else {			
 		$("#themeMenuActiveColorWrapper").slideDown();
 	}
 }).trigger("change");

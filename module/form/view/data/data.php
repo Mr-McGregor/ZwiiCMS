@@ -17,6 +17,7 @@
 	</div>
 	<div class="col2">
 	<?php echo template::button('formDataBack', [
+			'class' => 'buttonBlue',
 			'href' => helper::baseUrl() . $this->getUrl(0) . '/export2csv' . '/' . $_SESSION['csrf'],
 			'ico' => 'download',			
 			'value' => 'Export CSV'

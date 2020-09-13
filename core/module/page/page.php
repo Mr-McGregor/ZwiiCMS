@@ -26,21 +26,13 @@ class page extends common {
 	];
 	public static $pagesBarId = [
 		'' => 'Aucune'
-	];
+	];	
 	public static $moduleIds = [];
-	// Nom des modules
-	public static $moduleNames = [
-		'news'			=> 'Nouvelles',
-		'blog' 			=> 'Blog',
-		'form' 			=> 'Formulaire',
-		'gallery' 		=> 'Galerie',
-		'redirection' 	=> 'Redirection',
-		'search'        => 'Recherche'
-	];
+
 	public static $typeMenu = [
 		'text' => 'Texte',
 		'icon' => 'Icône',
-		'icontitle' => 'Icône avec bulle de texte'
+		'icontitle' => 'Icône et bulle'
 	];
 	// Position du module
 	public static $modulePosition = [
@@ -61,10 +53,10 @@ class page extends common {
 	];
 	public static $displayMenu = [
 		'none'	=> 'Aucun',
-		'parents' 	=> 'Le menu',
+		'parents' 	=> 'Le menu horizontal',
 		'children'	=> 'Le sous-menu de la page parente'
 	];
-
+	
 	/**
 	 * Création
 	 */
@@ -74,10 +66,10 @@ class page extends common {
 		$this->setData([
 			'page',
 			$pageId,
-			[
+			[		
 				'typeMenu' => 'text',
 				'iconUrl' => '',
-                'disable' => false,
+                'disable' => false,								
 				'content' => 'Contenu de votre nouvelle page.',
 				'hideTitle' => false,
 				'breadCrumb' => false,
@@ -89,6 +81,7 @@ class page extends common {
 				'position' => 0,
 				'group' => self::GROUP_VISITOR,
 				'targetBlank' => false,
+				'targetLity' => false,
 				'title' => $pageTitle,
 				'block' => '12',
 				'barLeft' => '',
@@ -154,10 +147,10 @@ class page extends common {
 			]);
 		}
 		// Suppression
-		else {
+		else {		
 			// Met à jour le site map
-			$this->createSitemap('all');
-			// Effacer la page
+			$this->createSitemap();
+			// Effacer la page	
 			$this->deleteData(['page', $url[0]]);
 			$this->deleteData(['module', $url[0]]);
 			// Valeurs en sortie
@@ -168,7 +161,7 @@ class page extends common {
 			]);
 		}
 	}
-
+	
 
 	/**
 	 * Édition
@@ -184,17 +177,12 @@ class page extends common {
 		// La page existe
 		else {
 			// Soumission du formulaire
-			if($this->isPost()) {
-				// Génére l'ID si le titre de la page a changé
-				if ( $this->getInput('pageEditTitle') !== $this->getData(['page',$this->getUrl(2),'title']) ) {
-					$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID, true);
-				} else {
-					$pageId = $this->getUrl(2);
-				}
+			if($this->isPost()) {			
+				$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID, true);
 				// un dossier existe du même nom (erreur en cas de redirection)
 				if (file_exists($pageId)) {
-					$pageId = uniqid($pageId);
-				}
+					$pageId = uniqid($pageId . '-');
+				}		
 				// Si l'id a changée
 				if ($pageId !== $this->getUrl(2)) {
 					// Incrémente le nouvel id de la page
@@ -245,28 +233,31 @@ class page extends common {
 					$hideTitle = $this->getInput('pageEditHideTitle', helper::FILTER_BOOLEAN);
 
 				} else {
-					// Une barre ne peut pas avoir de barres
+					// Une barre ne peut pas avoir de barres 
 					$barLeft = "";
 					$barRight = "";
 					// Une barre est masquée
 					$position = 0;
 					$hideTitle = true;
 				}
+				// Contrôle de la HomePage
 
 				// Gestion de la Page d'accueil
-				if ($this->getinput('pageHomePageId', helper::FILTER_BOOLEAN) === true  && 
-					$this->getHomePageId() === $this->getUrl(0)) {
-					// Effacer l'ancienne homepage
+				if ($this->getinput('pageHomePageId', helper::FILTER_BOOLEAN) === true ) {
+					// Effacer l'ancienne hompage 
 					$this->setData(['page',$this->getHomePageId(),'homePageId',false]);
-				}
+					// Positionner la nouvelle homepage
+					$this->setData(['page',$pageId,'homePageId',true]);
+				} 
+
 				// Modifie la page ou en crée une nouvelle si l'id a changé
 				$this->setData([
 					'page',
 					$pageId,
-					[
+					[					
 						'typeMenu' => $this->getinput('pageTypeMenu'),
 						'iconUrl' => $this->getinput('pageIconUrl'),
-						'disable'=> $this->getinput('pageEditDisable', helper::FILTER_BOOLEAN),
+						'disable'=> $this->getinput('pageEditDisable', helper::FILTER_BOOLEAN), 						
 						'content' => (empty($this->getInput('pageEditContent', null)) ? '<p>&nbsp;</p>' : $this->getInput('pageEditContent', null)),
 						'hideTitle' => $hideTitle,
 						'breadCrumb' => $this->getInput('pageEditbreadCrumb', helper::FILTER_BOOLEAN),
@@ -278,6 +269,7 @@ class page extends common {
 						'position' => $position,
 						'group' => $this->getinput('pageEditBlock') !== 'bar' ? $this->getInput('pageEditGroup', helper::FILTER_INT) : 0,
 						'targetBlank' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN),
+						'targetLity' => $this->getInput('pageEditTargetBlank', helper::FILTER_BOOLEAN) === true ? false : $this->getInput('pageEditTargetLity', helper::FILTER_BOOLEAN),						
 						'title' => $this->getInput('pageEditTitle', helper::FILTER_STRING_SHORT),
 						'block' => $this->getinput('pageEditBlock'),
 						'barLeft' => $barLeft,
@@ -288,9 +280,9 @@ class page extends common {
 						'hideMenuChildren' => $this->getinput('pageEditHideMenuChildren', helper::FILTER_BOOLEAN),
 						'homePageId' => $this->getinput('pageHomePageId', helper::FILTER_BOOLEAN)
 					]
-				]);
+				]);				
 				// Aucune homepage, sélection par défaut
-				 $this->getHomePageId($this->getinput('pageHomePageId', helper::FILTER_BOOLEAN));
+				$this->getHomePageId();
 				// Barre renommée : changement le nom de la barre dans les pages mères
 				if ($this->getinput('pageEditBlock') === 'bar') {
 					foreach ($this->getHierarchy() as $eachPageId=>$parentId) {
@@ -331,33 +323,29 @@ class page extends common {
 				}
 			}
 			// Liste des modules
-			$moduleIds = [];
+			$moduleIds = [
+				'' => 'Aucun'
+			];
 			$iterator = new DirectoryIterator('module/');
 			foreach($iterator as $fileInfos) {
 				if(is_file($fileInfos->getPathname() . '/' . $fileInfos->getFilename() . '.php')) {
-					if (array_key_exists($fileInfos->getBasename(),self::$moduleNames)) {
-						$moduleIds[$fileInfos->getBasename()] = self::$moduleNames[$fileInfos->getBasename()];
-					} else {
-						$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
-					}
+					$moduleIds[$fileInfos->getBasename()] = ucfirst($fileInfos->getBasename());
 				}
 			}
-			self::$moduleIds = 	$moduleIds;
-			asort(self::$moduleIds);
-			self::$moduleIds = array_merge( ['' => 'Aucun'] , self::$moduleIds);
+			self::$moduleIds = $moduleIds;
 			// Pages sans parent
 			foreach($this->getHierarchy() as $parentPageId => $childrenPageIds) {
 				if($parentPageId !== $this->getUrl(2)) {
 					self::$pagesNoParentId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
 				}
-			}
+			}	
 			// Pages barre latérales
 			foreach($this->getHierarchy(null,false,true) as $parentPageId => $childrenPageIds) {
 					if($parentPageId !== $this->getUrl(2) &&
 						$this->getData(['page', $parentPageId, 'block']) === 'bar') {
 						self::$pagesBarId[$parentPageId] = $this->getData(['page', $parentPageId, 'title']);
 					}
-			}
+			}			
 			// Valeurs en sortie
 			$this->addOutput([
 				'title' => $this->getData(['page', $this->getUrl(2), 'title']),

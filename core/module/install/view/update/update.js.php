@@ -61,3 +61,10 @@ function step(i, data) {
 	});
 }
 $(window).on("load", step(1, null));
+
+/** 
+* Paramètres par défaut au chargement
+*/ 
+$( document ).ready(function() {
+   $("section").addClass("updateForm");
+});

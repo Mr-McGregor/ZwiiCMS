@@ -18,95 +18,47 @@
 			<div class="block">
 				<h4>Couleurs</h4>
 				<div class="row">
-					<div class="col8">
-						<div class="row">
-							<div class="col6">
-								<?php echo template::text('themeSiteBackgroundColor', [
-									'class' => 'colorPicker',
-									'help' => 'Le curseur horizontal règle le niveau de transparence.',
-									'label' => 'Fond',
-									'value' => $this->getData(['theme', 'site', 'backgroundColor'])
-								]); ?>
-							</div>
-							<div class="col6">
-								<?php echo template::text('themeTextTextColor', [
-									'class' => 'colorPicker',
-									'help' => 'Le curseur horizontal règle le niveau de transparence.',
-									'label' => 'Texte',
-									'value' => $this->getData(['theme', 'text', 'textColor'])
-								]); ?>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col6">
-								<?php echo template::text('themeTitleTextColor', [
-									'class' => 'colorPicker',
-									'help' => 'Le curseur horizontal règle le niveau de transparence.',
-									'label' => 'Titres',
-									'value' => $this->getData(['theme', 'title', 'textColor'])
-								]); ?>
-							</div>
-							<div class="col6">
-								<?php echo template::text('themeTextLinkColor', [
-									'class' => 'colorPicker',
-									'help' => 'Le curseur horizontal règle le niveau de transparence.',
-									'label' => 'Liens',
-									'value' => $this->getData(['theme',  'text', 'linkColor'])
-								]); ?>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col6">
-								<?php echo template::text('themeBlockBackgroundColor', [
-									'class' => 'colorPicker',
-									'help' => 'Couleur visible en l\'absence d\'une image.<br />Le curseur horizontal règle le niveau de transparence.',
-									'label' => 'Arrière-plan des blocs',
-									'value' => $this->getData(['theme', 'block', 'backgroundColor'])
-								]); ?>
-							</div>
-							<div class="col6">
-								<?php echo template::text('themeBlockBorderColor', [
-									'class' => 'colorPicker',
-									'help' => 'Couleur visible en l\'absence d\'une image.<br />Le curseur horizontal règle le niveau de transparence.',
-									'label' => 'Bordure des blocs',
-									'value' => $this->getData(['theme', 'block', 'borderColor'])
-								]); ?>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col6 offset3">
-								<?php echo template::text('themeButtonBackgroundColor', [
-									'class' => 'colorPicker',
-									'help' => 'Le curseur horizontal règle le niveau de transparence.',
-									'label' => 'Boutons',
-									'value' => $this->getData(['theme', 'button', 'backgroundColor'])
-								]); ?>
-							</div>
-						</div>
+					<div class="col4">
+						<?php echo template::text('themeSiteBackgroundColor', [
+							'class' => 'colorPicker',
+							'help' => 'Le curseur horizontal règle le niveau de transparence.',							
+							'label' => 'Fond',
+							'value' => $this->getData(['theme', 'site', 'backgroundColor'])
+						]); ?>
 					</div>
-					<div class="col4 bodybackground">
-						<div class="bgPreview">
-							<div class="row">
-								<div class="col6">
-                                    <h1 class="headerPreview">Titre</h1>
-                                    <h2 class="headerPreview">Sous-titre </h2>
-                                </div>
-                                <div class="col6">
-                                    <?php echo template::button('themeSiteSubmitButtonPreview', [
-                                        'class' => 'buttonSubmitPreview',
-                                        'value' => 'Bouton'
-                                    ]); ?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col12">
-                                    <div class="block preview">
-                                        <h4 class="preview">Bloc</h4>										<p class="textPreview">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-										<p><a href="#" class="urlPreview">Lorem ipsum dolor sit amet.</a></p>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div class="col4">
+						<?php echo template::text('themeTextTextColor', [
+							'class' => 'colorPicker',
+							'help' => 'Le curseur horizontal règle le niveau de transparence.',							
+							'label' => 'Texte',
+							'value' => $this->getData(['theme', 'text', 'textColor'])
+						]); ?>
+					</div>
+					<div class="col4">
+						<?php echo template::text('themeLinkTextColor', [
+							'class' => 'colorPicker',
+							'help' => 'Le curseur horizontal règle le niveau de transparence.',							
+							'label' => 'Liens',
+							'value' => $this->getData(['theme', 'link', 'textColor'])
+						]); ?>
+					</div>					
+				</div>
+				<div class="row">
+					<div class="col4">
+						<?php echo template::text('themeTitleTextColor', [
+							'class' => 'colorPicker',
+							'help' => 'Le curseur horizontal règle le niveau de transparence.',							
+							'label' => 'Titres',
+							'value' => $this->getData(['theme', 'title', 'textColor'])
+						]); ?>
+					</div>
+					<div class="col4 offset4">
+						<?php echo template::text('themeButtonBackgroundColor', [
+							'class' => 'colorPicker',
+							'help' => 'Le curseur horizontal règle le niveau de transparence.',							
+							'label' => 'Boutons',
+							'value' => $this->getData(['theme', 'button', 'backgroundColor'])
+						]); ?>
 					</div>
 				</div>
 			</div>
@@ -123,7 +75,7 @@
 							'selected' => $this->getData(['theme', 'text', 'font']),
 							'fonts' => true
 						]); ?>
-					</div>
+					</div>				
 					<div class="col6">
 						<?php echo template::select('themeTextFontSize', $module::$siteFontSizes, [
 							'label' => 'Taille',
@@ -136,7 +88,7 @@
 		</div>
 		<div class="col6">
 			<div class="block">
-				<h4>Mise en forme des titres</h4>
+				<h4>Mise en forme des titres</h4>				
 				<div class="row">
 					<div class="col4">
 						<?php echo template::select('themeTitleFont', $module::$fonts, [
@@ -150,7 +102,7 @@
 							'label' => 'Style',
 							'selected' => $this->getData(['theme', 'title', 'fontWeight'])
 						]); ?>
-					</div>
+					</div>									
 					<div class="col4">
 						<?php echo template::select('themeTitleTextTransform', $module::$textTransforms, [
 							'label' => 'Casse',
@@ -174,7 +126,7 @@
 					</div>
 					<div class="col4">
 						<?php echo template::select('themeSiteRadius', $module::$radius, [
-							'label' => 'Arrondi des angles',
+							'label' => 'Bords arrondis',
 							'selected' => $this->getData(['theme', 'site', 'radius'])
 						]); ?>
 					</div>
@@ -182,13 +134,6 @@
 						<?php echo template::select('themeSiteShadow', $module::$shadows, [
 							'label' => 'Ombre sur les bords du site',
 							'selected' => $this->getData(['theme', 'site', 'shadow'])
-						]); ?>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col6">
-						<?php echo template::checkbox('themeSiteMargin',true, 'Pas de marge au-dessus et en-dessous du site', [
-							'checked' => $this->getData(['theme', 'site', 'margin'])
 						]); ?>
 					</div>
 				</div>

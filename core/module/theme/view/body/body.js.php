@@ -11,13 +11,6 @@
  */
 
 /**
- * Affichage de l'icone de remontée et permettre l'aperçu.
- */
-$(document).ready(function(){
-	$("#backToTop").css("display","show");
-});
-
-/**
  * Aperçu en direct
  */
 $("input, select").on("change", function() {
@@ -31,8 +24,8 @@ $("input, select").on("change", function() {
 	else {
 		css += "body{background-image:none}";
 	}
-	css += '#backToTop {background-color:'  + $("#themeBodyToTopBackground").val() + ';color:' + $("#themeBodyToTopColor").val() + ';}';	
-
+	css += '#backToTop {background-color:'  + $("#themeBodyToTopBackground").val() + ';color:' + $("#themeBodyToTopColor").val() + ';}';
+	
 	// Ajout du css au DOM
 	$("#themePreview").remove();
 	$("<style>")
@@ -50,4 +43,3 @@ $("#themeBodyImage").on("change", function() {
 		$("#themeBodyImageOptions").slideUp();
 	}
 }).trigger("change");
-

@@ -52,8 +52,7 @@ core.colorVariants = function(rgba) {
 		"normal": "rgba(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")",
 		"darken": "rgba(" + Math.max(0, rgba[0] - 15) + "," + Math.max(0, rgba[1] - 15) + "," + Math.max(0, rgba[2] - 15) + "," + rgba[3] + ")",
 		"veryDarken": "rgba(" + Math.max(0, rgba[0] - 20) + "," + Math.max(0, rgba[1] - 20) + "," + Math.max(0, rgba[2] - 20) + "," + rgba[3] + ")",
-		//"text": core.relativeLuminanceW3C(rgba) > .22 ? "inherit" : "white"
-		"text": core.relativeLuminanceW3C(rgba) > .22 ? "#222" : "#DDD"
+		"text": core.relativeLuminanceW3C(rgba) > .22 ? "inherit" : "white"
 	};
 };
 
@@ -225,7 +224,7 @@ core.start = function() {
 		if(document.cookie.indexOf("ZWII_COOKIE_CONSENT") === -1) {
 			$("body").append(
 				$("<div>").attr("id", "cookieConsent").append(
-					$("<span>").text("En poursuivant votre navigation sur ce site, vous acceptez l'utilisation de cookies et de vos données de visite."),
+					$("<span>").text("En poursuivant votre navigation sur ce site, vous acceptez l'utilisation de cookies."),
 					$("<span>")
 						.attr("id", "cookieConsentConfirm")
 						.text("OK")
@@ -269,10 +268,10 @@ core.start = function() {
 		var fileName = inputFileHiddenDOM.val();
 		if(fileName === "") {
 			fileName = "Choisissez un fichier";
-			$(inputFileHiddenDOM).addClass("disabled");
+			$(".inputFileDelete").addClass("disabled");
 		}
 		else {
-			$(inputFileHiddenDOM).removeClass("disabled");
+			$(".inputFileDelete").removeClass("disabled");
 		}
 		inputFileHiddenDOM.parent().find(".inputFileLabel").text(fileName);
 	}).trigger("change");
@@ -355,8 +354,8 @@ core.start = function() {
 			var ratio = width / height;
 			if ( ($(window).width() / ratio) <= height) {
 				$("header").height( $(window).width() / ratio );
-				$("header").css("line-height", $(window).width() / ratio + "px");
-			}
+				$("header").css("line-height", $(window).width() / ratio + "px"); 
+			}						
 		}
 	}).trigger("resize");
 
@@ -398,7 +397,7 @@ core.relativeLuminanceW3C = function(rgba) {
 
 $(document).ready(function(){
 	/**
-	 * Affiche le sous-menu quand il est sticky
+	 * Affiche le sous-menu quand il est sticky 
 	 */
 	$("nav").mouseenter(function(){
 		$("#navfixedlogout .navLevel2").css({ 'pointer-events' : 'auto' });
@@ -423,7 +422,7 @@ $(document).ready(function(){
 		// on récupère la valeur data-speed si elle existe
 		var toggleSpeed = accordion.attr('data-speed') || 100;
 
-		// fonction pour afficher un élément
+		// fonction pour afficher un élément   
 		function open(item, speed) {
 			// on récupère tous les éléments, on enlève l'élément actif de ce résultat, et on les cache
 			accordion.find('.accordion-item').not(item).removeClass('active')
@@ -437,31 +436,31 @@ $(document).ready(function(){
 				.find('.accordion-content').slideUp(speed);
 		}
 
-		// on initialise l'accordéon, sans animation
+		// on initialise l'accordéon, sans animation 
 		open(accordion.find('.active:first'), 0);
 
 		// au clic sur un titre...
 		accordion.on('click', '.accordion-title', function(ev) {
-			ev.preventDefault();
+			ev.preventDefault();		
 			// Masquer l'élément déjà actif
 			if ($(this).closest('.accordion-item').hasClass('active')) {
 				close($(this).closest('.accordion-item'), toggleSpeed);
 			} else {
-				// ...on lance l'affichage de l'élément, avec animation
-				open($(this).closest('.accordion-item'), toggleSpeed);
+				// ...on lance l'affichage de l'élément, avec animation	
+				open($(this).closest('.accordion-item'), toggleSpeed);	
 			}
 		});
 	});
 
 	/**
-	 * Icône du Menu Burger
+	 * Icône du Menu Burger 
 	 */
-	$("#toggle").click(function() {
+	$("#toggle").click(function() {	
 		var changeIcon = $('#toggle').children("span");
 		if ( $(changeIcon).hasClass('zwiico-menu') ) {
 			$(changeIcon).removeClass('zwiico-menu').addClass('zwiico-cancel');
 		}
-		else {
+		else {							
 			$(changeIcon).addClass('zwiico-menu');
 		};
 	});

@@ -33,12 +33,12 @@ class template {
     }
 
     /**
-    * Crée un champ captcha
+    * Crée un champ capcha
     * @param string $nameId Nom et id du champ
     * @param array $attributes Attributs ($key => $value)
     * @return string
     */
-    public static function captcha($nameId, array $attributes = []) {
+    public static function capcha($nameId, array $attributes = []) {
         // Attributs par défaut
         $attributes = array_merge([
             'class' => '',
@@ -48,18 +48,15 @@ class template {
             'name' => $nameId,
             'value' => ''
         ], $attributes);
-        // Génère deux nombres pour le captcha
-        $numbers = array(0,1,2,3,4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20);
-        $letters = array('u','t','s','r','q','p','o','n','m','l','k','j','i','h','g','f','e','d','c','b','a');
-        $firstNumber = rand ( 0 , count($letters)-1 );
-        $secondNumber = rand ( 0 , count($letters)-1 );
+        // Génère deux nombres pour le capcha
+        $firstNumber = mt_rand(1, 15);
+        $secondNumber = mt_rand(1, 15);
         // Début du wrapper
         $html = '<div id="' . $attributes['id'] . 'Wrapper" class="inputWrapper ' . $attributes['classWrapper'] . '">';
         // Label
-        $html .= self::label($attributes['id'],
-                 '<img class="captchaNumber" src="core/vendor/zwiico/png/'.$letters[$firstNumber] . '.png" /> + <img class="captchaNumber" src="core/vendor/zwiico/png/' . $letters[$secondNumber] . '.png" /> =  en chiffres ?', [
-                        'help' => $attributes['help']
-                ]);
+        $html .= self::label($attributes['id'],  $firstNumber . ' + ' . $secondNumber . ' = ?', [
+            'help' => $attributes['help']
+        ]);
         // Notice
         $notice = '';
         if(array_key_exists($attributes['id'], common::$inputNotices)) {
@@ -67,7 +64,7 @@ class template {
             $attributes['class'] .= ' notice';
         }
         $html .= self::notice($attributes['id'], $notice);
-        // captcha
+        // Capcha
         $html .= sprintf(
             '<input type="text" %s>',
             helper::sprintAttributes($attributes)
@@ -244,7 +241,7 @@ class template {
             'value' => $attributes['value']
         ]);
         // Champ d'upload
-        $html .= '<div class="inputFileManagerWrapper">';
+        $html .= '<div>';
         $html .= sprintf(
             '<a
                 href="' .
@@ -252,6 +249,7 @@ class template {
                     '?relative_url=1' .
                     '&field_id=' . $attributes['id'] .
                     '&type=' . $attributes['type'] .
+                    //'&akey=' . md5_file('site/data/'.'core.json') .
                     '&akey=' . md5_file(core::DATA_DIR.'core.json') .
                     ($attributes['extensions'] ? '&extensions=' . $attributes['extensions'] : '')
                 . '"
@@ -519,7 +517,7 @@ class template {
         // Liste des polices à intégrer
         if ($attributes['fonts'] === true) {
             foreach ($options as $fontId) {
-                echo "<link href='https://fonts.googleapis.com/css?family=".str_replace(" ", "+", $fontId)."' rel='stylesheet' type='text/css'>\n";
+                echo "<link href='http://fonts.googleapis.com/css?family=".str_replace(" ", "+", $fontId)."' rel='stylesheet' type='text/css'>\n";
             }
         }
         // Début du wrapper
@@ -600,62 +598,56 @@ class template {
     }
 
     /**
-	 * Crée un tableau
-	 * @param array $cols Cols des colonnes (format: [col colonne1, col colonne2, etc])
-	 * @param array $body Contenu (format: [[contenu1, contenu2, etc], [contenu1, contenu2, etc]])
-	 * @param array $head Entêtes (format : [[titre colonne1, titre colonne2, etc])
-     * @param array $rowsId Id pour la numérotation des rows (format : [id colonne1, id colonne2, etc])
-	 * @param array $attributes Attributs ($key => $value)
-	 * @return string
-	 */
-	public static function table(array $cols = [], array $body = [], array $head = [], array $attributes = [], array $rowsId = []) {
-		// Attributs par défaut
-		$attributes = array_merge([
-			'class' => '',
-			'classWrapper' => '',
-			'id' => ''
-		], $attributes);
-		// Début du wrapper
-		$html = '<div id="' . $attributes['id'] . 'Wrapper" class="tableWrapper ' . $attributes['classWrapper']. '">';
-		// Début tableau
-		$html .= '<table id="' . $attributes['id'] . '" class="table ' . $attributes['class']. '">';
-		// Entêtes
-		if($head) {
-			// Début des entêtes
-			$html .= '<thead>';
-			$html .= '<tr class="nodrag">';
-			$i = 0;
-			foreach($head as $th) {
-				$html .= '<th class="col' . $cols[$i++] . '">' . $th . '</th>';
-			}
-			// Fin des entêtes
-			$html .= '</tr>';
-			$html .= '</thead>';
+    * Crée un tableau
+    * @param array $cols Cols des colonnes (format: [col colonne1, col colonne2, etc])
+    * @param array $body Contenu (format: [[contenu1, contenu2, etc], [contenu1, contenu2, etc]])
+    * @param array $head Entêtes (format : [[titre colonne1, titre colonne2, etc])
+    * @param array $attributes Attributs ($key => $value)
+    * @return string
+    */
+    public static function table(array $cols = [], array $body = [], array $head = [], array $attributes = []) {
+        // Attributs par défaut
+        $attributes = array_merge([
+            'class' => '',
+            'classWrapper' => '',
+            'id' => ''
+        ], $attributes);
+        // Début du wrapper
+        $html = '<div id="' . $attributes['id'] . 'Wrapper" class="tableWrapper ' . $attributes['classWrapper']. '">';
+        // Début tableau
+        $html .= '<table id="' . $attributes['id'] . '" class="table ' . $attributes['class']. '">';
+        // Entêtes
+        if($head) {
+            // Début des entêtes
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $i = 0;
+            foreach($head as $th) {
+                $html .= '<th class="col' . $cols[$i++] . '">' . $th . '</th>';
+            }
+            // Fin des entêtes
+            $html .= '</tr>';
+            $html .= '</thead>';
         }
-        // Pas de tableau d'Id transmis, générer une numérotation
-        if (empty($rowsId)) {
-            $rowsId = range(0,count($body));
+        // Début contenu
+        $html .= '<tbody>';
+        foreach($body as $tr) {
+            $html .= '<tr>';
+            $i = 0;
+            foreach($tr as $td) {
+                $html .= '<td class="col' . $cols[$i++] . '">' . $td . '</td>';
+            }
+            $html .= '</tr>';
         }
-		// Début contenu
-		$j = 0;
-		foreach($body as $tr) {	
-			// Id de ligne pour les tableaux drag and drop		
-			$html .= '<tr id="' . $rowsId[$j++] . '">';
-			$i = 0;
-			foreach($tr as $td) {
-				$html .= '<td class="col' . $cols[$i++] . '">' . $td . '</td>';
-			}
-			$html .= '</tr>';
-		}
-		// Fin contenu
-		$html .= '</tbody>';
-		// Fin tableau
-		$html .= '</table>';
-		// Fin container
-		$html .= '</div>';
-		// Retourne le html
-		return $html;
-	}
+        // Fin contenu
+        $html .= '</tbody>';
+        // Fin tableau
+        $html .= '</table>';
+        // Fin container
+        $html .= '</div>';
+        // Retourne le html
+        return $html;
+    }
 
     /**
     * Crée un champ texte court
@@ -721,7 +713,7 @@ class template {
         // Attributs par défaut
         $attributes = array_merge([
             'before' => true,
-            'class' => '', // editorWysiwyg et editor possible pour utiliser un éditeur (il faut également instancier les librairies)
+            'class' => '', // editorWysiwyg et editorCss possible pour utiliser le éditeurs (il faut également instancier les librairies)
             'classWrapper' => '',
             'disabled' => false,
             'noDirty' => false,

@@ -2,7 +2,7 @@
  * Initialisation de CodeMirror
  */
 $(function() {
-	$(".editor").each(function() {
+	$(".editorCss").each(function() {
 		var _this = this;
 		// Initialisation de CodeMirror
 		var codeMirror = CodeMirror.fromTextArea(_this, {

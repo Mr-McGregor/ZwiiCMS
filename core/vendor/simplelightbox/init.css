@@ -1,6 +1,10 @@
 .sl-overlay {
 	background: rgba(0, 0, 0, .9);
-	opacity: 1;		
+	opacity: 1;	
+}
+body {
+	padding-right: 0 !important;
+	margin: 0 !important;
 }
 .sl-wrapper .sl-close,
 .sl-wrapper .sl-counter,

@@ -17,52 +17,6 @@ class helper {
 	const FILTER_TIMESTAMP = 10;
 	const FILTER_URL = 11;
 
-
-
-	/** 
-	 * Récupérer l'adresse IP sans tenit compte du proxy
-	 * @return string IP adress
-	 * Cette focntion est utilisé par user
-	*/
-
-	public static function getIp() {
-		if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-			$ip=$_SERVER['HTTP_CLIENT_IP'];
-		}
-		elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-			$ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
-		}
-		else{
-			$ip=$_SERVER['REMOTE_ADDR'];
-		}
-		return $ip;
-	}
-
-	/**
-	 * Fonction pour récupérer le numéro de version en ligne
-	 * @param string $url à récupérer
-	 * @return mixed données récupérées
-	 */
-
-	public static function urlGetContents ($url) {
-		// Ejecter free.fr
-		if (strpos(self::baseUrl(),'free.fr') > 0 ){
-			return false;
-		}
-		if(function_exists('file_get_contents') &&
-				ini_get('allow_url_fopen') ){
-				$url_get_contents_data = @file_get_contents($url); // Masque un warning éventuel
-			}elseif(function_exists('fopen') &&
-				function_exists('stream_get_contents') &&
-				ini_get('allow_url_fopen')){
-				$handle = fopen ($url, "r");
-				$url_get_contents_data = stream_get_contents($handle);
-			}else{
-				$url_get_contents_data = false;
-			}
-		return $url_get_contents_data;
-	}
-
 	/**
 	 * Retourne les valeurs d'une colonne du tableau de données
 	 * @param array $array Tableau cible
@@ -71,7 +25,7 @@ class helper {
 	 * @return array
 	 */
 	public static function arrayCollumn($array, $column, $sort = null) {
-		$newArray = [];
+		$newArray = [];	
 		if(empty($array) === false) {
 			$newArray = array_map(function($element) use($column) {
 				return $element[$column];
@@ -90,7 +44,7 @@ class helper {
 
 
 	/**
-	 * Génère un backup des données de site
+	 * Génére un backup des données de site
 	 * @param string $folder dossier de sauvegarde
 	 * @param array $exclude dossier exclus
 	 * @return string nom du fichier de sauvegarde
@@ -98,9 +52,7 @@ class helper {
 
 	public static function autoBackup($folder, $filter = ['backup','tmp'] ) {
 		// Creation du ZIP
-		$baseName = str_replace('/','',helper::baseUrl(false,false));
-		$baseName = empty($baseName) ? 'ZwiiCMS' : $baseName;
-		$fileName =  $baseName . '-backup-' . date('Y-m-d-h-i-s', time()) . '.zip';
+		$fileName = str_replace('/','',helper::baseUrl(false,false)) . '-'. date('Y-m-d-h-i-s', time()) . '.zip';
 		$zip = new ZipArchive();
 		$zip->open($folder . $fileName, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 		$directory = 'site/';
@@ -121,27 +73,11 @@ class helper {
 				$filePath = $file->getRealPath();
 				$relativePath = substr($filePath, strlen(realpath($directory)) + 1);
 				$zip->addFile($filePath, $relativePath);
-			}
+			} 			
 		}
 		$zip->close();
 		return ($fileName);
 	}
-
-	/**
-	 * Retourne true si le protocole est en TLS
-	 * @return bool
-	 */
-	public static function isHttps() {
-		if(
-			(empty($_SERVER['HTTPS']) === false AND $_SERVER['HTTPS'] !== 'off')
-			OR $_SERVER['SERVER_PORT'] === 443
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 
 	/**
 	 * Retourne l'URL de base du site
@@ -150,8 +86,16 @@ class helper {
 	 * @return string
 	 */
 	public static function baseUrl($queryString = true, $host = true) {
-		// Protocole
-		$protocol = helper::isHttps() === true ? 'https://' : 'http://';
+		// Protocol
+		if(
+			(empty($_SERVER['HTTPS']) === false AND $_SERVER['HTTPS'] !== 'off')
+			OR $_SERVER['SERVER_PORT'] === 443
+		) {
+			$protocol = 'https://';
+		}
+		else {
+			$protocol = 'http://';
+		}
 		// Host
 		if($host) {
 			$host = $protocol . $_SERVER['HTTP_HOST'];
@@ -165,7 +109,7 @@ class helper {
 		else {
 			$queryString = '';
 		}
-		return $host . rtrim($pathInfo['dirname'], ' ' . DIRECTORY_SEPARATOR) . '/' . $queryString;
+		return $host . rtrim($pathInfo['dirname'], ' /') . '/' . $queryString;
 	}
 
 	/**
@@ -187,7 +131,7 @@ class helper {
 	 * @return string
 	 */
 	public static function getOnlineVersion() {
-		return (helper::urlGetContents('http://zwiicms.com/update/'. common::ZWII_UPDATE_CHANNEL . '/version'));
+		return (@file_get_contents('http://zwiicms.com/update/version'));
 	}
 
 
@@ -196,7 +140,6 @@ class helper {
 	 * @return bool
 	 */
 	public static function checkNewVersion() {
-
 		if($version = helper::getOnlineVersion()) {
 			//return (trim($version) !== common::ZWII_VERSION);
 			return ((version_compare(common::ZWII_VERSION,$version)) === -1);
@@ -219,7 +162,7 @@ class helper {
 			'normal' => 'rgba(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . $rgba[3] . ')',
 			'darken' => 'rgba(' . max(0, $rgba[0] - 15) . ',' . max(0, $rgba[1] - 15) . ',' . max(0, $rgba[2] - 15) . ',' . $rgba[3] . ')',
 			'veryDarken' => 'rgba(' . max(0, $rgba[0] - 20) . ',' . max(0, $rgba[1] - 20) . ',' . max(0, $rgba[2] - 20) . ',' . $rgba[3] . ')',
-			'text' => self::relativeLuminanceW3C($rgba) > .22 ? "#222" : "#DDD"
+			'text' => self::relativeLuminanceW3C($rgba) > .22 ? "inherit" : "white"
 		];
 	}
 
@@ -229,7 +172,7 @@ class helper {
 	 */
 	public static function deleteCookie($cookieKey) {
 		unset($_COOKIE[$cookieKey]);
-		setcookie($cookieKey, '', time() - 3600, helper::baseUrl(false, false), '', false, true);
+		setcookie($cookieKey, '', time() - 3600, helper::baseUrl(false, false));
 	}
 
 	/**
@@ -262,10 +205,6 @@ class helper {
 					$text
 				));
 				$text = preg_replace('/([^a-z0-9-])/', '', $text);
-				// Supprime les emoji
-				$text = preg_replace('/[[:^print:]]/', '', $text);
-				// Supprime les tirets en fin de chaine (emoji en fin de nom)
-				$text = rtrim($text,'-');
 				// Cas où un identifiant est vide
 				if (empty($text)) {
 					$text = uniqid('');
@@ -273,7 +212,7 @@ class helper {
 				// Un ID ne peut pas être un entier, pour éviter les conflits avec le système de pagination
 				if(intval($text) !== 0) {
 					$text = 'i' . $text;
-				}
+				}			
 				break;
 			case self::FILTER_INT:
 				$text = (int) filter_var($text, FILTER_SANITIZE_NUMBER_INT);
@@ -297,7 +236,7 @@ class helper {
 				$text = filter_var($text, FILTER_SANITIZE_URL);
 				break;
 		}
-		return $text;
+		return get_magic_quotes_gpc() ? stripslashes($text) : $text;
 	}
 
 	/**
@@ -478,29 +417,6 @@ class helper {
 			$text = mb_substr($text, 0, min(mb_strlen($text), mb_strrpos($text, ' ')));
 		}
 		return $text;
-	}
-
-	/**
-	 * Cryptage
-	 * @param string $key la clé d'encryptage
-	 * @param string $payload la chaine à coder
-	 * @return string
-	 */
-	public static function encrypt($key, $payload) {
-		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-		$encrypted = openssl_encrypt($payload, 'aes-256-cbc', $key, 0, $iv);
-		return base64_encode($encrypted . '::' . $iv);
-	}
-
-	/**
-	 * Décryptage
-	 * @param string $key la clé d'encryptage
-	 * @param string $garble la chaine à décoder
-	 * @return string
-	 */
-	public static  function decrypt($key, $garble) {
-		list($encrypted_data, $iv) = explode('::', base64_decode($garble), 2);
-		return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
 	}
 
 }

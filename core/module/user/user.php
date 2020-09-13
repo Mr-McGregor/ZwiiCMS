@@ -25,12 +25,7 @@ class user extends common {
 		'logout' => self::GROUP_MEMBER,
 		'reset' => self::GROUP_VISITOR
 	];
-
 	public static $users = [];
-
-	public static $userId = '';
-
-	public static $userLongtime = false;
 
 	/**
 	 * Ajout
@@ -49,14 +44,14 @@ class user extends common {
 			if($this->getInput('userAddPassword', helper::FILTER_STRING_SHORT, true) !== $this->getInput('userAddConfirmPassword', helper::FILTER_STRING_SHORT, true)) {
 				self::$inputNotices['userAddConfirmPassword'] = 'Incorrect';
 				$check = false;
-			}
+			}		
 			// Crée l'utilisateur
 			$userFirstname = $this->getInput('userAddFirstname', helper::FILTER_STRING_SHORT, true);
 			$userLastname = $this->getInput('userAddLastname', helper::FILTER_STRING_SHORT, true);
 			$userMail = $this->getInput('userAddMail', helper::FILTER_MAIL, true);
 			// Pas de nom saisi
-			if (empty($userFirstname) ||
-				empty($userLastname)  ||
+			if (empty($userFirstname) || 
+				empty($userLastname)  || 
 				empty($this->getInput('userAddPassword', helper::FILTER_STRING_SHORT, true)) ||
 				empty($this->getInput('userAddConfirmPassword', helper::FILTER_STRING_SHORT, true))) {
 				$check=false;
@@ -72,7 +67,7 @@ class user extends common {
 						'group' => $this->getInput('userAddGroup', helper::FILTER_INT, true),
 						'lastname' => $userLastname,
 						'mail' => $userMail,
-						'password' => $this->getInput('userAddPassword', helper::FILTER_PASSWORD, true),
+						'password' => $this->getInput('userAddPassword', helper::FILTER_PASSWORD, true)
 					]
 				]);
 			}
@@ -86,7 +81,7 @@ class user extends common {
 					'Un administrateur vous a créé un compte sur le site ' . $this->getData(['config', 'title']) . '. Vous trouverez ci-dessous les détails de votre compte.<br><br>' .
 					'<strong>Identifiant du compte :</strong> ' . $this->getInput('userAddId') . '<br>' .
 					'<strong>Mot de passe du compte :</strong> ' . $this->getInput('userAddPassword') . '<br><br>' .
-					'<small>Nous ne conservons pas les mots de passe, en conséquence nous vous conseillons de conserver ce message tant que vous ne vous êtes pas connecté. Vous pourrez modifier votre mot de passe après votre première connexion.</small>',
+					'<small>Nous ne conservons pas les mots de passe, par conséquence nous vous conseillons de garder ce mail tant que vous ne vous êtes pas connecté. Vous pourrez modifier votre mot de passe après votre première connexion.</small>',
 					null
 				);
 			}
@@ -127,7 +122,7 @@ class user extends common {
 				'redirect' => helper::baseUrl() . 'user',
 				'notification' => 'Action non autorisée'
 			]);
-		}
+		}		
 		// Bloque la suppression de son propre compte
 		elseif($this->getUser('id') === $this->getUrl(2)) {
 			// Valeurs en sortie
@@ -153,13 +148,13 @@ class user extends common {
 	 */
 	public function edit() {
 		if ($this->getUrl(3) !== $_SESSION['csrf'] &&
-			$this->getUrl(4) !== $_SESSION['csrf']) {
+			$this->getUrl(4) !== $_SESSION['csrf']) {			
 			// Valeurs en sortie
 			$this->addOutput([
 				'redirect' => helper::baseUrl() . 'user',
 				'notification' => 'Action  non autorisée'
 			]);
-		}
+		}	
 		// Accès refusé
 		if(
 			// L'utilisateur n'existe pas
@@ -226,12 +221,7 @@ class user extends common {
 						'group' => $newGroup,
 						'lastname' => $this->getInput('userEditLastname', helper::FILTER_STRING_SHORT, true),
 						'mail' => $this->getInput('userEditMail', helper::FILTER_MAIL, true),
-						'password' => $newPassword,
-						'connectFail' => $this->getData(['user',$this->getUrl(2),'connectFail']),
-						'connectTimeout' => $this->getData(['user',$this->getUrl(2),'connectTimeout']),
-						'accessUrl' => $this->getData(['user',$this->getUrl(2),'accessUrl']),
-						'accessTimer' => $this->getData(['user',$this->getUrl(2),'accessTimer']),
-						'accessCsrf' => $this->getData(['user',$this->getUrl(2),'accessCsrf'])
+						'password' => $newPassword
 					]
 				]);
 				// Redirection spécifique si l'utilisateur change son mot de passe
@@ -312,22 +302,20 @@ class user extends common {
 		$userIdsFirstnames = helper::arrayCollumn($this->getData(['user']), 'firstname');
 		ksort($userIdsFirstnames);
 		foreach($userIdsFirstnames as $userId => $userFirstname) {
-			if ($this->getData(['user', $userId, 'group'])) {
-				self::$users[] = [
-					$userId,
-					$userFirstname . ' ' . $this->getData(['user', $userId, 'lastname']),
-					self::$groups[$this->getData(['user', $userId, 'group'])],
-					template::button('userEdit' . $userId, [
-						'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back/'. $_SESSION['csrf'],
-						'value' => template::ico('pencil')
-					]),
-					template::button('userDelete' . $userId, [
-						'class' => 'userDelete buttonRed',
-						'href' => helper::baseUrl() . 'user/delete/' . $userId. '/' . $_SESSION['csrf'],
-						'value' => template::ico('cancel')
-					])
-				];
-			}
+			self::$users[] = [
+				$userId,
+				$userFirstname . ' ' . $this->getData(['user', $userId, 'lastname']),
+				self::$groups[$this->getData(['user', $userId, 'group'])],
+				template::button('userEdit' . $userId, [
+					'href' => helper::baseUrl() . 'user/edit/' . $userId . '/back/'. $_SESSION['csrf'],
+					'value' => template::ico('pencil')
+				]),
+				template::button('userDelete' . $userId, [
+					'class' => 'userDelete buttonRed',
+					'href' => helper::baseUrl() . 'user/delete/' . $userId. '/' . $_SESSION['csrf'],
+					'value' => template::ico('cancel')
+				])
+			];
 		}
 		// Valeurs en sortie
 		$this->addOutput([
@@ -343,118 +331,41 @@ class user extends common {
 		// Soumission du formulaire
 		if($this->isPost()) {
 			$userId = $this->getInput('userLoginId', helper::FILTER_ID, true);
-
-			/**
-			 * Aucun compte existant
-			 */
-			if ( !$this->getData(['user', $userId])) {
-				//Stockage de l'IP
-				$this->setData([
-					'blacklist',
-					$userId,
-					[
-						'connectFail' => $this->getData(['blacklist',$userId,'connectFail']) + 1,
-						'lastFail' => time(),
-						'ip' => helper::getIp()
-					]
-				]);
-				// Verrouillage des IP
-				$ipBlackList = helper::arrayCollumn($this->getData(['blacklist']), 'ip');
-				if ( $this->getData(['blacklist',$userId,'connectFail']) >= $this->getData(['config', 'connect', 'attempt'])
-				     AND in_array($this->getData(['blacklist',$userId,'ip']),$ipBlackList) ) {
-					// Valeurs en sortie
+			// Connexion si les informations sont correctes
+			if(
+				password_verify($this->getInput('userLoginPassword', helper::FILTER_STRING_SHORT, true), $this->getData(['user', $userId, 'password']))
+				AND $this->getData(['user', $userId, 'group']) >= self::GROUP_MEMBER
+			) {
+				$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
+				setcookie('ZWII_USER_ID', $userId, $expire, helper::baseUrl(false, false));
+				setcookie('ZWII_USER_PASSWORD', $this->getData(['user', $userId, 'password']), $expire, helper::baseUrl(false, false));
+				// Valeurs en sortie lorsque le site est en maintenance et que l'utilisateur n'est pas administrateur
+				if(
+					$this->getData(['config', 'maintenance'])
+					AND $this->getData(['user', $userId, 'group']) < self::GROUP_ADMIN
+				) {
 					$this->addOutput([
-						'notification' => 'Trop de tentatives, compte verrouillé',
+						'notification' => 'Seul un administrateur peur se connecter lors d\'une maintenance',
 						'redirect' => helper::baseUrl(),
 						'state' => false
 					]);
-				} else {
-					// Valeurs en sortie
-					$this->addOutput([
-						'notification' => 'Identifiant ou mot de passe incorrect'
-					]);
 				}
-			/**
-			 * Le compte existe
-			 */
-			} else 	{
-				// Cas 4 : le délai de  blocage est  dépassé et le compte est au max - Réinitialiser
-				if ($this->getData(['user',$userId,'connectTimeout'])  + $this->getData(['config', 'connect', 'timeout']) < time()
-					AND $this->getData(['user',$userId,'connectFail']) === $this->getData(['config', 'connect', 'attempt']) ) {
-					$this->setData(['user',$userId,'connectFail',0 ]);
-					$this->setData(['user',$userId,'connectTimeout',0 ]);
-				}
-				// Check la présence des variables et contrôle du blocage du compte si valeurs dépassées
-				// Vérification du mot de passe et du groupe
-				if (
-					( $this->getData(['user',$userId,'connectTimeout']) + $this->getData(['config', 'connect', 'timeout'])  ) < time()
-					AND $this->getData(['user',$userId,'connectFail']) < $this->getData(['config', 'connect', 'attempt'])
-					AND password_verify($this->getInput('userLoginPassword', helper::FILTER_STRING_SHORT, true), $this->getData(['user', $userId, 'password']))
-					AND $this->getData(['user', $userId, 'group']) >= self::GROUP_MEMBER
-				) {
-					// Expiration
-					$expire = $this->getInput('userLoginLongTime') ? strtotime("+1 year") : 0;
-					$c = $this->getInput('userLoginLongTime', helper::FILTER_BOOLEAN) === true ? 'true' : 'false';
-					setcookie('ZWII_USER_ID', $userId, $expire, helper::baseUrl(false, false)  , '', helper::isHttps(), true);
-					setcookie('ZWII_USER_PASSWORD', $this->getData(['user', $userId, 'password']), $expire, helper::baseUrl(false, false), '', helper::isHttps(), true);
-					setcookie('ZWII_USER_LONGTIME', $c, $expire, helper::baseUrl(false, false), '', helper::isHttps(), true);
-					// Accès multiples avec le même compte
-					$this->setData(['user',$userId,'accessCsrf',$_SESSION['csrf']]);
-					// Valeurs en sortie lorsque le site est en maintenance et que l'utilisateur n'est pas administrateur
-					if(
-						$this->getData(['config', 'maintenance'])
-						AND $this->getData(['user', $userId, 'group']) < self::GROUP_ADMIN
-					) {
-						$this->addOutput([
-							'notification' => 'Seul un administrateur peut se connecter lors d\'une maintenance',
-							'redirect' => helper::baseUrl(),
-							'state' => false
-						]);
-					} else {
-						// Valeurs en sortie
-						$this->addOutput([
-							'notification' => 'Connexion réussie',
-							'redirect' => helper::baseUrl() . str_replace('_', '/', str_replace('__', '#', $this->getUrl(2))),
-							'state' => true
-						]);
-					}
-				// Sinon notification d'échec
-				} else {
-					$notification = 'Identifiant ou mot de passe incorrect';
-					// Cas 1 le nombre de connexions est inférieur aux tentatives autorisées : incrément compteur d'échec
-					if ($this->getData(['user',$userId,'connectFail']) < $this->getData(['config', 'connect', 'attempt'])) {
-						$this->setData(['user',$userId,'connectFail',$this->getdata(['user',$userId,'connectFail']) + 1 ]);
-					}
-					// Cas 2 la limite du nombre de connexion est atteinte : placer le timer
-					if ( $this->getdata(['user',$userId,'connectFail']) == $this->getData(['config', 'connect', 'attempt'])	) {
-							$this->setData(['user',$userId,'connectTimeout', time()]);
-					}
-					// Cas 3 le délai de bloquage court
-					if ($this->getData(['user',$userId,'connectTimeout'])  + $this->getData(['config', 'connect', 'timeout']) > time() ) {
-						$notification = 'Trop de tentatives, accès bloqué durant ' . ($this->getData(['config', 'connect', 'timeout']) / 60) . ' minutes.';
-					}
-					// Journalisation
-					$dataLog = strftime('%d/%m/%y',time()) . ';' . strftime('%R',time()) . ';' ;
-					$dataLog .= helper::getIp() . ';';
-					$dataLog .= $userId . ';' ;
-					$dataLog .= $this->getUrl() .';' ;
-					$dataLog .= 'échec de connexion' ;
-					$dataLog .= PHP_EOL;
-					if ($this->getData(['config','connect','log'])) {
-						file_put_contents(self::DATA_DIR . 'journal.log', $dataLog, FILE_APPEND);
-					}
-					// Valeurs en sortie
+				// Valeurs en sortie en cas de réussite
+				else {
 					$this->addOutput([
-						'notification' => $notification
+						'notification' => 'Connexion réussie',
+						'redirect' => helper::baseUrl() . str_replace('_', '/', str_replace('__', '#', $this->getUrl(2))),
+						'state' => true
 					]);
 				}
 			}
-		}
-		if (!empty($_COOKIE['ZWII_USER_ID'])) {
-			self::$userId = $_COOKIE['ZWII_USER_ID'];
-		}
-		if (!empty($_COOKIE['ZWII_USER_LONGTIME'])) {
-			self::$userLongtime = $_COOKIE['ZWII_USER_LONGTIME'] == 'true' ? true : false;
+			// Sinon notification d'échec
+			else {
+				// Valeurs en sortie
+				$this->addOutput([
+					'notification' => 'Identifiant ou mot de passe incorrect'
+				]);
+			}
 		}
 		// Valeurs en sortie
 		$this->addOutput([
@@ -468,11 +379,7 @@ class user extends common {
 	 * Déconnexion
 	 */
 	public function logout() {
-		// Ne pas effacer l'identifiant mais seulement le mot de passe
-		if ($_COOKIE['ZWII_USER_LONGTIME'] !== 'true' ) {
-			helper::deleteCookie('ZWII_USER_ID');
-			helper::deleteCookie('ZWII_USER_LONGTIME');
-		}
+		helper::deleteCookie('ZWII_USER_ID');
 		helper::deleteCookie('ZWII_USER_PASSWORD');
 		session_destroy();
 		// Valeurs en sortie

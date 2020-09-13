@@ -1,0 +1,10 @@
+# Bloque l'accès aux données
+<FilesMatch "\.json">
+	Order deny,allow
+	Deny from all
+</FilesMatch>
+# Bloque l'accès htaccess
+<Files .htaccess>
+	Order deny,allow
+	Deny from all
+</Files>

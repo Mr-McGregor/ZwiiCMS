@@ -1,1 +1,23 @@
-/* Volontairement vide */
+.newsTitle {
+    background-color: #ECEFF1;
+    padding:5px;
+}
+.newsContent {
+	clear: left;
+    margin-left: 10px;
+    padding: 5px;
+}
+.newsDate {
+    font-size:0.8em;
+	font-style: italic;
+	color: grey;
+    margin-left:10px;
+    float: left;
+}
+.newsSignature {
+    margin-right:10px;
+    float:right;
+    font-size:0.8em;
+	font-style: italic;
+	color: grey;
+}

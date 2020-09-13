@@ -6,44 +6,18 @@
  *
  * @author Rémi Jean <remi.jean@outlook.com>
  * @copyright Copyright (C) 2008-2018, Rémi Jean
- * @author Frédéric Tempez <frederic.tempez@outlook.com>
- * @copyright Copyright (C) 2018-2020, Frédéric Tempez
  * @license GNU General Public License, version 3
  * @link http://zwiicms.com/
  */
 
-$( document ).ready(function() {
-
-
-	/**
-	 * Tri de la galerie avec drag and drop
-	 */	
-	$("#galleryTable").tableDnD({	
-		onDrop: function(table, row) {			
-			$("#galleryConfigFilterResponse").val($.tableDnD.serialize());
-		},
-		onDragStop : function(table, row) {
-			// Affiche le bouton de tri après un déplacement
-			//$(":input[type='submit']").prop('disabled', false);
-			// Sauvegarde le tri
-			sortGalleries();
-		},
-		// Supprime le tiret des séparateurs
-		serializeRegexp:  ""
+/**
+ * Confirmation de suppression
+ */
+$(".galleryConfigDelete").on("click", function() {
+	var _this = $(this);
+	return core.confirm("Êtes-vous sûr de vouloir supprimer cette galerie ?", function() {
+		$(location).attr("href", _this.attr("href"));
 	});
-	
-
-
-	/**
-	 * Confirmation de suppression
-	 */
-	$(".galleryConfigDelete").on("click", function() {
-		var _this = $(this);
-		return core.confirm("Êtes-vous sûr de vouloir supprimer cette galerie ?", function() {
-			$(location).attr("href", _this.attr("href"));
-		});
-	});
-
 });
 
 /**
@@ -85,20 +59,3 @@ setInterval(function() {
 directoryDOM.on("change", function() {
 	directoryOldDOM.val($(this).val());
 });
-
-
-/**
- * Tri dynamique des galeries
- */
-
-function sortGalleries() {
-	var url = "<?php echo helper::baseUrl() . $this->getUrl(0); ?>/sortGalleries";
-	var data = $("#galleryConfigFilterResponse").val();			
-	$.ajax({
-		type: "POST",
-		url: url ,
-		data: {
-			response : data
-		}
-	});
-}

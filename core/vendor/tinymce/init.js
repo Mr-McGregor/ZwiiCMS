@@ -18,45 +18,22 @@ tinymce.init({
 	// Langue
 	language: "fr_FR",
 	// Plugins
-	plugins: "advlist anchor autolink autoresize autosave codemirror colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace stickytoolbar tabfocus table template textcolor emoticons ",
+	plugins: "advlist anchor autolink autoresize autosave codemirror colorpicker contextmenu fullscreen hr image imagetools link lists media paste searchreplace stickytoolbar tabfocus table template textcolor  codesample",
 	// Contenu de la barre d'outils
-	toolbar: "restoredraft | undo redo |  formatselect bold italic underline forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist emoticons | table template | image media link | code fullscreen",
-	// Emoticons
-	emoticons_append: {
-		custom_mind_explode: {
-		  keywords: ["brain", "mind", "explode", "blown"],
-		  char: "🤯"
-		}
-	},
+	toolbar: "restoredraft | undo redo | styleselect | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | image media link anchor  inserttable  hr template  code codesample  fullscreen",
 	// CodeMirror
 	codemirror: {
 		indentOnInit: true, // Whether or not to indent code on init.
+		fullscreen: false,   // Default setting is false
 		path: 'codemirror', // Path to CodeMirror distribution
-		saveCursorPosition: false,    // Insert caret marker
+		saveCursorPosition: true,    // Insert caret marker
 		config: {           // CodeMirror config object
-			/*theme: 'ambiance',*/
-			fullscreen: true,
-			/*mode: 'application/x-httpd-php',*/
-			indentUnit: 4,
-			lineNumbers: true,
-			mode: "htmlmixed",
+			mode: 'application/x-httpd-php',
+			lineNumbers: true
 		},
-		jsFiles: [
-			'mode/php/php.js',
-			'mode/css/css.js',
-			'mode/htmlmixed/htmlmixed.js',
-			'mode/htmlembedded/htmlembedded.js',
-			'mode/javascript/javascript.js',
-			'mode/xml/xml.js',
-			'addon/search/searchcursor.js',
-			'addon/search/search.js',
-		],
-		cssFiles: [
-			/*'theme/ambiance.css',*/
-		],
 		width: 800,         // Default value is 800
 		height: 500       // Default value is 550
-	},
+	}, 
 	// Cibles de la target
 	target_list: [
 		{title: 'None', value: ''},
@@ -67,13 +44,13 @@ tinymce.init({
 		{title: 'None', value: ''},
 		{title: 'Une popup (Lity)', value: 'data-lity'},
 		{title: 'Une galerie d\'images (SimpleLightbox)', value: 'gallery'}
-	],
+	],	
 	// Titre des image
 	image_title: true,
 	// Pages internes
 	link_list: baseUrl + "core/vendor/tinymce/links.php",
 	// Contenu du menu contextuel
-	contextmenu: "selectall searchreplace | hr | media image  link anchor  | insertable  cell row column deletetable",
+	contextmenu: "cut copy paste pastetext | selectall searchreplace | link image inserttable | cell row column deletetable",
 	// Fichiers CSS à intégrer à l'éditeur
 	content_css: [
 		baseUrl + "core/layout/common.css",
@@ -84,19 +61,11 @@ tinymce.init({
 // Classe à ajouter à la balise body dans l'iframe
 	body_class: "editorWysiwyg",
 	// Cache les menus
-	menubar: true,
+	menubar: false,
 	// URL menu contextuel
-	link_context_toolbar: true,
+	link_context_toolbar: true,	
 	// Cache la barre de statut
 	statusbar: false,
-	// Active le copié collé à partir du Web
-	paste_data_images: true,
-	// Active le copié collé à partir du presse papier
-	paste_filter_drop: false,
-	/* Eviter BLOB à tester
-	images_dataimg_filter: function(img) {
-		return img.hasAttribute('internal-blob');
-	},*/
 	// Autorise tous les éléments
 	valid_elements :"*[*]",
 	valid_children : "*[*]",
@@ -125,7 +94,7 @@ tinymce.init({
 	//	toolbar: [ 'undo', 'bold', 'italic', 'styleselect' ]
 	//},
 	// Contenu du bouton insérer
-	insert_button_items: "anchor hr table",
+	insert_button_items: "anchor hr ",
 	// Contenu du bouton formats
 	style_formats: [
 		{title: "Headers", items: [
@@ -211,11 +180,13 @@ tinymce.init({
 	]
 });
 
+
+
 tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 	editor.on('init', function() {
 	  setSticky();
 	});
-
+	
 	$(window).on('scroll', function() {
 	  setSticky();
 	});
@@ -224,13 +195,12 @@ tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 	  var container = editor.editorContainer;
 	  var toolbars = $(container).find('.mce-toolbar-grp');
 	  var statusbar = $(container).find('.mce-statusbar');
-	  var menubar = $(container).find('.mce-menubar');
-
+	  
 	  if (isSticky()) {
 		$(container).css({
-		  paddingTop: menubar.outerHeight()
+		  paddingTop: toolbars.outerHeight()
 		});
-
+		
 		if (isAtBottom()) {
 		  toolbars.css({
 			top: 'auto',
@@ -238,68 +208,54 @@ tinymce.PluginManager.add('stickytoolbar', function(editor, url) {
 			position: 'absolute',
 			width: '100%',
 			borderBottom: 'none'
-		  });
+		  }); 
 		} else {
-			menubar.css({
-				top: 45,
-				bottom: 'auto',
-				position: 'fixed',
-				width: $(container).width(),
-				borderBottom: '1px solid rgba(0,0,0,0.2)',
-				background: '#fff'
-			});
-		  	toolbars.css({
-				top: 78,
-				bottom: 'auto',
-				position: 'fixed',
-				width: $(container).width(),
-				borderBottom: '1px solid rgba(0,0,0,0.2)'
-		  	});
+		  toolbars.css({
+			top: 45,
+			bottom: 'auto',
+			position: 'fixed',
+			width: $(container).width(),
+			borderBottom: '1px solid rgba(0,0,0,0.2)'
+		  });       
 		}
 	  } else {
 		$(container).css({
 		  paddingTop: 0
 		});
-
+		
 		toolbars.css({
   		top:0,
 		  position: 'relative',
 		  width: 'auto',
 		  borderBottom: 'none'
 		});
-		menubar.css({
-			top:0,
-			position: 'relative',
-			width: 'auto',
-			borderBottom: 'none'
-		  });
 	  }
 	}
-
+	
 	function isSticky() {
 	  var container = editor.editorContainer,
 		editorTop = container.getBoundingClientRect().top;
-
+	  
 	  if (editorTop < 0) {
 		return true;
 	  }
-
+  
 	  return false;
 	}
-
+	
 	function isAtBottom() {
 	  var container = editor.editorContainer,
 		editorTop = container.getBoundingClientRect().top;
-
+	  
 	  var toolbarHeight = $(container).find('.mce-toolbar-grp').outerHeight();
 	  var footerHeight = $(container).find('.mce-statusbar').outerHeight();
-
+	  
 	  var hiddenHeight = -($(container).outerHeight() - toolbarHeight - footerHeight);
 
   	  if (editorTop < hiddenHeight) {
 		return true;
 	  }
-
+	  
 	  return false;
 	}
   });

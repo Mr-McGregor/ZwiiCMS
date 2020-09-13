@@ -11,4 +11,10 @@
 			closeText:"&times;",
 			captionsData:'alt' 
 		});
+		var b = new SimpleLightbox('.galleryGalleryPicture', { 
+			captionSelector: "self",
+			captionType: "data",
+			captionsData: "caption",
+			closeText: "&times;"
+		});
 	});

@@ -2,7 +2,7 @@
 <div class="notranslate">
 	<div class="row">
 		<div class="col2">
-			<?php if($this->getUser('group') === self::GROUP_ADMIN): ?>
+			<?php if($this->getUrl(3)): ?>
 				<?php echo template::button('userEditBack', [
 					'class' => 'buttonGrey',
 					'href' => helper::baseUrl() . 'user',
@@ -54,7 +54,7 @@
 						'label' => 'Groupe',
 						'selected' => $this->getData(['user', $this->getUrl(2), 'group'])
 					]); ?>
-					 <div id="userEditLabelAuth">Autorisations :</div>
+					Autorisations :
 					<ul id="userEditGroupDescription<?php echo self::GROUP_MEMBER; ?>" class="userEditGroupDescription displayNone">
 						<li>Accès aux pages privées membres</li>
 					</ul>
@@ -85,7 +85,7 @@
 					'value' => $this->getUrl(2)
 				]); ?>
 				<?php echo template::password('userEditOldPassword', [
-					'autocomplete' => 'new-password', // remplace 'off' pour éviter le pré remplissage auto
+					'autocomplete' => 'off',
 					'label' => 'Ancien mot de passe'
 				]); ?>
 				<?php echo template::password('userEditNewPassword', [
