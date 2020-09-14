@@ -32,7 +32,7 @@ class common {
 	const I18N_DIR = 'site/i18n/';
 
 	// Numéro de version
-	const ZWII_VERSION = '11.0.153.dev';
+	const ZWII_VERSION = '11.0.209.dev';
 	const ZWII_UPDATE_CHANNEL = "v11";
 	// Miniatures de la galerie
 	const THUMBS_SEPARATOR = 'mini_';
