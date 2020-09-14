@@ -17,6 +17,52 @@ class helper {
 	const FILTER_TIMESTAMP = 10;
 	const FILTER_URL = 11;
 
+
+	/** 
+	 * Récupérer l'adresse IP sans tenit compte du proxy
+	 * @return string IP adress
+	 * Cette focntion est utilisé par user
+	*/
+
+	public static function getIp() {
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+			$ip=$_SERVER['HTTP_CLIENT_IP'];
+		}
+		elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+			$ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		else{
+			$ip=$_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
+
+	/**
+	 * Fonction pour récupérer le numéro de version en ligne
+	 * @param string $url à récupérer
+	 * @return mixed données récupérées
+	 */
+
+	public static function urlGetContents ($url) {
+		// Ejecter free.fr
+		if (strpos(self::baseUrl(),'free.fr') > 0 ){
+			return false;
+		}
+		if(function_exists('file_get_contents') &&
+				ini_get('allow_url_fopen') ){
+				$url_get_contents_data = @file_get_contents($url); // Masque un warning éventuel
+			}elseif(function_exists('fopen') &&
+				function_exists('stream_get_contents') &&
+				ini_get('allow_url_fopen')){
+				$handle = fopen ($url, "r");
+				$url_get_contents_data = stream_get_contents($handle);
+			}else{
+				$url_get_contents_data = false;
+			}
+		return $url_get_contents_data;
+	}
+
+
 	/**
 	 * Retourne les valeurs d'une colonne du tableau de données
 	 * @param array $array Tableau cible
