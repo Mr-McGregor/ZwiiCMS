@@ -6,7 +6,12 @@ class init extends common {
 			'autoBackup' => true,
 			'cookieConsent' => true,
 			'favicon' => 'favicon.ico',
-			'maintenance' => false,		
+			'faviconDark' => 'faviconDark.ico',
+			'homePageId' => 'accueil',
+			'page302' => 'erreur302',
+			'page403' => 'erreur403',
+			'page404' => 'erreur404',
+			'maintenance' => false,
 			'social' => [
 				'facebookId' => 'facebook',
 				'instagramId' => '',
@@ -40,7 +45,7 @@ class init extends common {
 			'lastAutoUpdate' => 0,
 			'baseUrl' => ''
 		],
-		'page' => [	
+		'page' => [
 			'accueil' => [
 			'typeMenu' => 'text',
 			'iconUrl' => '',
@@ -87,9 +92,9 @@ class init extends common {
 			],
 			'footer' => [
 				'backgroundColor' => 'rgba(255, 255, 255, 1)',
-				'font' => 'Open+Sans',				
+				'font' => 'Open+Sans',
 				'fontSize' => '.8em',
-				'fontWeight' => 'normal',				
+				'fontWeight' => 'normal',
 				'height' => '5px',
 				'loginLink' => true,
 				'margin' => true,
@@ -99,8 +104,8 @@ class init extends common {
 				'copyrightAlign' => 'right',
 				'text' => '<p>Pied de page personnalisé</p>',
 				'textPosition' => 'left',
-				'textAlign' => 'left',	
-				'textTransform' => 'none',							
+				'textAlign' => 'left',
+				'textTransform' => 'none',
 				'socialsPosition' => 'center',
 				'socialsAlign' => 'center',
 				'displayVersion' => true,
@@ -133,7 +138,7 @@ class init extends common {
 			],
 			'menu' => [
 				'backgroundColor' => 'rgba(32, 59, 82, 1)',
-				'font' => 'Open+Sans',				
+				'font' => 'Open+Sans',
 				'fontSize' => '1em',
 				'fontWeight' => 'normal',
 				'height' => '15px 10px',
@@ -172,7 +177,7 @@ class init extends common {
 
 
     public static $siteData = [
-		'page' => [	
+		'page' => [
 			'accueil' => [
 			'typeMenu' => 'text',
 			'iconUrl' => '',
@@ -206,12 +211,12 @@ class init extends common {
 						'disable' => false,
 				'content' => '<p>Vous pouvez assigner des parents à vos pages afin de mieux organiser votre menu !</p>
 								<div class="row">
-								<div class="col4"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum, neque non vulputate hendrerit, arcu turpis dapibus nisl, id scelerisque metus lectus vitae nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec feugiat dolor et turpis finibus condimentum. Cras sit amet ligula sagittis justo.</p></div>
-								<div class="col4"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum, neque non vulputate hendrerit, arcu turpis dapibus nisl, id scelerisque metus lectus vitae nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec feugiat dolor et turpis finibus condimentum. Cras sit amet ligula sagittis justo.</p></div>
-								<div class="col4"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum, neque non vulputate hendrerit, arcu turpis dapibus nisl, id scelerisque metus lectus vitae nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec feugiat dolor et turpis finibus condimentum. Cras sit amet ligula sagittis justo.</p></div>
+								<div class="col4"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac dolor arcu. Cras dignissim finibus nisi, vulputate egestas mauris faucibus ultricies. Nullam ornare pretium eleifend. Donec placerat purus ut turpis dapibus condimentum. Fusce at leo pharetra nisl vestibulum fermentum. Maecenas feugiat justo at semper tincidunt. Integer in blandit lorem.</p></div>
+								<div class="col4"><p>Ergo ego senator inimicus, si ita vultis, homini, amicus esse, sicut semper fui, rei publicae debeo. Quid? si ipsas inimicitias, depono rei publicae causa, quis me tandem iure reprehendet, praesertim cum ego omnium meorum consiliorum atque factorum exempla semper ex summorum hominum consiliis atque factis mihi censuerim petenda.</p></div>
+								<div class="col4"><p>Principium autem unde latius se funditabat, emersit ex negotio tali. Chilo ex vicario et coniux eius Maxima nomine, questi apud Olybrium ea tempestate urbi praefectum, vitamque suam venenis petitam adseverantes inpetrarunt ut hi, quos suspectati sunt, ilico rapti conpingerentur in vincula, organarius Sericus et Asbolius palaestrita et aruspex Campensis.</p></div>
 								</div>',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -226,7 +231,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false	
+				'hideMenuChildren' =>false
 			],
 			'privee' => [
 					'typeMenu' => 'text',
@@ -234,11 +239,11 @@ class init extends common {
 						'disable' => false,
 				'content' => '<p>Cette page n\'est visible que des membres de votre site !</p>
 								<div class="row">
-									<div class="col6"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum, neque non vulputate hendrerit, arcu turpis dapibus nisl, id scelerisque metus lectus vitae nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec feugiat dolor et turpis finibus condimentum. Cras sit amet ligula sagittis justo.</p></div>
-									<div class="col6"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum, neque non vulputate hendrerit, arcu turpis dapibus nisl, id scelerisque metus lectus vitae nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec feugiat dolor et turpis finibus condimentum. Cras sit amet ligula sagittis justo.</p></div>
+									<div class="col6"><p>Eius populus ab incunabulis primis ad usque pueritiae tempus extremum, quod annis circumcluditur fere trecentis, circummurana pertulit bella, deinde aetatem ingressus adultam post multiplices bellorum aerumnas Alpes transcendit et fretum, in iuvenem erectus et virum ex omni plaga quam orbis ambit inmensus, reportavit laureas et triumphos, iamque vergens in senium et nomine solo aliquotiens vincens ad tranquilliora vitae discessit.</p></div>
+									<div class="col6"><p>Exsistit autem hoc loco quaedam quaestio subdifficilis, num quando amici novi, digni amicitia, veteribus sint anteponendi, ut equis vetulis teneros anteponere solemus. Indigna homine dubitatio! Non enim debent esse amicitiarum sicut aliarum rerum satietates; veterrima quaeque, ut ea vina, quae vetustatem ferunt, esse debet suavissima; verumque illud est, quod dicitur, multos modios salis simul edendos esse, ut amicitiae munus expletum sit.</p></div>
 								</div>',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -264,7 +269,7 @@ class init extends common {
 								<p>Cette nouvelle fonctionnalité autorise toutes sortes d\'utilisations : texte, encadrés, images, vidéos... ou simple marge blanche. Seule restriction : on ne peut pas installer un module dans une barre latérale.</p>
 								<p>La liste des barres disponibles et leur emplacement s\'affichent en fonction du gabarit que vous aurez choisi.',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -289,7 +294,7 @@ class init extends common {
 						Deux types de menus sont disponibles : l\'un reprenant les rubriques du menu principal comme celui-ci, l\'autre listant les pages d\'une même rubrique. Le choix du type de menu se fait dans la page de configuration d\'une barre latérale.</p>
 						<p>Pour ajouter un menu à une page, choisissez une barre latérale avec menu dans la page de configuration. Les bulles d\'aide de la rubrique "Menu" expliquent comment masquer une page.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => true,				
+				'breadCrumb' => true,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -305,14 +310,14 @@ class init extends common {
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
 				'hideMenuChildren' =>false
-				],				
+				],
 			'blog' => [
 				'typeMenu' => 'text',
 						'iconUrl' => '',
 						'disable' => false,
 				'content' => '<p>Cette page contient une instance du module de blog. Cliquez sur un article afin de le lire et de poster des commentaires.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => 'blog',
@@ -327,7 +332,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false							
+				'hideMenuChildren' =>false
 			],
 			'galeries' => [
 				'typeMenu' => 'text',
@@ -335,7 +340,7 @@ class init extends common {
 						'disable' => false,
 				'content' => '<p>Cette page contient une instance du module de galeries photos. Cliquez sur la galerie ci-dessous afin de voir les photos qu\'elle contient.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => 'gallery',
@@ -350,7 +355,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' =>  'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false			
+				'hideMenuChildren' =>false
 			],
 			'site-de-zwii' => [
 			'typeMenu' => 'text',
@@ -358,8 +363,8 @@ class init extends common {
 					'disable' => false,
 			'content' => '',
 			'hideTitle' => false,
-			'homePageId' => false,			
-			'breadCrumb' => false,				
+			'homePageId' => false,
+			'breadCrumb' => false,
 			'metaDescription' => '',
 			'metaTitle' => '',
 			'moduleId' => 'redirection',
@@ -374,7 +379,7 @@ class init extends common {
 			'barRight' => '',
 			'displayMenu' => 'none',
 			'hideMenuSide' => false,
-			'hideMenuChildren' =>false							
+			'hideMenuChildren' =>false
 			],
 			'contact' => [
 				'typeMenu' => 'text',
@@ -382,7 +387,7 @@ class init extends common {
 				'disable' => false,
 				'content' => '<p>Cette page contient un exemple de formulaire conçu à partir du module de génération de formulaires. Il est configuré pour envoyer les données saisies par mail aux administrateurs du site.</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => 'form',
@@ -397,7 +402,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' => 'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false						
+				'hideMenuChildren' =>false
 			],
 			'barre' => [
 				'typeMenu' => 'text',
@@ -405,7 +410,7 @@ class init extends common {
 				'disable' => false,
 				'content' => '<div class="block"><h4>ZwiiCMS</h4><h3>Le CMS sans base de données à l\'installation simple et rapide</h3></div>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -420,7 +425,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' => 'none',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false	
+				'hideMenuChildren' =>false
 			],
 			'barrelateraleavecmenu' => [
 				'typeMenu' => 'text',
@@ -428,7 +433,7 @@ class init extends common {
 				'disable' => false,
 				'content' => '<p>&nbsp;</p>',
 				'hideTitle' => false,
-				'breadCrumb' => false,				
+				'breadCrumb' => false,
 				'metaDescription' => '',
 				'metaTitle' => '',
 				'moduleId' => '',
@@ -443,7 +448,7 @@ class init extends common {
 				'barRight' => '',
 				'displayMenu' => 'parents',
 				'hideMenuSide' => false,
-				'hideMenuChildren' =>false			
+				'hideMenuChildren' =>false
 			],
 			'mentions-legales' => [
 				'typeMenu' => 'text',
@@ -497,6 +502,100 @@ class init extends common {
 				'hideMenuHead' => false,
 				'hideMenuChildren' => false
 			],
+			'erreur302' => [
+				'typeMenu' => 'text',
+				'iconUrl' => '',
+				'disable' => false,
+				'content' => '<p>Notre site est actuellement en maintenance. Nous sommes d&eacute;sol&eacute;s pour la g&ecirc;ne occasionn&eacute;e et faisons notre possible pour &ecirc;tre rapidement de retour.</p>
+							  <div class="row"><div class="col4 offset8 textAlignCenter"><a href="./?user/login" id="maintenanceLogin" name="maintenanceLogin" class="button"><span class="zwiico-lock zwiico-margin-right"></span>Administration</a></div></div>',
+				'hideTitle' => false,
+				'breadCrumb' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => '',
+				'modulePosition' => '',
+				'parentPageId' => '',
+				'position' => 0,
+				'group' => self::GROUP_VISITOR,
+				'targetBlank' => false,
+				'title' => 'Maintenance en cours',
+				'block' => '12',
+				'barLeft' => '',
+				'barRight' => '',
+				'displayMenu' => 'none',
+				'hideMenuSide' => true,
+				'hideMenuHead' => true,
+				'hideMenuChildren' => true
+				],
+			'erreur403' => [
+				'typeMenu' => 'text',
+				'iconUrl' => '',
+				'disable' => false,
+				'content' => '<h2 style="text-align: center;">Vous n\'êtes pas autorisé à accéder à cette page...</h2><p style="text-align: center;">Personnalisez cette page à votre convenance sans qu\'elle apparaisse dans les menus.<p>',
+				'hideTitle' => false,
+				'breadCrumb' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => '',
+				'modulePosition' => 'bottom',
+				'parentPageId' => '',
+				'position' => 0,
+				'group' => self::GROUP_VISITOR,
+				'targetBlank' => false,
+				'title' => 'Erreur 403',
+				'block' => '12',
+				'barLeft' => '',
+				'barRight' => '',
+				'displayMenu' => 'none',
+				'hideMenuSide' => false,
+				'hideMenuChildren' => false
+			],
+			'erreur404' => [
+				'typeMenu' => 'text',
+				'iconUrl' => '',
+				'disable' => false,
+				'content' => '<h2 style="text-align: center;">Oups ! La page demandée est introuvable...</h2><p style="text-align: center;">Personnalisez cette page à votre convenance sans qu\'elle apparaisse dans les menus.<p>',
+				'hideTitle' => false,
+				'breadCrumb' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => 'search',
+				'modulePosition' => 'bottom',
+				'parentPageId' => '',
+				'position' => 0,
+				'group' => self::GROUP_VISITOR,
+				'targetBlank' => false,
+				'title' => 'Erreur 404',
+				'block' => '12',
+				'barLeft' => '',
+				'barRight' => '',
+				'displayMenu' => 'none',
+				'hideMenuSide' => false,
+				'hideMenuChildren' =>false
+			],
+			'recherche' => [
+				'typeMenu' => 'icon',
+				'iconUrl' => 'icones/loupe.png',
+				'disable' => false,
+				'content' => '<h1>Rechercher dans le site</h1>',
+				'hideTitle' => true,
+				'breadCrumb' => false,
+				'metaDescription' => '',
+				'metaTitle' => '',
+				'moduleId' => 'search',
+				'modulePosition' => 'bottom',
+				'parentPageId' => '',
+				'position' => 7,
+				'group' => self::GROUP_VISITOR,
+				'targetBlank' => false,
+				'title' => 'Recherche',
+				'block' => '12',
+				'barLeft' => '',
+				'barRight' => '',
+				'displayMenu' => 'none',
+				'hideMenuSide' => false,
+				'hideMenuChildren' => false
+			],
 		],
 		'module' => [
 			'blog' => [
@@ -510,9 +609,9 @@ class init extends common {
 							'userId' => ''
 						]
 					],
-					'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a placerat metus. Morbi luctus laoreet dolor et euismod. Phasellus eget eros ac eros pretium tincidunt. Sed maximus magna lectus, non vestibulum sapien pretium maximus. Donec convallis leo tortor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras convallis lacus eu risus gravida varius. Etiam mattis massa vitae eros placerat bibendum.</p><p>Vivamus tempus magna augue, in bibendum quam blandit at. Morbi felis tortor, suscipit ut ipsum ut, volutpat consectetur orci. Nulla tincidunt quis ligula non viverra. Sed pretium dictum blandit. Donec fringilla, nunc at dictum pretium, arcu massa viverra leo, et porta turpis ipsum eget risus. Quisque quis maximus purus, in elementum arcu. Donec nisi orci, aliquam non luctus non, congue volutpat massa. Curabitur sed risus congue, porta arcu vel, tincidunt nisi. Duis tincidunt quam ut velit maximus ornare. Nullam sagittis, ante quis pharetra hendrerit, lorem massa dapibus mi, a hendrerit dolor odio nec augue. Nunc sem nisl, tincidunt vitae nunc et, viverra tristique diam. In eget dignissim lectus. Nullam volutpat lacus id ex dapibus viverra. Pellentesque ultricies lorem ut nunc elementum volutpat. Cras id ultrices justo.</p><p>Phasellus nec erat leo. Praesent at sem nunc. Vestibulum quis condimentum turpis. Cras semper diam vitae enim fringilla, ut fringilla mauris efficitur. In nec porttitor urna. Nam eros leo, vehicula eget lobortis sed, gravida id mauris. Nulla bibendum nunc tortor, non bibendum justo consectetur vel. Phasellus nec risus diam. In commodo tellus nec nulla fringilla, nec feugiat nunc consectetur. Etiam non eros sodales, sodales lacus vel, finibus leo. Quisque hendrerit tristique congue. Phasellus nec augue vitae libero elementum facilisis. Mauris pretium ornare nisi, non scelerisque velit consectetur sit amet.</p>',
+					'content' => '<p>Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.</p><p>Ex his quidam aeternitati se commendari posse per statuas aestimantes eas ardenter adfectant quasi plus praemii de figmentis aereis sensu carentibus adepturi, quam ex conscientia honeste recteque factorum, easque auro curant inbracteari, quod Acilio Glabrioni delatum est primo, cum consiliis armisque regem superasset Antiochum. quam autem sit pulchrum exigua haec spernentem et minima ad ascensus verae gloriae tendere longos et arduos, ut memorat vates Ascraeus, Censorius Cato monstravit. qui interrogatus quam ob rem inter multos... statuam non haberet malo inquit ambigere bonos quam ob rem id non meruerim, quam quod est gravius cur inpetraverim mussitare.</p><p>Latius iam disseminata licentia onerosus bonis omnibus Caesar nullum post haec adhibens modum orientis latera cuncta vexabat nec honoratis parcens nec urbium primatibus nec plebeiis.</p>',
 					'picture' => 'galerie/landscape/meadow.jpg',
-					'hidePicture' => false,					
+					'hidePicture' => false,
 					'publishedOn' => 1548790902,
 					'state' => true,
 					'title' => 'Mon premier article',
@@ -521,9 +620,9 @@ class init extends common {
 				'mon-deuxieme-article' => [
 					'closeComment' => false,
 					'comment' => [],
-					'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis eros pharetra metus rutrum pretium et sagittis mauris. Donec commodo venenatis sem nec suscipit. In tempor sollicitudin scelerisque. Etiam quis nibh eleifend, congue nisl quis, ultricies ipsum. Integer at est a eros vulputate pellentesque eu vitae tellus. Nullam suscipit quam nisl. Vivamus dui odio, luctus ac fringilla ultrices, eleifend vel sapien. Integer sem ex, lobortis eu mattis eu, condimentum non libero. Aliquam non porttitor elit, eu hendrerit neque. Praesent tortor urna, tincidunt sed dictum id, rutrum tempus sapien.</p><p>Donec accumsan ante ac odio laoreet porttitor. Pellentesque et leo a leo scelerisque mattis id vel elit. Quisque egestas congue enim nec semper. Morbi mollis nibh sapien. Nunc quis fringilla lorem. Donec vel venenatis nunc. Donec lectus velit, tempor sit amet dui sed, consequat commodo enim. Nam porttitor neque semper, dapibus nunc bibendum, lobortis urna. Morbi ullamcorper molestie lectus a elementum. Curabitur eu cursus orci, sed tristique justo. In massa lacus, imperdiet eu elit quis, consectetur maximus magna. Integer suscipit varius ante vitae egestas. Morbi scelerisque fermentum ipsum, euismod faucibus mi tincidunt id. Sed at consectetur velit. Ut fermentum nunc nibh, at commodo felis lacinia nec.</p><p>Nullam a justo quis lectus facilisis semper eget quis sem. Morbi suscipit erat sem, non fermentum nunc luctus vel. Proin venenatis quam ut arcu luctus efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam sollicitudin tristique nunc nec convallis. Maecenas id tortor semper, tempus nisl laoreet, cursus lacus. Aliquam sagittis est in leo congue, a pharetra felis aliquet. Nulla gravida lobortis sapien, quis viverra enim ullamcorper sed. Donec ultrices sem eu volutpat dapibus. Nam euismod, tellus eu congue mollis, massa nisi finibus odio, vitae porta arcu urna ac lorem. Sed faucibus dignissim pretium. Pellentesque eget ante tellus. Pellentesque a elementum odio, sit amet vulputate diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit consequat dolor, malesuada pellentesque tellus molestie non. Aenean quis purus a lectus pellentesque laoreet.</p>',
+					'content' => '<p>Et prima post Osdroenam quam, ut dictum est, ab hac descriptione discrevimus, Commagena, nunc Euphratensis, clementer adsurgit, Hierapoli, vetere Nino et Samosata civitatibus amplis inlustris.</p><p>Ob haec et huius modi multa, quae cernebantur in paucis, omnibus timeri sunt coepta. et ne tot malis dissimulatis paulatimque serpentibus acervi crescerent aerumnarum, nobilitatis decreto legati mittuntur: Praetextatus ex urbi praefecto et ex vicario Venustus et ex consulari Minervius oraturi, ne delictis supplicia sint grandiora, neve senator quisquam inusitato et inlicito more tormentis exponeretur.</p><p>Sed ut tum ad senem senex de senectute, sic hoc libro ad amicum amicissimus scripsi de amicitia. Tum est Cato locutus, quo erat nemo fere senior temporibus illis, nemo prudentior; nunc Laelius et sapiens (sic enim est habitus) et amicitiae gloria excellens de amicitia loquetur. Tu velim a me animum parumper avertas, Laelium loqui ipsum putes. C. Fannius et Q. Mucius ad socerum veniunt post mortem Africani; ab his sermo oritur, respondet Laelius, cuius tota disputatio est de amicitia, quam legens te ipse cognosces.</p>',
 					'picture' => 'galerie/landscape/desert.jpg',
-					'hidePicture' => false,					
+					'hidePicture' => false,
 					'publishedOn' => 1550432502,
 					'state' => true,
 					'title' => 'Mon deuxième article',
@@ -532,9 +631,9 @@ class init extends common {
 				'mon-troisieme-article' => [
 					'closeComment' => true,
 					'comment' => [],
-					'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut tempus nibh. Cras eget iaculis justo, ac laoreet lacus. Nunc tellus nulla, auctor id hendrerit eu, pellentesque in sapien. In hac habitasse platea dictumst. Aliquam leo urna, hendrerit id nunc eget, finibus maximus dolor. Sed rutrum sapien consectetur, tincidunt nulla at, blandit quam. Duis ex enim, vehicula vel nisi vitae, lobortis volutpat nisl. Vivamus enim libero, euismod nec risus vel, interdum placerat elit. In cursus sapien condimentum dui imperdiet, sed lobortis ante consectetur. Maecenas hendrerit eget felis non consequat.</p><p>Nullam nec risus non velit efficitur tempus eget tincidunt mauris. Etiam venenatis leo id justo sagittis, commodo dignissim sapien tristique. Vivamus finibus augue malesuada sapien gravida rutrum. Integer mattis lectus ac pulvinar scelerisque. Integer suscipit feugiat metus, ac molestie odio suscipit eget. Fusce at elit in tellus venenatis finibus id sit amet magna. Integer sodales luctus neque blandit posuere. Cras pellentesque dictum lorem eget vestibulum. Quisque vitae metus non nisi efficitur rhoncus ut vitae ipsum. Donec accumsan massa at est faucibus lacinia. Quisque imperdiet luctus neque eu vestibulum. Phasellus pellentesque felis ligula, id imperdiet elit ultrices eu.</p>',
+					'content' => '<p>Rogatus ad ultimum admissusque in consistorium ambage nulla praegressa inconsiderate et leviter proficiscere inquit ut praeceptum est, Caesar sciens quod si cessaveris, et tuas et palatii tui auferri iubebo prope diem annonas. hocque solo contumaciter dicto subiratus abscessit nec in conspectum eius postea venit saepius arcessitus.</p><p>Proinde concepta rabie saeviore, quam desperatio incendebat et fames, amplificatis viribus ardore incohibili in excidium urbium matris Seleuciae efferebantur, quam comes tuebatur Castricius tresque legiones bellicis sudoribus induratae.</p><p>Inter has ruinarum varietates a Nisibi quam tuebatur accitus Vrsicinus, cui nos obsecuturos iunxerat imperiale praeceptum, dispicere litis exitialis certamina cogebatur abnuens et reclamans, adulatorum oblatrantibus turmis, bellicosus sane milesque semper et militum ductor sed forensibus iurgiis longe discretus, qui metu sui discriminis anxius cum accusatores quaesitoresque subditivos sibi consociatos ex isdem foveis cerneret emergentes, quae clam palamve agitabantur, occultis Constantium litteris edocebat inplorans subsidia, quorum metu tumor notissimus Caesaris exhalaret.</p>',
 					'picture' => 'galerie/landscape/iceberg.jpg',
-					'hidePicture' => false,					
+					'hidePicture' => false,
 					'publishedOn' => 1550864502,
 					'state' => true,
 					'title' => 'Mon troisième article',

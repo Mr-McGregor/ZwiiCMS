@@ -10,7 +10,7 @@
  * @license GNU General Public License, version 3
  * @author Frédéric Tempez <frederic.tempez@outlook.com>
  * @copyright Copyright (C) 2018-2020, Frédéric Tempez
- * @link http://zwiicms.com/
+ * @link http://zwiicms.fr/
  */
 
 class common {
@@ -1596,7 +1596,7 @@ class core extends common {
 			// Déconnexion
 			$user = new user;
 			$user->logout();
-			// Rédirection
+			// Redirection
 			http_response_code(302);
 			header('Location:' . helper::baseUrl() . 'maintenance');
 			exit();
@@ -1843,17 +1843,35 @@ class core extends common {
 		}
 		if($access === false) {
 			http_response_code(403);
-			$this->addOutput([
-				'title' => 'Erreur 403',
-				'content' => template::speech('Vous n\'êtes pas autorisé à accéder à cette page...')
-			]);
-		}
-		elseif($this->output['content'] === '') {
+			if ($accessInfo['userName']) {
+				$this->addOutput([
+					'title' => 'Accès verrouillé',
+					'content' => template::speech('La page <strong>' . $accessInfo['pageId'] . '</strong> est ouverte par l\'utilisateur <strong>' . $accessInfo['userName'] . '</strong>')
+				]);
+			} else {
+				if ( $this->getData(['config','page403']) !== 'none'
+					AND $this->getData(['page',$this->getData(['config','page403'])])) 
+				{
+					header('Location:' . helper::baseUrl() . $this->getData(['config','page403']));
+				} else {
+					$this->addOutput([
+						'title' => 'Erreur 403',
+						'content' => template::speech('Vous n\'êtes pas autorisé à accéder à cette page...')
+					]);
+				}
+			}
+		} elseif ($this->output['content'] === '') {
 			http_response_code(404);
-			$this->addOutput([
-				'title' => 'Erreur 404',
-				'content' => template::speech('Oups ! La page demandée est introuvable...')
-			]);
+			if ( $this->getData(['config','page404']) !== 'none' 
+				AND $this->getData(['page',$this->getData(['config','page404'])])) 
+			{
+				header('Location:' . helper::baseUrl() . $this->getData(['config','page404']));
+			} else {
+				$this->addOutput([
+					'title' => 'Erreur 404',
+					'content' => template::speech('Oups ! La page demandée est introuvable...')
+				]);
+			}
 		}
 		// Mise en forme des métas
 		if($this->output['metaTitle'] === '') {
@@ -2058,7 +2076,7 @@ class layout extends common {
 		$items .= '>Motorisé&nbsp;par&nbsp;</span>';
 		// Toujours afficher le nom du CMS
 		$items .= '<span id="footerZwiiCMS">';
-		$items .= '<a href="http://zwiicms.com/" onclick="window.open(this.href);return false" data-tippy-content="Zwii CMS sans base de données, très léger et performant">ZwiiCMS</a>';
+		$items .= '<a href="https://zwiicms.fr/" onclick="window.open(this.href);return false" data-tippy-content="Zwii CMS sans base de données, très léger et performant">ZwiiCMS</a>';
 		$items .= '</span>';
 		// Affichage du numéro de version
 		$items .= '<span id="footerDisplayVersion"';
@@ -2597,13 +2615,19 @@ class layout extends common {
 				}
 				$rightItems .= '<li><a href="' . helper::baseUrl() . 'config" data-tippy-content="Gérer le site">' . template::ico('cog-alt') . '</a></li>';
 				// Mise à jour automatique
-				$lastAutoUpdate = mktime(0, 0, 0);
-				if( $this->getData(['config','autoUpdate']) === true &&
-					$lastAutoUpdate > $this->getData(['core','lastAutoUpdate']) + 86400 ) {
-						$this->setData(['core','lastAutoUpdate',$lastAutoUpdate]);
-				    if ( helper::checkNewVersion(common::ZWII_UPDATE_CHANNEL)  ) {
-						$rightItems .= '<li><a id="barUpdate" href="' . helper::baseUrl() . 'install/update" data-tippy-content="Mettre à jour Zwii '. common::ZWII_VERSION .' vers '. helper::getOnlineVersion(common::ZWII_UPDATE_CHANNEL) .'">' . template::ico('update colorRed') . '</a></li>';
-					}
+				$today = mktime(0, 0, 0);
+				// Une mise à jour est disponible + recherche auto activée + 1 jour de délais
+				if ( $this->getData(['config','autoUpdate']) === true
+					AND $today > $this->getData(['core','lastAutoUpdate']) + 86400 ) {
+						if ( helper::checkNewVersion(common::ZWII_UPDATE_CHANNEL) ) {
+							$this->setData(['core','updateAvailable', true]);
+							$this->setData(['core','lastAutoUpdate',$today]);
+						}
+				}
+				// Afficher le bouton : Mise à jour détectée + activée
+				if ( $this->getData(['core','updateAvailable']) === true &&
+					$this->getData(['config','autoUpdate']) === true  ) {
+					$rightItems .= '<li><a id="barUpdate" href="' . helper::baseUrl() . 'install/update" data-tippy-content="Mettre à jour Zwii '. common::ZWII_VERSION .' vers '. helper::getOnlineVersion(common::ZWII_UPDATE_CHANNEL) .'">' . template::ico('update colorRed') . '</a></li>';
 				}
 			}
 			$rightItems .= '<li><a href="' . helper::baseUrl() . 'user/edit/' . $this->getUser('id'). '/' . $_SESSION['csrf'] . '" data-tippy-content="Configurer mon compte">' . template::ico('user', 'right') . '<span id="displayUsername">' .  $this->getUser('firstname') . ' ' . $this->getUser('lastname') . '</span></a></li>';

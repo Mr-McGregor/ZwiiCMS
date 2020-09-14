@@ -7,7 +7,7 @@
  * @author Rémi Jean <remi.jean@outlook.com>
  * @copyright Copyright (C) 2008-2018, Rémi Jean
  * @license GNU General Public License, version 3
- * @link http://zwiicms.com/
+ * @link http://zwiicms.fr/
  */
 
 /**
@@ -1427,4 +1427,14 @@ th.col12 {
 }
 .accordion-content {
 	padding: 7px;
+}
+
+/* Captcha
+*  Taille des images
+*/
+.captchaNumber {
+	height: 25px;
+	vertical-align: bottom;
+	padding-left: 5px;
+	padding-right: 5px;
 }

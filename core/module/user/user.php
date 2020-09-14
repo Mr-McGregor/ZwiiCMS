@@ -9,7 +9,7 @@
  * @author Rémi Jean <remi.jean@outlook.com>
  * @copyright Copyright (C) 2008-2018, Rémi Jean
  * @license GNU General Public License, version 3
- * @link http://zwiicms.com/
+ * @link http://zwiicms.fr/
  */
 
 
@@ -49,12 +49,12 @@ class user extends common {
 			$userFirstname = $this->getInput('userAddFirstname', helper::FILTER_STRING_SHORT, true);
 			$userLastname = $this->getInput('userAddLastname', helper::FILTER_STRING_SHORT, true);
 			$userMail = $this->getInput('userAddMail', helper::FILTER_MAIL, true);
-			// Pas de nom saisi
-			if (empty($userFirstname) || 
-				empty($userLastname)  || 
-				empty($this->getInput('userAddPassword', helper::FILTER_STRING_SHORT, true)) ||
-				empty($this->getInput('userAddConfirmPassword', helper::FILTER_STRING_SHORT, true))) {
-				$check=false;
+			// Vérification des saisies
+			if (empty($userFirstname)
+				AND empty($userLastname)
+				AND empty($this->getInput('userAddPassword', helper::FILTER_STRING_SHORT, true))
+				AND empty($this->getInput('userAddConfirmPassword', helper::FILTER_STRING_SHORT, true))) {
+				$check = false;
 			}
 			// Si tout est ok création effective
 			if ($check === true) {
@@ -379,7 +379,12 @@ class user extends common {
 	 * Déconnexion
 	 */
 	public function logout() {
-		helper::deleteCookie('ZWII_USER_ID');
+		// Ne pas effacer l'identifiant mais seulement le mot de passe
+		if (array_key_exists('ZWII_USER_LONGTIME',$_COOKIE)
+			AND $_COOKIE['ZWII_USER_LONGTIME'] !== 'true' ) {
+			helper::deleteCookie('ZWII_USER_ID');
+			helper::deleteCookie('ZWII_USER_LONGTIME');
+		}
 		helper::deleteCookie('ZWII_USER_PASSWORD');
 		session_destroy();
 		// Valeurs en sortie

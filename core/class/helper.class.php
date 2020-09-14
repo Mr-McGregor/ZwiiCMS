@@ -131,7 +131,7 @@ class helper {
 	 * @return string
 	 */
 	public static function getOnlineVersion() {
-		return (@file_get_contents('http://zwiicms.com/update/version'));
+		return (helper::urlGetContents('http://zwiicms.fr/update/'. common::ZWII_UPDATE_CHANNEL . '/version'));
 	}
 
 

@@ -9,7 +9,7 @@
  * @author Rémi Jean <remi.jean@outlook.com>
  * @copyright Copyright (C) 2008-2018, Rémi Jean
  * @license GNU General Public License, version 3
- * @link http://zwiicms.com/
+ * @link http://zwiicms.fr/
  */
 
 class config extends common {
@@ -25,7 +25,7 @@ class config extends common {
 	];
 
 	public static $newVersion;
-	
+
 	public static $timezones = [
 		'Pacific/Midway'		=> '(GMT-11:00) Midway Island',
 		'US/Samoa'				=> '(GMT-11:00) Samoa',
@@ -146,15 +146,42 @@ class config extends common {
 		5 => '5 articles',
 		10 => '10 articles',
 		15 => '15 articles',
-		20 => '20  articles'		
+		20 => '20  articles'
 	];
 	// Type de proxy
 	public static $proxyType = [
 		'tcp://' => 'TCP',
 		'http://' => 'HTTP'
 	];
+	// Authentification SMTP
+	public static $SMTPauth = [
+		true => 'Oui',
+		false => 'Non'
+	];
+	// Encryptation SMTP
+	public static $SMTPEnc = [
+		'' => 'Aucune',
+		'tls' => 'START TLS',
+		'ssl' => 'SSL/TLS'
+	];
+	// Sécurité de la  connexion - tentative max avant blocage
+	public static $connectAttempt = [
+		999 => 'Aucun',
+		3 => '3 tentatives',
+		5 => '5 tentatives',
+		10 => '10 tentatives'
+	];
+	// Sécurité de la connexion - durée du blocage
+	public static $connectTimeout = [
+		0 => 'Aucun',
+		300 => '5 minutes',
+		600 => '10 minutes',
+		900 => '15 minutes'
+	];
 
-
+	/**
+	 * Génére les fichiers pour les crawlers
+	 */
 	public function generateFiles() {
 		// Mettre à jour le site map
 		$successSitemap=$this->createSitemap();
@@ -176,7 +203,7 @@ class config extends common {
 	}
 
 	/**
-	 * Met à jour un fichier robots.txt lors du changement de réécriture 
+	 * Met à jour un fichier robots.txt lors du changement de réécriture
 	 */
 
 	public function updateRobots() {
@@ -188,7 +215,7 @@ class config extends common {
 		rename ('robots.txt','robots.bak');
 		$fileold = fopen('robots.bak','r');
 		$filenew = fopen('robots.txt','w');
-		while(!feof($fileold))	{			
+		while(!feof($fileold))	{
 			$data = fgets($fileold);
 			if (strpos($data,'sitemap.xml') == 0) {
 				fwrite($filenew, $data);
@@ -209,11 +236,11 @@ class config extends common {
 	public function backup() {
 		// Soumission du formulaire
 		if($this->isPost()) {
-			// Creation du ZIP		
+			// Creation du ZIP
 			$filter = $this->getInput('configBackupOption',helper::FILTER_BOOLEAN) === true ? ['backup','tmp'] : ['backup','tmp','file'];
 			$fileName = helper::autoBackup(self::TEMP_DIR,$filter);
 
-			// Téléchargement du ZIP		
+			// Téléchargement du ZIP
 			header('Content-Type: application/zip');
 			header('Content-Disposition: attachment; filename="' . $fileName . '"');
 			header('Content-Length: ' . filesize(self::TEMP_DIR . $fileName));
@@ -238,11 +265,11 @@ class config extends common {
 	 *  https://www.codexworld.com/capture-screenshot-website-url-php-google-api/
 	 */
 	public function configMetaImage() {
-		// fonction désactivée pour un site local		
-		if ( strpos(helper::baseUrl(false),'localhost') > 0 OR strpos(helper::baseUrl(false),'127.0.0.1') > 0)	{				
+		// fonction désactivée pour un site local
+		if ( strpos(helper::baseUrl(false),'localhost') > 0 OR strpos(helper::baseUrl(false),'127.0.0.1') > 0)	{
 			$site = 'https://zwiicms.com/'; } else {
 			$site = helper::baseUrl(false);	}
-		
+
 		$success= false;
 		$googlePagespeedData = @file_get_contents('https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url='. $site .'&screenshot=true');
 		if ($googlePagespeedData  !== false) {
@@ -250,7 +277,7 @@ class config extends common {
 			$screenshot = $googlePagespeedData['screenshot']['data'];
 			$screenshot = str_replace(array('_','-'),array('/','+'),$screenshot);
 			$data = 'data:image/jpeg;base64,'.$screenshot;
-			$data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));			
+			$data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
 			// Effacer la miniature
 			if (file_exists(self::FILE_DIR.'thumb/screenshot.png')) {
 				unlink (self::FILE_DIR.'thumb/screenshot.png');
@@ -265,7 +292,7 @@ class config extends common {
 			'redirect' => helper::baseUrl() . 'config',
 			'state' => $success
 		]);
-	}	
+	}
 
 
      /**
@@ -288,7 +315,7 @@ class config extends common {
 					]);
 			}
 			$successOpen = $zip->open(self::FILE_DIR . 'source/' . $fileZip);
-			if ($successOpen === FALSE) {					
+			if ($successOpen === FALSE) {
 				// Valeurs en sortie erreur
 				$this->addOutput([
 					'notification' => 'Impossible de lire l\'archive',
@@ -297,29 +324,29 @@ class config extends common {
 					]);
 			}
 			// Lire le contenu de l'archive dans le tableau files
-			for( $i = 0; $i < $zip->numFiles; $i++ ){ 
-				$stat = $zip->statIndex( $i ); 
-				$files [] = ( basename( $stat['name'] )); 
+			for( $i = 0; $i < $zip->numFiles; $i++ ){
+				$stat = $zip->statIndex( $i );
+				$files [] = ( basename( $stat['name'] ));
 			}
-			
+
 			// Détermination de la version	à installer
-			if (in_array('theme.json',$files) === true && 
-				in_array('core.json',$files) === true && 
-				in_array ('user.json', $files) === false ) { 
+			if (in_array('theme.json',$files) === true &&
+				in_array('core.json',$files) === true &&
+				in_array ('user.json', $files) === false ) {
 					// V9 pas de fichier user dans l'archive
 					// Stocker le choix de conserver les users installées
 					$version = '9';
 
-			} elseif (in_array('theme.json',$files) === true && 					
-				in_array('core.json',$files) === true && 
-				in_array ('user.json', $files) === true && 
+			} elseif (in_array('theme.json',$files) === true &&
+				in_array('core.json',$files) === true &&
+				in_array ('user.json', $files) === true &&
 				in_array ('config.json', $files) === true ) {
 					// V10 valide user et config
 					$version = '10';
 					// Option active, les users sont stockées
-					if ($this->getInput('configRestoreImportUser', helper::FILTER_BOOLEAN) === true ) { 
-						$users = $this->getData(['user']); 
-					}						
+					if ($this->getInput('configRestoreImportUser', helper::FILTER_BOOLEAN) === true ) {
+						$users = $this->getData(['user']);
+					}
 			} else { // Version invalide
 				// Valeurs en sortie erreur
 				$this->addOutput([
@@ -336,28 +363,28 @@ class config extends common {
 			}
 
 			// Extraire le zip
-			$success = $zip->extractTo( 'site/' );				
-			// Fermer l'archive	
+			$success = $zip->extractTo( 'site/' );
+			// Fermer l'archive
 			$zip->close();
 
 			// Restaurer les users originaux d'une v10 si option cochée
 			if (!empty($users) &&
 				$version === '10' &&
-				$this->getInput('configRestoreImportUser', helper::FILTER_BOOLEAN) === true) { 
-					$this->setData(['user',$users]);					
-			}		
-	
+				$this->getInput('configRestoreImportUser', helper::FILTER_BOOLEAN) === true) {
+					$this->setData(['user',$users]);
+			}
+
 			// Message de notification
-			$notification  = $success === true ? 'Sauvegarde importée avec succès' : 'Erreur d\'extraction'; 
+			$notification  = $success === true ? 'Sauvegarde importée avec succès' : 'Erreur d\'extraction';
 			$redirect = $this->getInput('configRestoreImportUser', helper::FILTER_BOOLEAN) === true ?  helper::baseUrl() . 'config/restore' : helper::baseUrl() . 'user/login/';
-			// Valeurs en sortie erreur	
+			// Valeurs en sortie erreur
 			$this->addOutput([
 				'notification' => $notification,
 				'redirect' =>$redirect,
 				'state' => $success
 			]);
-		} 
-	
+		}
+
 		// Valeurs en sortie
 		$this->addOutput([
 			'title' => 'Restaurer une sauvegarde',
@@ -381,7 +408,10 @@ class config extends common {
 			$this->setData([
 				'config',
 				[
-					//'homePageId' => $this->getInput('configHomePageId', helper::FILTER_ID, true),
+					'homePageId' => $this->getInput('configHomePageId', helper::FILTER_ID, true),
+					'page404' => $this->getInput('configPage404'),
+					'page403' => $this->getInput('configPage403'),
+					'page302' => $this->getInput('configPage302'),
 					'analyticsId' => $this->getInput('configAnalyticsId'),
 					'autoBackup' => $this->getInput('configAutoBackup', helper::FILTER_BOOLEAN),
 					'maintenance' => $this->getInput('configMaintenance', helper::FILTER_BOOLEAN),
@@ -401,7 +431,7 @@ class config extends common {
 					'timezone' => $this->getInput('configTimezone', helper::FILTER_STRING_SHORT, true),
 					'itemsperPage' => $this->getInput('configItemsperPage', helper::FILTER_INT,true),
 					'legalPageId' => $this->getInput('configLegalPageId'),
-					'metaDescription' => $this->getInput('configMetaDescription', helper::FILTER_STRING_LONG, true),					
+					'metaDescription' => $this->getInput('configMetaDescription', helper::FILTER_STRING_LONG, true),
 					'title' => $this->getInput('configTitle', helper::FILTER_STRING_SHORT, true),
 					'disablei18n' => $this->getInput('configdisablei18n', helper::FILTER_BOOLEAN),
 					'googTransLogo' => $this->getInput('configdGoogTransLogo', helper::FILTER_BOOLEAN),
@@ -409,14 +439,14 @@ class config extends common {
 					'autoUpdate' => $this->getInput('configAutoUpdate', helper::FILTER_BOOLEAN),
 					'proxyType' => $this->getInput('configProxyType'),
 					'proxyUrl' => $this->getInput('configProxyUrl'),
-					'proxyPort' => $this->getInput('configProxyPort',helper::FILTER_INT)	
+					'proxyPort' => $this->getInput('configProxyPort',helper::FILTER_INT)
 				]
 			]);
-							
+
 			if(self::$inputNotices === []) {
 				// Ecrire les fichiers de script
 				file_put_contents(self::DATA_DIR . 'head.inc.html',$this->getInput('configScriptHead',null));
-				file_put_contents(self::DATA_DIR . 'body.inc.html',$this->getInput('configScriptBody',null));				
+				file_put_contents(self::DATA_DIR . 'body.inc.html',$this->getInput('configScriptBody',null));
 				// Active la réécriture d'URL
 				$rewrite = $this->getInput('rewrite', helper::FILTER_BOOLEAN);
 				if(
@@ -462,7 +492,7 @@ class config extends common {
 				'state' => true
 			]);
 		}
-		// Initialisation du screen 
+		// Initialisation du screen
 		if (!file_exists(self::FILE_DIR.'source/screenshot.png')) {
 			$this->configMetaImage();
 		}
@@ -494,28 +524,28 @@ class configHelper extends helper {
 	/**
 	 * Met à jour les données de site avec l'adresse trannsmise
 	 */
-	public function updateBaseUrl () {		
+	public function updateBaseUrl () {
 		// Supprimer l'information de redirection
 		$old = str_replace('?','',$this->getData(['core', 'baseUrl']));
 		$new = helper::baseUrl(false,false);
 		$success = false ;
-		// Boucler sur les pages			
+		// Boucler sur les pages
 		foreach($this->getHierarchy(null,null,null) as $parentId => $childIds) {
-			$content = $this->getData(['page',$parentId,'content']);			
-			$replace = str_replace( $old , $new , stripslashes($content),$count) ;			
+			$content = $this->getData(['page',$parentId,'content']);
+			$replace = str_replace( $old , $new , stripslashes($content),$count) ;
 			if ($count > 0) {
 				$success = true;
 				$this->setData(['page',$parentId,'content', $replace ]);
 			}
 			foreach($childIds as $childId) {
 				$content = $this->getData(['page',$childId,'content']);
-				$replace = str_replace( $old , $new, stripslashes($content),$count) ;				
+				$replace = str_replace( $old , $new, stripslashes($content),$count) ;
 				if ($count > 0) {
 					$success = true;
 					$this->setData(['page',$childId,'content', $replace ]);
 				}
 			}
-		}		
+		}
 		if ($success ===  true) {
 			 $this->setData(['core','baseUrl',helper::baseUrl(true,false)]);
 		}
@@ -527,5 +557,5 @@ class configHelper extends helper {
 			'state' => $success ? true : false
 		]);
 	}
-	
+
 }
