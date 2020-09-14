@@ -9,26 +9,26 @@
  * @author Frédéric Tempez <frederic.tempez@outlook.com>
  * @copyright Copyright (C) 2018-2020, Frédéric Tempez
  * @license GNU General Public License, version 3
- * @link http://zwiicms.fr/
+ * @link http://zwiicms.com/
  */
 
-@import url("site/data/admin.css");
+ @import url("site/data/admin.css");
 
-.blockContainer {
-    display : none;
-}
+ .blockContainer {
+     display : none;
+ }
 
-#info .zwiico-minus {
-    display: inline;
-}
+ #info .zwiico-minus {
+     display: inline;
+ }
 
-.zwiico-minus,
-#info .zwiico-plus {
-    display: none;
-}
+ .zwiico-minus,
+ #info .zwiico-plus {
+     display: none;
+ }
 
 
-.zwiico-minus,
-.zwiico-plus {
-    cursor: pointer;
-}
+ .zwiico-minus,
+ .zwiico-plus {
+     cursor: pointer;
+ }
