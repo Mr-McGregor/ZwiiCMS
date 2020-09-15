@@ -138,6 +138,21 @@
 						]); ?>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col6">
+						<?php echo template::checkbox('configdisablei18n', true, 'Désactiver la gestion des langues', [
+							'checked' => (bool) (sizeof($this->i18nInstalled() ) === 1) ? $this->getData(['config', 'disablei18n']) : false,
+							'disabled' => (bool) (sizeof($this->i18nInstalled() ) === 1) ? false : true,
+							'help' => 'L\'option n\'est pas modifiable  quand une langue est installée.'
+						]); ?>
+					</div>
+					<div class="col6">
+						<?php echo template::checkbox('configdGoogTransLogo', true, 'Afficher les conditions Google Traduction', [
+							'checked' => $this->getData(['config', 'googTransLogo']),
+							'help' => 'Affiche les conditions d\'utilisation de Google Translation en bas des pages traduites automatiquement. Si vous ne traduisez pas vous-même vos pages, cette option est vivement recommandée.'
+						]); ?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -213,7 +228,6 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="row">
 		<div class="col12">
 			<div class="block" id="social">
