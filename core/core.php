@@ -24,7 +24,8 @@ class common {
 	const GROUP_VISITOR = 0;
 	const GROUP_MEMBER = 1;
 	const GROUP_EDITOR = 2;
-	const GROUP_ADMIN = 3;
+	const GROUP_MODERATOR = 3;
+	const GROUP_ADMIN = 4;
 	const SIGNATURE_ID = 1;
 	const SIGNATURE_PSEUDO = 2;
 	const SIGNATURE_FIRSTLASTNAME = 3;
@@ -127,24 +128,28 @@ class common {
 		self::GROUP_BANNED => 'Banni',
 		self::GROUP_VISITOR => 'Visiteur',
 		self::GROUP_MEMBER => 'Membre',
-		self::GROUP_EDITOR => 'Éditeur',
+		self::GROUP_EDITOR => 'Rédacteur',
+		self::GROUP_MODERATOR => 'Modérateur',
 		self::GROUP_ADMIN => 'Administrateur'
 	];
 	public static $groupEdits = [
 		self::GROUP_BANNED => 'Banni',
 		self::GROUP_MEMBER => 'Membre',
-		self::GROUP_EDITOR => 'Éditeur',
+		self::GROUP_EDITOR => 'Rédacteur',
+		self::GROUP_MODERATOR => 'Modérateur',
 		self::GROUP_ADMIN => 'Administrateur'
 	];
 	public static $groupNews = [
 		self::GROUP_MEMBER => 'Membre',
-		self::GROUP_EDITOR => 'Éditeur',
+		self::GROUP_EDITOR => 'Rédacteur',
+		self::GROUP_MODERATOR => 'Modérateur',
 		self::GROUP_ADMIN => 'Administrateur'
 	];
 	public static $groupPublics = [
 		self::GROUP_VISITOR => 'Visiteur',
 		self::GROUP_MEMBER => 'Membre',
-		self::GROUP_EDITOR => 'Éditeur',
+		self::GROUP_EDITOR => 'Rédacteur',
+		self::GROUP_MODERATOR => 'Modérateur',
 		self::GROUP_ADMIN => 'Administrateur'
 	];
 	public static $timezone;
@@ -1464,6 +1469,13 @@ class common {
 					}
 				}
 			}
+			// Actualiser les droits
+			$users = $this->getdata(['user']);
+			foreach ($users as $key => $value) {
+				if ($this->getData(['user',$key,'group']) > 2 ) {
+					$this->setData(['user',$key,'group', $this->getData(['user',$key,'group']) + 1 ]);
+				}
+			}
 			$this->setData(['core', 'dataVersion', 10400]);
 		}
 	}
@@ -2684,6 +2696,7 @@ class layout extends common {
 		if($this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')) {
 			// Items de gauche
 			$leftItems = '';
+			//if($this->getUser('group') >= self::GROUP_MODERATOR) {
 			if($this->getUser('group') >= self::GROUP_EDITOR) {
 				$leftItems .= '<li><select id="barSelectPage">';
 				$leftItems .= '<option value="">Choisissez une page</option>';
@@ -2729,7 +2742,9 @@ class layout extends common {
 				}
 				$leftItems .= '</optgroup>';
 				$leftItems .= '</select></li>';
-				$leftItems .= '<li><a href="' . helper::baseUrl() . 'page/add" data-tippy-content="Créer une page ou<br>une barre latérale">' . template::ico('plus') . '</a></li>';
+				if($this->getUser('group') >= self::GROUP_MODERATOR) {
+					$leftItems .= '<li><a href="' . helper::baseUrl() . 'page/add" data-tippy-content="Créer une page ou<br>une barre latérale">' . template::ico('plus') . '</a></li>';
+				}
 				if(
 					// Sur un module de page qui autorise le bouton de modification de la page
 					$this->core->output['showBarEditButton']
@@ -2739,15 +2754,20 @@ class layout extends common {
 					OR $this->getUrl(0) === ''
 				) {
 					$leftItems .= '<li><a href="' . helper::baseUrl() . 'page/edit/' . $this->getUrl(0) . '" data-tippy-content="Modifier la page">' . template::ico('pencil') . '</a></li>';
-					if ($this->getData(['page', $this->getUrl(0),'moduleId'])) {
+					if ($this->getData(['page', $this->getUrl(0),'moduleId'])
+						AND $this->getUser('group') >= self::GROUP_MODERATOR
+					) {
 						$leftItems .= '<li><a href="' . helper::baseUrl() . $this->getUrl(0) . '/config' . '" data-tippy-content="Configurer le module">' . template::ico('gear') . '</a></li>';
 					}
-					$leftItems .= '<li><a id="pageDuplicate" href="' . helper::baseUrl() . 'page/duplicate/' . $this->getUrl(0) . '&csrf=' . $_SESSION['csrf'] . '" data-tippy-content="Dupliquer la page">' . template::ico('clone') . '</a></li>';
-					$leftItems .= '<li><a id="pageDelete" href="' . helper::baseUrl() . 'page/delete/' . $this->getUrl(0) . '&csrf=' . $_SESSION['csrf'] . '" data-tippy-content="Effacer la page">' . template::ico('trash') . '</a></li>';
+					if($this->getUser('group') >= self::GROUP_MODERATOR) {
+						$leftItems .= '<li><a id="pageDuplicate" href="' . helper::baseUrl() . 'page/duplicate/' . $this->getUrl(0) . '&csrf=' . $_SESSION['csrf'] . '" data-tippy-content="Dupliquer la page">' . template::ico('clone') . '</a></li>';
+						$leftItems .= '<li><a id="pageDelete" href="' . helper::baseUrl() . 'page/delete/' . $this->getUrl(0) . '&csrf=' . $_SESSION['csrf'] . '" data-tippy-content="Effacer la page">' . template::ico('trash') . '</a></li>';
+					}
 				}
 			}
 			// Items de droite
 			$rightItems = '';
+			// if($this->getUser('group') >= self::GROUP_MODERATOR) {
 			if($this->getUser('group') >= self::GROUP_EDITOR) {
 				$rightItems .= '<li><a href="' . helper::baseUrl(false) . 'core/vendor/filemanager/dialog.php?type=0&akey=' . md5_file(self::DATA_DIR.'core.json') .'" data-tippy-content="Gérer les fichiers" data-lity>' . template::ico('folder') . '</a></li>';
 			}
@@ -2807,6 +2827,7 @@ class layout extends common {
 		$vars .= 'var baseUrlQs = ' . json_encode(helper::baseUrl()) . ';';
 		if(
 			$this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
+			//AND $this->getUser('group') >= self::GROUP_MODERATOR
 			AND $this->getUser('group') >= self::GROUP_EDITOR
 		) {
 			$vars .= 'var privateKey = ' . json_encode(md5_file(self::DATA_DIR.'core.json')) . ';';
