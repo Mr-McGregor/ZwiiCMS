@@ -1799,7 +1799,8 @@ class core extends common {
 		$access = null;
 		$accessInfo['userName'] = '';
 		$accessInfo['pageId'] = '';
-		if($this->getData(['page', $this->getUrl(0)]) !== null) {
+		if($this->getData(['page', $this->getUrl(0)]) !== null
+			OR $this->getData(['page', $this->getUrl(2)]) !== NULL) { // Page Redirection éviter une valeur nulle
 			if(
 				$this->getData(['page', $this->getUrl(0), 'group']) === self::GROUP_VISITOR
 				OR (
@@ -1818,7 +1819,6 @@ class core extends common {
 				}
 			}
 		}
-
 		/**
 		 * Contrôle si la page demandée est en édition ou accès à la gestion du site
 		 * conditions de blocage :
