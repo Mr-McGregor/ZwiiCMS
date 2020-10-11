@@ -76,57 +76,57 @@ class page extends common {
 			$this->addOutput([
 				'access' => false
 			]);
-		} else {
-			// Adresse sans le token
-			$url = explode('&',$this->getUrl(2));
-			// La page n'existe pas
-			if($this->getData(['page', $url[0]]) === null) {
-				// Valeurs en sortie
-				$this->addOutput([
-					'access' => false
-				]);
-			} // Jeton incorrect
-			elseif(!isset($_GET['csrf'])) {
-				// Valeurs en sortie
-				$this->addOutput([
-					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-					'notification' => 'Jeton invalide'
-				]);
-			}
-			elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
-				// Valeurs en sortie
-				$this->addOutput([
-					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-					'notification' => 'Suppression non autorisée'
-				]);
-			}
-			// Duplication de la page
-			$pageTitle = $this->getData(['page',$url[0],'title']);
-			$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
+			return;
+		}
+		// Adresse sans le token
+		$url = explode('&',$this->getUrl(2));
+		// La page n'existe pas
+		if($this->getData(['page', $url[0]]) === null) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'access' => false
+			]);
+		} // Jeton incorrect
+		elseif(!isset($_GET['csrf'])) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+				'notification' => 'Jeton invalide'
+			]);
+		}
+		elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+				'notification' => 'Suppression non autorisée'
+			]);
+		}
+		// Duplication de la page
+		$pageTitle = $this->getData(['page',$url[0],'title']);
+		$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
+		$data = $this->getData([
+			'page',
+			$url[0]
+		]);
+		// Ecriture
+		$this->setData (['page',$pageId,$data]);
+		$notification = 'La page a été dupliquée';
+		// Duplication du module présent
+		if ($this->getData(['page',$url[0],'moduleId'])) {
 			$data = $this->getData([
-				'page',
+				'module',
 				$url[0]
 			]);
 			// Ecriture
-			$this->setData (['page',$pageId,$data]);
-			$notification = 'La page a été dupliquée';
-			// Duplication du module présent
-			if ($this->getData(['page',$url[0],'moduleId'])) {
-				$data = $this->getData([
-					'module',
-					$url[0]
-				]);
-				// Ecriture
-				$this->setData (['module',$pageId,$data]);
-				$notification = 'La page et son module ont été dupliqués';
-			}
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $pageId,
-				'notification' => $notification,
-				'state' => true
-			]);
+			$this->setData (['module',$pageId,$data]);
+			$notification = 'La page et son module ont été dupliqués';
 		}
+		// Valeurs en sortie
+		$this->addOutput([
+			'redirect' => helper::baseUrl() . 'page/edit/' . $pageId,
+			'notification' => $notification,
+			'state' => true
+		]);
 	}
 
 
@@ -349,7 +349,8 @@ class page extends common {
 				}
 			}
 			// Supprime les données du module en cas de changement de module
-			if($this->getInput('pageEditModuleId') !== $this->getData(['page', $this->getUrl(2), 'moduleId'])) {
+			if( !empty($this->getInput('pageEditModuleId') )
+				AND $this->getInput('pageEditModuleId') !== $this->getData(['page', $this->getUrl(2), 'moduleId'])) {
 				$this->deleteData(['module', $pageId]);
 			}
 			// Supprime l'ancienne page si l'id a changée
