@@ -1797,7 +1797,7 @@ class core extends common {
 		}
 		// Check l'accès à la page
 		$access = null;
-		if($this->getData(['page', $this->getUrl(0)]) !== null)
+		if($this->getData(['page', $this->getUrl(0)]) !== null) {
 			if(
 				$this->getData(['page', $this->getUrl(0), 'group']) === self::GROUP_VISITOR
 				OR (
@@ -1808,10 +1808,7 @@ class core extends common {
 				$access = true;
 			}
 			else {
-				
-				if($this->getUrl(0) === 'user'
-					AND $this->getUrl(1) === 'login'
-				) {
+				if($this->getUrl(0) === $this->getData(['config', 'homePageId'])) {
 					$access = 'login';
 				}
 				else {
@@ -1880,7 +1877,7 @@ class core extends common {
 		}
 		// Importe le module
 		else {
-			// Id du module, et valeurs en sortie de la page s'il s'agit d'un module de page
+			// Id du module, et valeurs en sortie de la page si il s'agit d'un module de page
 
 			if($access AND $this->getData(['page', $this->getUrl(0), 'moduleId'])) {
 				$moduleId = $this->getData(['page', $this->getUrl(0), 'moduleId']);

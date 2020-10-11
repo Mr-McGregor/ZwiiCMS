@@ -15,7 +15,7 @@
 
 ## version 10.3.03
 - Correction :
-    - Test incomplet dans le module de routage
+    - Doublons de lignes.
 
 ## version 10.3.02
 - Corrections :
