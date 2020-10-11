@@ -21,12 +21,12 @@ class blog extends common {
 	const EDIT_ADMIN        = '03'; // Groupe des admin
 
 	public static $actions = [
-		'add' => self::GROUP_EDITOR,
+		'add' => self::GROUP_MODERATOR,
 		'comment' => self::GROUP_MODERATOR,
 		'commentApprove' => self::GROUP_MODERATOR,
 		'commentDelete' => self::GROUP_MODERATOR,
 		'commentDeleteAll' => self::GROUP_MODERATOR,
-		'config' => self::GROUP_EDITOR,
+		'config' => self::GROUP_MODERATOR,
 		'delete' => self::GROUP_MODERATOR,
 		'edit' => self::GROUP_EDITOR,
 		'index' => self::GROUP_VISITOR
@@ -375,37 +375,29 @@ class blog extends common {
 	 * Suppression
 	 */
 	public function delete() {
-		// Contrôle d'accès
-		if ( self::$actions[__FUNCTION__] >= $this->getUser('group')) {
+		if($this->getData(['module', $this->getUrl(0), $this->getUrl(2)]) === null) {
 			// Valeurs en sortie
 			$this->addOutput([
 				'access' => false
 			]);
-		} else {
-			if($this->getData(['module', $this->getUrl(0), $this->getUrl(2)]) === null) {
-				// Valeurs en sortie
-				$this->addOutput([
-					'access' => false
-				]);
-			}
-			// Jeton incorrect
-			elseif ($this->getUrl(3) !== $_SESSION['csrf']) {
-				// Valeurs en sortie
-				$this->addOutput([
-					'redirect' => helper::baseUrl()  . $this->getUrl(0) . '/config',
-					'notification' => 'Action non autorisée'
-				]);
-			}
-			// Suppression
-			else {
-				$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
-				// Valeurs en sortie
-				$this->addOutput([
-					'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
-					'notification' => 'Article supprimé',
-					'state' => true
-				]);
-			}
+		}
+		// Jeton incorrect
+		elseif ($this->getUrl(3) !== $_SESSION['csrf']) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl()  . $this->getUrl(0) . '/config',
+				'notification' => 'Action non autorisée'
+			]);
+		}
+		// Suppression
+		else {
+			$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
+				'notification' => 'Article supprimé',
+				'state' => true
+			]);
 		}
 	}
 
@@ -469,7 +461,7 @@ class blog extends common {
 				}
 				// Valeurs en sortie
 				$this->addOutput([
-					'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
+					'redirect' => $this->getUser('group') >= self::GROUP_MODERATOR ? helper::baseUrl() . $this->getUrl(0) . '/config' : helper::baseUrl() . $this->getUrl(0),
 					'notification' => 'Modifications enregistrées',
 					'state' => true
 				]);
@@ -479,7 +471,7 @@ class blog extends common {
 			ksort(self::$users);
 			foreach(self::$users as $userId => &$userFirstname) {
 			// Les membres ne sont pas éditeurs, les exclure de la liste
-				if ( $this->getData(['user', $userId, 'group']) < self::GROUP_MODERATOR) {
+				if ( $this->getData(['user', $userId, 'group']) < self::GROUP_EDITOR) {
 					unset(self::$users[$userId]);
 				}
 				$userFirstname = $userFirstname . ' ' . $this->getData(['user', $userId, 'lastname']) . ' (' .  self::$groupEdits[$this->getData(['user', $userId, 'group'])] . ')';

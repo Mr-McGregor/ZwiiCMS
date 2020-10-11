@@ -8,7 +8,7 @@
 			</div>
 		</div>
 		<?php  if(
-					$this->getUser('group') >= self::GROUP_MODERATOR
+					$this->getUser('group') >= self::GROUP_EDITOR
 					AND $this->getUser('password') === $this->getInput('ZWII_USER_PASSWORD')
 				): ?>
 			<div class="col2">

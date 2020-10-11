@@ -1797,6 +1797,8 @@ class core extends common {
 		}
 		// Check l'accès à la page
 		$access = null;
+		$accessInfo['userName'] = '';
+		$accessInfo['pageId'] = '';
 		if($this->getData(['page', $this->getUrl(0)]) !== null) {
 			if(
 				$this->getData(['page', $this->getUrl(0), 'group']) === self::GROUP_VISITOR
@@ -1816,6 +1818,7 @@ class core extends common {
 				}
 			}
 		}
+
 		/**
 		 * Contrôle si la page demandée est en édition ou accès à la gestion du site
 		 * conditions de blocage :
@@ -1824,8 +1827,6 @@ class core extends common {
 		 * - Une partie de l'URL fait partie  de la liste de filtrage (édition d'un module etc..)
 		 * - L'édition est ouverte depuis un temps dépassé, on considère que la page est restée ouverte et qu'elle ne sera pas validée
 		 */
-		$accessInfo['userName'] = '';
-		$accessInfo['pageId'] = '';
 		foreach($this->getData(['user']) as $userId => $userIds){
 			$t = explode('/',$this->getData(['user', $userId, 'accessUrl']));
 			if ( $this->getuser('id') &&

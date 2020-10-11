@@ -13,6 +13,16 @@ ob_start('mb_output_handler');
 date_default_timezone_set('Europe/Paris');
 setlocale(LC_CTYPE, 'fr_FR'); //correct transliteration
 
+// Validation des actions (delete, rename) par lecture du groupe de l'utilisateur via cookie et user.json
+if( is_file('../../../site/data/user.json')){
+	$json = file_get_contents('../../../site/data/user.json');
+}
+else{
+	$json = '{}';
+}
+$user = json_decode($json, true);
+$val = $user['user'][$_COOKIE["ZWII_USER_ID"]]['group'] >= 3 ? true : false;
+
 /*
 |--------------------------------------------------------------------------
 | Optional security
@@ -336,18 +346,18 @@ $config = array(
 	//*************************
 	//Permissions configuration
 	//******************
-	'delete_files'                            => true,
+	'delete_files'                            => $val,
 	'create_folders'                          => true,
-	'delete_folders'                          => true,
+	'delete_folders'                          => $val,
 	'upload_files'                            => true,
-	'rename_files'                            => true,
-	'rename_folders'                          => true,
+	'rename_files'                            => $val,
+	'rename_folders'                          => $val,
 	'duplicate_files'                         => true,
 	'extract_files'                           => true,
-	'copy_cut_files'                          => true, // for copy/cut files
-	'copy_cut_dirs'                           => true, // for copy/cut directories
-	'chmod_files'                             => true, // change file permissions
-	'chmod_dirs'                              => true, // change folder permissions
+	'copy_cut_files'                          => $val, // for copy/cut files
+	'copy_cut_dirs'                           => $val, // for copy/cut directories
+	'chmod_files'                             => $val, // change file permissions
+	'chmod_dirs'                              => $val, // change folder permissions
 	'preview_text_files'                      => true, // eg.: txt, log etc.
 	'edit_text_files'                         => true, // eg.: txt, log etc.
 	'create_text_files'                       => true, // only create files with exts. defined in $config['editable_text_file_exts']

@@ -1,9 +1,10 @@
 <?php
 echo template::formOpen('pageEditForm');
 	// Mise à jour de la liste des pages pour TinyMCE
-	$this->pages2Json(); ?>
+	$this->pages2Json();
+	// Validation des buttons réservés aux modérateurs et administrateurs
 	<div class="row">
-	<div class="col2">
+		<div class="col2">
 			<?php $href = helper::baseUrl() . $this->getUrl(2); ?>
     		<?php if ($this->getData(['page', $this->getUrl(2), 'moduleId']) === 'redirection' || 'code')$href = helper::baseUrl(); ?>
 			<?php echo template::button('pageEditBack', [
@@ -14,23 +15,23 @@ echo template::formOpen('pageEditForm');
 			]); ?>
 		</div>
 		<div class="col2 offset4">
-			<?php if ( $module::$actions['duplicate'] < $this->getUser('group')): ?>
-				<?php echo template::button('pageEditDuplicate', [
+			<?php if( $this->getUser('group') >= self::GROUP_MODERATOR ){
+				echo template::button('pageEditDuplicate', [
 					'href' => helper::baseUrl() . 'page/duplicate/' . $this->getUrl(2) . '&csrf=' . $_SESSION['csrf'],
 					'value' => 'Dupliquer',
 					'ico' => 'clone'
-				]); ?>
-			<?php endif;?>
+				]); 
+			}?>
 		</div>
 		<div class="col2">
-			<?php if ( $module::$actions['delete'] < $this->getUser('group')): ?>
-				<?php echo template::button('pageEditDelete', [
-					'class' => 'buttonRed',
-					'href' => helper::baseUrl() . 'page/delete/' . $this->getUrl(2) . '&csrf=' . $_SESSION['csrf'],
-					'value' => 'Supprimer',
-					'ico' => 'cancel'
-				]); ?>
-			<?php endif;?>
+			<?php if( $this->getUser('group') >= self::GROUP_MODERATOR ){
+				echo template::button('pageEditDelete', [
+				'class' => 'buttonRed',
+				'href' => helper::baseUrl() . 'page/delete/' . $this->getUrl(2) . '&csrf=' . $_SESSION['csrf'],
+				'value' => 'Supprimer',
+				'ico' => 'cancel'
+				]); 
+			}?>
 		</div>
 		<div class="col2">
 			<?php echo template::submit('pageEditSubmit'); ?>
@@ -51,23 +52,25 @@ echo template::formOpen('pageEditForm');
 						<div class="row">
 							<div class="col9">
 								<?php echo template::hidden('pageEditModuleRedirect'); ?>
-								<?php echo template::select('pageEditModuleId',  $listModules, [
+								<?php echo template::select('pageEditModuleId', $module::$moduleIds, [
 									'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
 									'label' => 'Module',
-									'selected' => $this->getData(['page', $this->getUrl(2), 'moduleId'])
+									'selected' => $this->getData(['page', $this->getUrl(2), 'moduleId']),
+									'disabled' => $this->getUser('group') >= self::GROUP_MODERATOR ? false : true
 								]); ?>
-								<!-- Confirmation de suppression e ca sd'annulation -->
 								<?php echo template::hidden('pageEditModuleIdOld',['value' => $this->getData(['page', $this->getUrl(2), 'moduleId'])]); ?>
 								<?php echo template::hidden('pageEditModuleIdOldText',[
 									'value' => array_key_exists($this->getData(['page', $this->getUrl(2), 'moduleId']),$module::$moduleNames)? $module::$moduleNames[$this->getData(['page', $this->getUrl(2), 'moduleId'])] : ucfirst($this->getData(['page', $this->getUrl(2), 'moduleId']))
 								]); ?>
 							</div>
 							<div class="col3 verticalAlignBottom">
-								<?php echo template::button('pageEditModuleConfig', [
-									'disabled' => (bool) $this->getData(['page', $this->getUrl(2), 'moduleId']) === false,
-									'uniqueSubmission' => true,
-									'value' => template::ico('gear')
-								]); ?>
+								<?php if( $this->getUser('group') >= self::GROUP_MODERATOR){
+									echo template::button('pageEditModuleConfig', [
+										'disabled' => (bool) $this->getData(['page', $this->getUrl(2), 'moduleId']) === false,
+										'uniqueSubmission' => true,
+										'value' => template::ico('gear')
+									]); 
+								}?>
 							</div>
 						</div>
 					</div>
@@ -90,7 +93,8 @@ echo template::formOpen('pageEditForm');
 					<?php echo template::select('configModulePosition', $module::$modulePosition,[
 							'help' => 'En position libre ajoutez le module en plaçant [MODULE] à l\'endroit voulu dans votre page.',
 							'label' => 'Position du module',
-							'selected' => $this->getData(['page', $this->getUrl(2), 'modulePosition'])
+							'selected' => $this->getData(['page', $this->getUrl(2), 'modulePosition']),
+							'disabled' => $this->getUser('group') >= self::GROUP_MODERATOR ? false : true
 						]); ?>
 					</div>
                 </div>
@@ -162,6 +166,7 @@ echo template::formOpen('pageEditForm');
 			</div>
 		</div>
 	</div>
+	<?php if( $this->getUser('group') >= self::GROUP_MODERATOR){ ?>
 	<div class="row">
 		<div class="col12"  id="pageEditMenu">
 			<div class="block" id="location">
@@ -289,4 +294,4 @@ echo template::formOpen('pageEditForm');
 			</div>
 		</div>
 	</div>
-<?php echo template::formClose(); ?>
+<?php } echo template::formClose(); ?>
