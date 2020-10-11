@@ -1797,10 +1797,7 @@ class core extends common {
 		}
 		// Check l'accès à la page
 		$access = null;
-		if($this->getData(['page', $this->getUrl(0)]) !== null
-			OR $this->getData(['page', $this->getUrl(1)]) !== null
-			OR $this->getData(['page', $this->getUrl(2)]) !== null
-			) {
+		if($this->getData(['page', $this->getUrl(0)]) !== null)
 			if(
 				$this->getData(['page', $this->getUrl(0), 'group']) === self::GROUP_VISITOR
 				OR (
@@ -1822,8 +1819,6 @@ class core extends common {
 				}
 			}
 		}
-		var_dump($access);
-		echo $this->getUrl(1);
 		/**
 		 * Contrôle si la page demandée est en édition ou accès à la gestion du site
 		 * conditions de blocage :
@@ -1836,12 +1831,12 @@ class core extends common {
 		$accessInfo['pageId'] = '';
 		foreach($this->getData(['user']) as $userId => $userIds){
 			$t = explode('/',$this->getData(['user', $userId, 'accessUrl']));
-			if ( $this->getuser('id')
-				AND $userId !== $this->getuser('id')
-				AND $this->getData(['user', $userId,'accessUrl']) === $this->getUrl()
-				AND array_intersect($t,self::$accessList)
-				AND array_intersect($t,self::$accessExclude) !== false
-				AND time() < $this->getData(['user', $userId,'accessTimer']) + self::ACCESS_TIMER
+			if ( $this->getuser('id') &&
+				$userId !== $this->getuser('id') &&
+				$this->getData(['user', $userId,'accessUrl']) === $this->getUrl() &&
+				array_intersect($t,self::$accessList)  &&
+				array_intersect($t,self::$accessExclude) !== false	 &&
+				time() < $this->getData(['user', $userId,'accessTimer']) + self::ACCESS_TIMER
 			) {
 					$access = false;
 					$accessInfo['userName']	= $this->getData(['user', $userId, 'lastname']) . ' ' . $this->getData(['user', $userId, 'firstname']);
@@ -1855,13 +1850,16 @@ class core extends common {
 		}
 		// Breadcrumb
 		$title = $this->getData(['page', $this->getUrl(0), 'title']);
-		if (!empty($this->getData(['page', $this->getUrl(0), 'parentPageId']))
-			 AND	$this->getData(['page', $this->getUrl(0), 'breadCrumb'])) {
-				$title = '<a href="' . helper::baseUrl() . 	$this->getData(['page', $this->getUrl(0), 'parentPageId']) .
-						'">' .	ucfirst($this->getData(['page',$this->getData(['page', $this->getUrl(0), 'parentPageId']), 'title'])) .
-						'</a> &#8250; '. $this->getData(['page', $this->getUrl(0), 'title']);
+		if (!empty($this->getData(['page', $this->getUrl(0), 'parentPageId'])) &&
+				$this->getData(['page', $this->getUrl(0), 'breadCrumb'])) {
+				$title = '<a href="' . helper::baseUrl() .
+						$this->getData(['page', $this->getUrl(0), 'parentPageId']) .
+						'">' .
+						ucfirst($this->getData(['page',$this->getData(['page', $this->getUrl(0), 'parentPageId']), 'title'])) .
+						'</a> &#8250; '.
+						$this->getData(['page', $this->getUrl(0), 'title']);
 		}
-		var_dump($access);
+
 		// Importe la page
 		if(
 			$this->getData(['page', $this->getUrl(0)]) !== null
@@ -1935,7 +1933,6 @@ class core extends common {
 							)
 						)
 						AND $output['access'] === true
-						AND $access !== false
 					) {
 						// Enregistrement du contenu de la méthode POST lorsqu'une notice est présente
 						if(common::$inputNotices) {
@@ -2059,7 +2056,6 @@ class core extends common {
 				}
 			}
 		}
-		var_dump($access);
 		// Erreurs
 		if($access === 'login') {
 			http_response_code(302);
