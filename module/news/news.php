@@ -15,10 +15,10 @@
 class news extends common {
 
 	public static $actions = [
-		'add' => self::GROUP_MODERATOR,
-		'config' => self::GROUP_MODERATOR,
+		'add' => self::GROUP_EDITOR,
+		'config' => self::GROUP_EDITOR,
 		'delete' => self::GROUP_MODERATOR,
-		'edit' => self::GROUP_MODERATOR,
+		'edit' => self::GROUP_EDITOR,
 		'index' => self::GROUP_VISITOR
 	];
 
@@ -117,30 +117,38 @@ class news extends common {
 	 * Suppression
 	 */
 	public function delete() {
-		// La news n'existe pas
-		if($this->getData(['module', $this->getUrl(0), $this->getUrl(2)]) === null) {
+		// Contrôle d'accès
+		if ( self::$actions[__FUNCTION__] >= $this->getUser('group')) {
 			// Valeurs en sortie
 			$this->addOutput([
 				'access' => false
 			]);
-		}
-		// Jeton incorrect
-		elseif ($this->getUrl(3) !== $_SESSION['csrf']) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl()  . $this->getUrl(0) . '/config',
-				'notification' => 'Action non autorisée'
-			]);
-		}
-		// Suppression
-		else {
-			$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
-				'notification' => 'News supprimée',
-				'state' => true
-			]);
+		} else {
+			// La news n'existe pas
+			if($this->getData(['module', $this->getUrl(0), $this->getUrl(2)]) === null) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'access' => false
+				]);
+			}
+			// Jeton incorrect
+			elseif ($this->getUrl(3) !== $_SESSION['csrf']) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl()  . $this->getUrl(0) . '/config',
+					'notification' => 'Action non autorisée'
+				]);
+			}
+			// Suppression
+			else {
+				$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
+					'notification' => 'News supprimée',
+					'state' => true
+				]);
+			}
 		}
 	}
 

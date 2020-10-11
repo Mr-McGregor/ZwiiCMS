@@ -36,13 +36,13 @@ class gallery extends common {
 	public static $thumbs = [];
 
 	public static $actions = [
-		'config' 		=> self::GROUP_MODERATOR,
+		'config' 		=> self::GROUP_EDITOR,
 		'delete' 		=> self::GROUP_MODERATOR,
-		'dirs' 			=> self::GROUP_MODERATOR,
-		'sortGalleries' => self::GROUP_MODERATOR,
-		'sortPictures' 	=> self::GROUP_MODERATOR,
-		'edit' 			=> self::GROUP_MODERATOR,
-		'theme' 		=> self::GROUP_MODERATOR,
+		'dirs' 			=> self::GROUP_EDITOR,
+		'sortGalleries' => self::GROUP_EDITOR,
+		'sortPictures' 	=> self::GROUP_EDITOR,
+		'edit' 			=> self::GROUP_EDITOR,
+		'theme' 		=> self::GROUP_EDITOR,
 		'index' 		=> self::GROUP_VISITOR
 	];
 
@@ -287,31 +287,39 @@ class gallery extends common {
 	 * Suppression
 	 */
 	public function delete() {
-		// $url prend l'adresse sans le token
-		// La galerie n'existe pas
-		if($this->getData(['module', $this->getUrl(0), $this->getUrl(2)]) === null) {
+		// Contrôle d'accès
+		if ( self::$actions[__FUNCTION__] >= $this->getUser('group')) {
 			// Valeurs en sortie
 			$this->addOutput([
 				'access' => false
 			]);
-		}
-		// Jeton incorrect
-		if ($this->getUrl(3) !== $_SESSION['csrf']) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
-				'notification' => 'Suppression  non autorisée'
-			]);
-		}
-		// Suppression
-		else {
-			$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
-				'notification' => 'Galerie supprimée',
-				'state' => true
-			]);
+		} else {
+			// $url prend l'adresse sans le token
+			// La galerie n'existe pas
+			if($this->getData(['module', $this->getUrl(0), $this->getUrl(2)]) === null) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'access' => false
+				]);
+			}
+			// Jeton incorrect
+			if ($this->getUrl(3) !== $_SESSION['csrf']) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
+					'notification' => 'Suppression  non autorisée'
+				]);
+			}
+			// Suppression
+			else {
+				$this->deleteData(['module', $this->getUrl(0), $this->getUrl(2)]);
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . $this->getUrl(0) . '/config',
+					'notification' => 'Galerie supprimée',
+					'state' => true
+				]);
+			}
 		}
 	}
 

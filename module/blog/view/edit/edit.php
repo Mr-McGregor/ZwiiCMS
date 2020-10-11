@@ -103,7 +103,6 @@
 			</div>
 		</div>
 	</div>
-	<?php if( $this->getUser('group') >= self::GROUP_MODERATOR){ ?>
 	<div class="row">
 		<div class="col6">
 			<div class="block">
@@ -146,4 +145,4 @@
 			</div>
 		</div>
 	</div>
-<?php } echo template::formClose(); ?>
+<?php echo template::formClose(); ?>
