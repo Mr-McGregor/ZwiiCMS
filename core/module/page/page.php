@@ -70,55 +70,63 @@ class page extends common {
 	 * Duplication
 	 */
 	public function duplicate() {
-		// Adresse sans le token
-		$url = explode('&',$this->getUrl(2));
-		// La page n'existe pas
-		if($this->getData(['page', $url[0]]) === null) {
+		// Contrôle d'accès
+		if ( self::$actions[__FUNCTION__] >= $this->getUser('group')) {
 			// Valeurs en sortie
 			$this->addOutput([
 				'access' => false
 			]);
-		} // Jeton incorrect
-		elseif(!isset($_GET['csrf'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-				'notification' => 'Jeton invalide'
-			]);
-		}
-		elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-				'notification' => 'Suppression non autorisée'
-			]);
-		}
-		// Duplication de la page
-		$pageTitle = $this->getData(['page',$url[0],'title']);
-		$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
-		$data = $this->getData([
-			'page',
-			$url[0]
-		]);
-		// Ecriture
-		$this->setData (['page',$pageId,$data]);
-		$notification = 'La page a été dupliquée';
-		// Duplication du module présent
-		if ($this->getData(['page',$url[0],'moduleId'])) {
+		} else {
+			// Adresse sans le token
+			$url = explode('&',$this->getUrl(2));
+			// La page n'existe pas
+			if($this->getData(['page', $url[0]]) === null) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'access' => false
+				]);
+			} // Jeton incorrect
+			elseif(!isset($_GET['csrf'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+					'notification' => 'Jeton invalide'
+				]);
+			}
+			elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+					'notification' => 'Suppression non autorisée'
+				]);
+			}
+			// Duplication de la page
+			$pageTitle = $this->getData(['page',$url[0],'title']);
+			$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
 			$data = $this->getData([
-				'module',
+				'page',
 				$url[0]
 			]);
 			// Ecriture
-			$this->setData (['module',$pageId,$data]);
-			$notification = 'La page et son module ont été dupliqués';
+			$this->setData (['page',$pageId,$data]);
+			$notification = 'La page a été dupliquée';
+			// Duplication du module présent
+			if ($this->getData(['page',$url[0],'moduleId'])) {
+				$data = $this->getData([
+					'module',
+					$url[0]
+				]);
+				// Ecriture
+				$this->setData (['module',$pageId,$data]);
+				$notification = 'La page et son module ont été dupliqués';
+			}
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . 'page/edit/' . $pageId,
+				'notification' => $notification,
+				'state' => true
+			]);
 		}
-		// Valeurs en sortie
-		$this->addOutput([
-			'redirect' => helper::baseUrl() . 'page/edit/' . $pageId,
-			'notification' => $notification,
-			'state' => true
-		]);
 	}
 
 
@@ -126,149 +134,165 @@ class page extends common {
 	 * Création
 	 */
 	public function add() {
-		$pageTitle = 'Nouvelle page';
-		$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
-		$this->setData([
-			'page',
-			$pageId,
-			[
-				'typeMenu' => 'text',
-				'iconUrl' => '',
-                'disable' => false,
-				'content' => 'Contenu de votre nouvelle page.',
-				'hideTitle' => false,
-				'breadCrumb' => false,
-				'metaDescription' => '',
-				'metaTitle' => '',
-				'moduleId' => '',
-				'parentPageId' => '',
-				'modulePosition' => 'bottom',
-				'position' => 0,
-				'group' => self::GROUP_VISITOR,
-				'targetBlank' => false,
-				'title' => $pageTitle,
-				'block' => '12',
-				'barLeft' => '',
-				'barRight' => '',
-				'displayMenu' => '0',
-				'hideMenuSide' => false,
-				'hideMenuHead' => false,
-				'hideMenuChildren' => false
-			]
-		]);
-		// Met à jour le site map
-		$this->createSitemap('all');
-		// Valeurs en sortie
-		$this->addOutput([
-			'redirect' => helper::baseUrl() . $pageId,
-			'notification' => 'Nouvelle page créée',
-			'state' => true
-		]);
+		// Contrôle d'accès
+		if ( self::$actions[__FUNCTION__] >= $this->getUser('group')) {
+			// Valeurs en sortie
+			$this->addOutput([
+				'access' => false
+			]);
+		} else {
+			$pageTitle = 'Nouvelle page';
+			$pageId = helper::increment(helper::filter($pageTitle, helper::FILTER_ID), $this->getData(['page']));
+			$this->setData([
+				'page',
+				$pageId,
+				[
+					'typeMenu' => 'text',
+					'iconUrl' => '',
+					'disable' => false,
+					'content' => 'Contenu de votre nouvelle page.',
+					'hideTitle' => false,
+					'breadCrumb' => false,
+					'metaDescription' => '',
+					'metaTitle' => '',
+					'moduleId' => '',
+					'parentPageId' => '',
+					'modulePosition' => 'bottom',
+					'position' => 0,
+					'group' => self::GROUP_VISITOR,
+					'targetBlank' => false,
+					'title' => $pageTitle,
+					'block' => '12',
+					'barLeft' => '',
+					'barRight' => '',
+					'displayMenu' => '0',
+					'hideMenuSide' => false,
+					'hideMenuHead' => false,
+					'hideMenuChildren' => false
+				]
+			]);
+			// Met à jour le site map
+			$this->createSitemap('all');
+			// Valeurs en sortie
+			$this->addOutput([
+				'redirect' => helper::baseUrl() . $pageId,
+				'notification' => 'Nouvelle page créée',
+				'state' => true
+			]);
+		}
 	}
 
 	/**
 	 * Suppression
 	 */
 	public function delete() {
-		// $url prend l'adresse sans le token
-		$url = explode('&',$this->getUrl(2));
-		// La page n'existe pas
-		if($this->getData(['page', $url[0]]) === null) {
+		// Contrôle d'accès
+		if ( self::$actions[__FUNCTION__] >= $this->getUser('group')) {
 			// Valeurs en sortie
 			$this->addOutput([
 				'access' => false
 			]);
-		}		// Jeton incorrect
-		elseif(!isset($_GET['csrf'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-				'notification' => 'Jeton invalide'
-			]);
-		}
-		elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-				'notification' => 'Suppression non autorisée'
-			]);
-		}
-		// Impossible de supprimer la page d'accueil
-		elseif($url[0] === $this->getData(['config', 'homePageId'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl()  . 'config',
-				'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
-			]);
-		}
-		// Impossible de supprimer la page de recherche affectée
-		elseif($url[0] === $this->getData(['config', 'searchPageId'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl()  . 'config',
-				'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
-			]);
-		}
-		// Impossible de supprimer la page des mentions légales affectée
-		elseif($url[0] === $this->getData(['config', 'page404'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'config',
-				'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
-			]);
-		}
-		// Impossible de supprimer la page des mentions légales affectée
-		elseif($url[0] === $this->getData(['config', 'page403'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'config',
-				'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
-			]);
-		}
-		// Impossible de supprimer la page des mentions légales affectée
-		elseif($url[0] === $this->getData(['config', 'page302'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'config',
-				'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
-			]);
-		}
-		// Jeton incorrect
-		elseif(!isset($_GET['csrf'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-				'notification' => 'Jeton invalide'
-			]);
-		}
-		elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-				'notification' => 'Suppression non autorisée'
-			]);
-		}
-		// Impossible de supprimer une page contenant des enfants
-		elseif($this->getHierarchy($url[0])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
-				'notification' => 'Impossible de supprimer une page contenant des enfants'
-			]);
-		}
-		// Suppression
-		else {
-			// Effacer la page
-			$this->deleteData(['page', $url[0]]);
-			$this->deleteData(['module', $url[0]]);
-			// Met à jour le site map
-			$this->createSitemap('all');
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl(false),
-				'notification' => 'Page supprimée',
-				'state' => true
-			]);
+		} else {
+			// $url prend l'adresse sans le token
+			$url = explode('&',$this->getUrl(2));
+			// La page n'existe pas
+			if($this->getData(['page', $url[0]]) === null) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'access' => false
+				]);
+			}		// Jeton incorrect
+			elseif(!isset($_GET['csrf'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+					'notification' => 'Jeton invalide'
+				]);
+			}
+			elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+					'notification' => 'Suppression non autorisée'
+				]);
+			}
+			// Impossible de supprimer la page d'accueil
+			elseif($url[0] === $this->getData(['config', 'homePageId'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl()  . 'config',
+					'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
+				]);
+			}
+			// Impossible de supprimer la page de recherche affectée
+			elseif($url[0] === $this->getData(['config', 'searchPageId'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl()  . 'config',
+					'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
+				]);
+			}
+			// Impossible de supprimer la page des mentions légales affectée
+			elseif($url[0] === $this->getData(['config', 'page404'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'config',
+					'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
+				]);
+			}
+			// Impossible de supprimer la page des mentions légales affectée
+			elseif($url[0] === $this->getData(['config', 'page403'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'config',
+					'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
+				]);
+			}
+			// Impossible de supprimer la page des mentions légales affectée
+			elseif($url[0] === $this->getData(['config', 'page302'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'config',
+					'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
+				]);
+			}
+			// Jeton incorrect
+			elseif(!isset($_GET['csrf'])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+					'notification' => 'Jeton invalide'
+				]);
+			}
+			elseif ($_GET['csrf'] !== $_SESSION['csrf']) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+					'notification' => 'Suppression non autorisée'
+				]);
+			}
+			// Impossible de supprimer une page contenant des enfants
+			elseif($this->getHierarchy($url[0])) {
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl() . 'page/edit/' . $url[0],
+					'notification' => 'Impossible de supprimer une page contenant des enfants'
+				]);
+			}
+			// Suppression
+			else {
+				// Effacer la page
+				$this->deleteData(['page', $url[0]]);
+				$this->deleteData(['module', $url[0]]);
+				// Met à jour le site map
+				$this->createSitemap('all');
+				// Valeurs en sortie
+				$this->addOutput([
+					'redirect' => helper::baseUrl(false),
+					'notification' => 'Page supprimée',
+					'state' => true
+				]);
+			}
 		}
 	}
 

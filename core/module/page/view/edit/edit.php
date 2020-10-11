@@ -14,19 +14,23 @@ echo template::formOpen('pageEditForm');
 			]); ?>
 		</div>
 		<div class="col2 offset4">
-			<?php echo template::button('pageEditDuplicate', [
-				'href' => helper::baseUrl() . 'page/duplicate/' . $this->getUrl(2) . '&csrf=' . $_SESSION['csrf'],
-				'value' => 'Dupliquer',
-				'ico' => 'clone'
-			]); ?>
+			<?php if ( $module::$actions['duplicate'] < $this->getUser('group')): ?>
+				<?php echo template::button('pageEditDuplicate', [
+					'href' => helper::baseUrl() . 'page/duplicate/' . $this->getUrl(2) . '&csrf=' . $_SESSION['csrf'],
+					'value' => 'Dupliquer',
+					'ico' => 'clone'
+				]); ?>
+			<?php endif;?>
 		</div>
 		<div class="col2">
-			<?php echo template::button('pageEditDelete', [
-				'class' => 'buttonRed',
-				'href' => helper::baseUrl() . 'page/delete/' . $this->getUrl(2) . '&csrf=' . $_SESSION['csrf'],
-				'value' => 'Supprimer',
-				'ico' => 'cancel'
-			]); ?>
+			<?php if ( $module::$actions['delete'] < $this->getUser('group')): ?>
+				<?php echo template::button('pageEditDelete', [
+					'class' => 'buttonRed',
+					'href' => helper::baseUrl() . 'page/delete/' . $this->getUrl(2) . '&csrf=' . $_SESSION['csrf'],
+					'value' => 'Supprimer',
+					'ico' => 'cancel'
+				]); ?>
+			<?php endif;?>
 		</div>
 		<div class="col2">
 			<?php echo template::submit('pageEditSubmit'); ?>
