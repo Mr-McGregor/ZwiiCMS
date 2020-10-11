@@ -210,14 +210,6 @@ class page extends common {
 			]);
 		}
 		// Impossible de supprimer la page des mentions légales affectée
-		elseif($url[0] === $this->getData(['config', 'legalPageId'])) {
-			// Valeurs en sortie
-			$this->addOutput([
-				'redirect' => helper::baseUrl() . 'config',
-				'notification' => 'Désactiver la page dans la configuration avant de la supprimer'
-			]);
-		}
-		// Impossible de supprimer la page des mentions légales affectée
 		elseif($url[0] === $this->getData(['config', 'page404'])) {
 			// Valeurs en sortie
 			$this->addOutput([
@@ -266,11 +258,11 @@ class page extends common {
 		}
 		// Suppression
 		else {
-			// Met à jour le site map
-			$this->createSitemap('all');
 			// Effacer la page
 			$this->deleteData(['page', $url[0]]);
 			$this->deleteData(['module', $url[0]]);
+			// Met à jour le site map
+			$this->createSitemap('all');
 			// Valeurs en sortie
 			$this->addOutput([
 				'redirect' => helper::baseUrl(false),
