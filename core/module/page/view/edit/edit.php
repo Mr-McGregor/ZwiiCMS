@@ -50,16 +50,17 @@ echo template::formOpen('pageEditForm');
 					<div class="col4">
 						<div class="row">
 							<div class="col9">
-								<?php echo template::hidden('pageEditModuleRedirect'); ?>
-								<?php echo template::select('pageEditModuleId', $module::$moduleIds, [
-									'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
-									'label' => 'Module',
-									'selected' => $this->getData(['page', $this->getUrl(2), 'moduleId'])
-								]); ?>
-								<?php echo template::hidden('pageEditModuleIdOld',['value' => $this->getData(['page', $this->getUrl(2), 'moduleId'])]); ?>
-								<?php echo template::hidden('pageEditModuleIdOldText',[
-									'value' => array_key_exists($this->getData(['page', $this->getUrl(2), 'moduleId']),$module::$moduleNames)? $module::$moduleNames[$this->getData(['page', $this->getUrl(2), 'moduleId'])] : ucfirst($this->getData(['page', $this->getUrl(2), 'moduleId']))
-								]); ?>
+									<?php echo template::hidden('pageEditModuleRedirect'); ?>
+									<?php echo template::select('pageEditModuleId', $module::$moduleIds, [
+										'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
+										'label' => 'Module',
+										'selected' => $this->getData(['page', $this->getUrl(2), 'moduleId']),
+										'disabled' => !($module::$actions['delete'] < $this->getUser('group'))
+									]); ?>
+									<?php echo template::hidden('pageEditModuleIdOld',['value' => $this->getData(['page', $this->getUrl(2), 'moduleId'])]); ?>
+									<?php echo template::hidden('pageEditModuleIdOldText',[
+										'value' => array_key_exists($this->getData(['page', $this->getUrl(2), 'moduleId']),$module::$moduleNames)? $module::$moduleNames[$this->getData(['page', $this->getUrl(2), 'moduleId'])] : ucfirst($this->getData(['page', $this->getUrl(2), 'moduleId']))
+									]); ?>
 							</div>
 							<div class="col3 verticalAlignBottom">
 								<?php echo template::button('pageEditModuleConfig', [
