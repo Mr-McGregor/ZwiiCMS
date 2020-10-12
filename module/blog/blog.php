@@ -15,7 +15,6 @@
 class blog extends common {
 
 	const EDIT_OWNER = 'owner';
-	const EDIT_GROUP = 'group';
 
 	public static $actions = [
 		'add' => self::GROUP_EDITOR,
@@ -77,8 +76,7 @@ class blog extends common {
 
 	// Permissions d'un article
 	public static $articleConsent = [
-		self::EDIT_GROUP       => 'Groupe du propriétaire',
-		self::EDIT_OWNER => 'Propiétaire'
+		self::EDIT_OWNER 	=> 'Propriétaire'
 	];
 
 
@@ -310,8 +308,7 @@ class blog extends common {
 					$consent === self::EDIT_OWNER
 					AND $this->getData(['module',  $this->getUrl(0), $value,'userId']) === $this->getUser('id')
 				) OR (
-					$consent === self::EDIT_GROUP
-					AND $this->getUser('group') >=  $this->getData(['user',$this->getUser('group'),'group'])
+					$this->getUser('group') >=  $this->getData(['module',$this->getUrl(0), $value,'editConsent'])
 				)
 			) {
 				$filterData[] = $value;

@@ -87,7 +87,7 @@
 						]); ?>
 					</div>
 					<div class="col4">
-						<?php echo template::select('blogAddConsent', $module::$articleConsent  , [
+						<?php echo template::select('blogAddConsent', array_merge($module::$articleConsent, self::$groupNews) , [
 							'label' => 'Edition /  Suppression',
 							'selected' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'editConsent']),
 							'help' => 'Les utilisateurs des groupes supérieurs accèdent à l\'article sans restriction'
