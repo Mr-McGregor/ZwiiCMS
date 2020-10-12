@@ -1275,7 +1275,7 @@ class common {
 				}
 			}
 			// Contrôle des options php.ini pour la mise à jour auto
-			if (helper::urlGetContents('http://zwiicms.com/update/' . common::ZWII_UPDATE_CHANNEL . '/version') ===  false) {
+			if (helper::urlGetContents('http://zwiicms.fr/update/' . common::ZWII_UPDATE_CHANNEL . '/version') ===  false) {
 				$this->setData(['config','autoUpdate',false]);
 			}
 
@@ -1454,11 +1454,15 @@ class common {
 					$articleIds = array_keys(helper::arrayCollumn($this->getData(['module',$parent]), 'publishedOn', 'SORT_DESC'));
 					foreach ($articleIds as $key => $article) {
 						// Droits les deux groupes
-						$this->setData(['module',  $parent, $article,'editRights','22']);
+						$this->setData(['module',  $parent, $article,'editConsent','group']);
 						// Limite de taille 500
 						$this->setData(['module',  $parent, $article,'commentMaxlength', '500']);
 						// Pas d'approbation des commentaires
-						$this->setData(['module',  $parent, $article,'commentApprove', false ]);
+						$this->setData(['module',  $parent, $article,'commentApproved', false ]);
+						// pas de notification
+						$this->setData(['module',  $parent, $article,'commentNotification', false ]);
+						// groupe de notification
+						$this->setData(['module',  $parent, $article,'commentGroupNotification', 3 ]);
 					}
 					// Traitement des commentaires
 					if ( is_array($this->getData(['module',  $parent, $article,'comment'])) ) {
@@ -1477,6 +1481,12 @@ class common {
 				}
 			}
 			$this->setData(['core', 'dataVersion', 10400]);
+		}
+		// Version 10.3.03
+		if ($this->getData(['core', 'dataVersion']) < 10303) {
+			// Activation par défaut du captcha à la connexion
+			$this->setData(['config', 'connect','captcha10', false]);
+		$this->setData(['core', 'dataVersion', 10303]);
 		}
 	}
 }
