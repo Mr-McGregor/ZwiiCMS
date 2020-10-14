@@ -70,7 +70,6 @@
 					</ul>
 					<ul id="userEditGroupDescription<?php echo self::GROUP_EDITOR; ?>" class="userEditGroupDescription displayNone">
 						<li>Édition de pages</li>
-						<li>Édition des articles de blog</li>
 					</ul>
 					<ul id="userEditGroupDescription<?php echo self::GROUP_MODERATOR; ?>" class="userEditGroupDescription displayNone">
 						<li>Accès aux pages privées membres et éditeurs</li>

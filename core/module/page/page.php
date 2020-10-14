@@ -19,7 +19,7 @@ class page extends common {
 	public static $actions = [
 		'add' => self::GROUP_MODERATOR,
 		'delete' => self::GROUP_MODERATOR,
-		'edit' => self::GROUP_EDITOR,
+		'edit' => self::GROUP_MODERATOR,
 		'duplicate' => self::GROUP_MODERATOR
 	];
 	public static $pagesNoParentId = [

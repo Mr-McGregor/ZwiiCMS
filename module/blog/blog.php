@@ -86,7 +86,7 @@ class blog extends common {
 
 	public static $users = [];
 
-	const BLOG_VERSION = '3.05.dev';
+	const BLOG_VERSION = '3.1';
 
 	/**
 	 * Édition
@@ -310,7 +310,7 @@ class blog extends common {
 					(
 					 $this->getData(['module',  $this->getUrl(0), $value,'editConsent']) === self::EDIT_OWNER
 					 AND $this->getData(['module',  $this->getUrl(0), $value,'userId']) === $this->getUser('id')
-					 AND $this->getUser('group') >= self::GROUP_EDITOR
+					 AND $this->getUser('group') >= self::GROUP_MODERATOR
 					)
 
 				OR (
