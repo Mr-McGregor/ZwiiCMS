@@ -16,6 +16,7 @@ class blog extends common {
 
 	const EDIT_OWNER = 'owner';
 	const EDIT_GROUP = 'group';
+	const EDIT_ALL = 'all';
 
 	public static $actions = [
 		'add' => self::GROUP_EDITOR,
@@ -77,10 +78,10 @@ class blog extends common {
 
 	// Permissions d'un article
 	public static $articleConsent = [
+		self::EDIT_ALL 		   => 'Tous les groupes',
 		self::EDIT_GROUP       => 'Groupe du propriétaire',
 		self::EDIT_OWNER       => 'Propiétaire'
 	];
-
 
 
 	public static $users = [];
@@ -309,14 +310,18 @@ class blog extends common {
 					(
 					 $this->getData(['module',  $this->getUrl(0), $value,'editConsent']) === self::EDIT_OWNER
 					 AND $this->getData(['module',  $this->getUrl(0), $value,'userId']) === $this->getUser('id')
-					) // Ou une autorité
-					OR $this->getUser('group') >  $this->getData(['module',$this->getUrl(0), $value,'editConsent'])
+					 AND $this->getUser('group') >= self::GROUP_EDITOR
+					)
 
-				) OR (
+				OR (
 					// Groupe
-					$this->getData(['module',  $this->getUrl(0), $this->getUrl(1),'editConsent']) !== self::EDIT_OWNER
+					$this->getData(['module',  $this->getUrl(0),  $value,'editConsent'])) !== self::EDIT_OWNER
 					AND $this->getUser('group') >=  $this->getData(['module',$this->getUrl(0), $value,'editConsent'])
-				)
+					)
+				OR (
+					// Tout le monde
+					$this->getData(['module',  $this->getUrl(0),  $value,'editConsent']) === self::EDIT_ALL
+					)
 			) {
 				$filterData[] = $value;
 			}
@@ -697,3 +702,4 @@ class blog extends common {
 		}
 	}
 }
+
