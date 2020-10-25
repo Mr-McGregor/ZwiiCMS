@@ -54,9 +54,10 @@ echo template::formOpen('pageEditForm');
 								<?php echo template::select('pageEditModuleId',  $module::$moduleIds, [
 									'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
 									'label' => 'Module',
-									'selected' => $this->getData(['page', $this->getUrl(2), 'moduleId'])
+									'selected' => $this->getData(['page', $this->getUrl(2), 'moduleId']),
+									'disabled' => $module::$actions['module'] >= $this->getUser('group')
 								]); ?>
-								<!-- Confirmation de suppression e ca sd'annulation -->
+								<!-- Confirmation de suppression en cas d'annulation -->
 								<?php echo template::hidden('pageEditModuleIdOld',['value' => $this->getData(['page', $this->getUrl(2), 'moduleId'])]); ?>
 								<?php echo template::hidden('pageEditModuleIdOldText',[
 									'value' => array_key_exists($this->getData(['page', $this->getUrl(2), 'moduleId']),$module::$moduleNames)? $module::$moduleNames[$this->getData(['page', $this->getUrl(2), 'moduleId'])] : ucfirst($this->getData(['page', $this->getUrl(2), 'moduleId']))

@@ -19,8 +19,9 @@ class page extends common {
 	public static $actions = [
 		'add' => self::GROUP_MODERATOR,
 		'delete' => self::GROUP_MODERATOR,
-		'edit' => self::GROUP_MODERATOR,
-		'duplicate' => self::GROUP_MODERATOR
+		'edit' => self::GROUP_EDITOR,
+		'duplicate' => self::GROUP_MODERATOR,
+		'module' => self::GROUP_MODERATOR
 	];
 	public static $pagesNoParentId = [
 		'' => 'Aucune'
@@ -310,7 +311,8 @@ class page extends common {
 	 */
 	public function edit() {
 		// La page n'existe pas
-		if($this->getData(['page', $this->getUrl(2)]) === null) {
+		if( $this->getData(['page', $this->getUrl(2)]) === null
+		) {
 			// Valeurs en sortie
 			$this->addOutput([
 				'access' => false
@@ -319,7 +321,8 @@ class page extends common {
 		}
 		// La page existe
 		// Soumission du formulaire
-		if($this->isPost()) {
+		if($this->isPost()
+		) {
 			// Génére l'ID si le titre de la page a changé
 			if ( $this->getInput('pageEditTitle') !== $this->getData(['page',$this->getUrl(2),'title']) ) {
 				$pageId = $this->getInput('pageEditTitle', helper::FILTER_ID, true);
@@ -417,7 +420,10 @@ class page extends common {
 					'breadCrumb' => $this->getInput('pageEditbreadCrumb', helper::FILTER_BOOLEAN),
 					'metaDescription' => $this->getInput('pageEditMetaDescription', helper::FILTER_STRING_LONG),
 					'metaTitle' => $this->getInput('pageEditMetaTitle'),
-					'moduleId' => $this->getInput('pageEditModuleId'),
+					'moduleId' =>  ( self::$actions['module'] >= $this->getUser('group') 
+									AND	$this->getInput('pageEditModuleId') !== $this->getData(['page',$this->getUrl(2),'moduleId']) )
+									? $this->getInput('pageEditModuleIdOld')
+									: $this->getInput('pageEditModuleId'),
 					'modulePosition' => $this->getInput('configModulePosition'),
 					'parentPageId' => $this->getInput('pageEditParentPageId'),
 					'position' => $position,
