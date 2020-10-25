@@ -51,7 +51,7 @@ echo template::formOpen('pageEditForm');
 						<div class="row">
 							<div class="col9">
 								<?php echo template::hidden('pageEditModuleRedirect'); ?>
-								<?php echo template::select('pageEditModuleId',  $listModules, [
+								<?php echo template::select('pageEditModuleId',  $module::$moduleIds, [
 									'help' => 'En cas de changement de module, les données du module précédent seront supprimées.',
 									'label' => 'Module',
 									'selected' => $this->getData(['page', $this->getUrl(2), 'moduleId'])
