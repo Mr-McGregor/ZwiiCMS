@@ -2,6 +2,7 @@
 
 ## version 10.4.00
 - Modifications :
+    - Captcha arithmétique, activation recommandée dans la configuration.
     - Module User
         - Pour les articles de blog et de news, choix de la signature, nom+prenom ; nom+prenom ; id ; pseudo
         - Importation d'un liste d'utilisateur dans un fichier plat (CSV).
@@ -12,6 +13,10 @@
         - Suppression des commentaires en masse.
         - Limiter l'édition des articles et des commentaires à l'id de l'éditeur
         - Approbation des commentaires
+
+## version 10.3.04
+- Correction :
+    - Position des entrées de menu sur les écrans de smartphone.
 
 ## version 10.3.03
 - Correction :
