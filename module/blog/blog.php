@@ -179,7 +179,7 @@ class blog extends common {
 			$comment['approval'] = array_key_exists('approval', $comment) === false ? true : $comment['approval'] ;
 			if ( $this->getData(['module', $this->getUrl(0), $this->getUrl(2),'commentApproved']) === true) {
 				$buttonApproval = template::button('blogCommentApproved' . $commentIds[$i], [
-					'class' => $comment['approval'] === true ? 'blogCommentReject buttonGreen' : 'blogCommentApproved buttonRed' ,
+					'class' => $comment['approval'] === true ? 'blogCommentRejected buttonGreen' : 'blogCommentApproved buttonRed' ,
 					'href' => helper::baseUrl() . $this->getUrl(0) . '/commentApprove/' . $this->getUrl(2) . '/' . $commentIds[$i] . '/' . $_SESSION['csrf'] ,
 					'value' => $comment['approval'] === true ? 'A' : 'R'
 				]);
@@ -279,19 +279,20 @@ class blog extends common {
 		}
 		// Inversion du statut
 		else {
+			$approved = !$this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'approval']) ;
 			$this->setData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), [
 				'author' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'author']),
 				'content' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'content']),
 				'createdOn' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'createdOn']),
 				'userId' => $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'userId']),
-				'approval' => !$this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'approval'])
+				'approval' => $approved
 			]]);
 
 			// Valeurs en sortie
 			$this->addOutput([
 				'redirect' => helper::baseUrl() . $this->getUrl(0) . '/comment/'.$this->getUrl(2),
-				'notification' =>  $this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'approval']) === true ? 'Commentaire rejeté' : 'Commentaire approuvé',
-				'state' => !$this->getData(['module', $this->getUrl(0), $this->getUrl(2), 'comment', $this->getUrl(3), 'approval'])
+				'notification' =>  $approved ?  'Commentaire approuvé' : 'Commentaire rejeté',
+				'state' => $approved
 			]);
 		}
 	}
