@@ -50,43 +50,49 @@ class template {
             'limit' => false
         ], $attributes);
 
-        // Tirage de l'opération et des nombres
-	// Correspondance tableau des images
+        // Captcha quatre opérations
+	// Limite addition et soustraction selon le type de captcha
         $numbers = array(0,1,2,3,4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20);
         $letters = array('u','t','s','r','q','p','o','n','m','l','k','j','i','h','g','f','e','d','c','b','a');
+	$limit = $attributes['limit']  ? count($letters)-1 : 10;
 
-	// Détermination de la limitation
-        $limit = $attributes['limit']  ? count($letters)-1 : 10;
+	// Tirage de l'opération
         mt_srand((float) microtime()*1000000);
-        $operator = mt_rand (0, 3);
+        $operator = mt_rand (1, 4);
 
-	// Limiter les valuers si pas une addition
-        if ($operator > 1) $limit = 10;
+	// Limite si multiplication ou division
+        if ($operator > 2) {
+		$limit = 10;
+	}
+	
+	// Tirage des nombres
+	mt_srand((float) microtime()*1000000);
         $firstNumber = mt_rand (1, $limit);
+	mt_srand((float) microtime()*1000000);
         $secondNumber = mt_rand (1, $limit);
 
-	// Ordre des valeurs selon type d'opération
-        if (($operator < 2) AND ($firstNumber < $secondNumber)) {
+	// Permutation si addition ou soustraction
+        if (($operator < 3) and ($firstNumber < $secondNumber)) {
             $temp = $firstNumber;
             $firstNumber = $secondNumber;
             $secondNumber = $temp;
         }
 
-	// Calcul du résultat et icône de l'opérateur
+	// Icône de l'opérateur et calcul du résultat
         switch ($operator) {
-            case 0:
+            case 1:
                 $operator = template::ico('plus');
                 $result =  $firstNumber + $secondNumber;
                 break;
-            case 1:
+            case 2:
                 $operator = template::ico('minus');
                 $result =  $firstNumber - $secondNumber;
                 break;
-            case 2:
+            case 3:
                 $operator = template::ico('cancel');
                 $result =  $firstNumber * $secondNumber;
                 break;
-            case 3:
+            case 4:
                 $operator = template::ico('divide');
                 $limit2 = [10, 10, 6, 5, 4, 3, 2, 2, 2, 2];
                 for ($i = 1; $i <= $firstNumber; $i++) {
